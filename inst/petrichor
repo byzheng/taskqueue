@@ -1,0 +1,44 @@
+#!/bin/bash
+#SBATCH --time=1:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=10g
+#SBATCH --job-name=$job
+#SBATCH --output=$job.out
+#SBATCH --error=$job.err
+#SBATCH --account=$account
+
+tic=`date +%s`
+echo "Start Time = "`date`
+
+cd $working_dir
+echo "working directory = "$working_dir
+module load R/4.3.1
+module load postgresql/16.0
+#module load openmpi
+
+module list
+ulimit -s unlimited
+
+
+# count the number of processors
+np=`srun hostname -s | wc -l`
+
+
+# generate nodelist
+nodelist=`srun hostname -s | sort | tr '\n' ' '`
+
+echo "Launching script using R"
+
+#mpirun $R_HOME/library/snow/RMPISNOW --no-save --no-restore < $rcode > $rout.Rout
+Rscript $rcode > $rout.Rout
+
+echo "All Done!"
+
+echo "End Time = "`date`
+toc=`date +%s`
+
+elapsedTime=`expr $toc - $tic`
+echo "Elapsed Time = $elapsedTime seconds"
+
+

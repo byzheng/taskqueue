@@ -1,0 +1,23 @@
+Package: taskqueue
+Type: Package
+Title: Task Queue in R Based On PostgreSQL 
+Version: 0.0.1
+Maintainer: Bangyou Zheng <bangyou.zheng@csiro.au>
+Authors@R: person("Bangyou", "Zheng", 
+               email = "bangyou.zheng@csiro.au", 
+               role = c("aut", "cre"))
+Description: Tasks of embarrassingly parallel are scheduled 
+        based on postgreSQL.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+Depends:
+    R (>= 3.0.0),
+Suggests:
+    testthat (>= 2.1.0)
+Imports: 
+    settings,
+    stats,
+    RPostgres,
+    DBI
