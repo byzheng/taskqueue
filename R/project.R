@@ -70,17 +70,49 @@ project_add <- function(project,
 
 
 
+#' Start a project
+#'
+#' @param project project name
+#' @param con connection to database
+#'
+#' @return
+#' @export
 project_start <- function(project, con = NULL) {
     sql <- sprintf("UPDATE project SET status=TRUE where name='%s'", project)
     db_sql(sql, DBI::dbExecute, con)
 }
 
 
+#' Stop a project
+#'
+#' @param project project name
+#' @param con connection to database
+#'
+#' @return
+#' @export
 project_stop <- function(project, con = NULL) {
     sql <- sprintf("UPDATE project SET status=FALSE where name='%s'", project)
     db_sql(sql, DBI::dbExecute, con)
 }
 
+#' Reset status of all tasks in a project to NULL
+#'
+#' @param project project name
+#' @param con connection to database
+#'
+#' @return
+#' @export
+project_reset <- function(project, con = NULL) {
+    sql <- sprintf("UPDATE task_%s SET status=NULL WHERE TRUE", project)
+    a <- db_sql(sql, DBI::dbExecute, con)
+}
+#' Get a project
+#'
+#' @param project project name
+#' @param con connection to database
+#'
+#' @return
+#' @export
 project_get <- function(project, con = NULL) {
     sql <- sprintf("SELECT * from project where name='%s'", project)
     p <- db_sql(sql, DBI::dbGetQuery, con)
@@ -90,6 +122,14 @@ project_get <- function(project, con = NULL) {
     p
 }
 
+
+#' Get resources of a project
+#'
+#' @param project project name
+#' @param con connection to database
+#'
+#' @return
+#' @export
 project_resource_get <- function(project, con = NULL) {
     project_info <- project_get(project, con)
     sql <- sprintf("SELECT * from project_resource where project_id='%s'",

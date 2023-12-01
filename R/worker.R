@@ -196,8 +196,17 @@ worker_stop <- function(name) {
 }
 
 
-# Create a worker on slurm cluster
-worker_slurm <- function(project, resource, rcode) {
+
+#' Create a worker on slurm cluster
+#'
+#' @param project Project name
+#' @param resource Resource name
+#' @param rcode rscript file path
+#' @param modules extra modules to load in slurm
+#'
+#' @return
+#' @export
+worker_slurm <- function(project, resource, rcode, modules = NULL) {
 
     # Get relative information
     con <- db_connect()
@@ -211,7 +220,7 @@ worker_slurm <- function(project, resource, rcode) {
         stop("Cannot find resource (", resource, ") for project (", project, ")")
     }
     # Check template file for petrichor
-    template <- system.file("petrichor", package = "ClusterRun")
+    template <- system.file("petrichor", package = "taskqueue")
     if (!file.exists(template)) {
         stop("Cannnot find template file for petrichor: ", template)
     }
@@ -226,12 +235,25 @@ worker_slurm <- function(project, resource, rcode) {
     if (length(rcode) != 1) {
         stop("Only support a single file")
     }
+
     rcode_path <- file.path(pr_info$working_dir, rcode)
     if (!file.exists(rcode_path)) {
         stop("Cannot find rcode file: ", rcode_path)
     }
     template <- gsub("\\$rcode", rcode, template)
     template <- gsub("\\$working_dir", pr_info$working_dir, template)
+    template <- gsub("\\$times", pr_info$times, template)
+
+    # modules
+    if (!is.null(modules)) {
+        stopifnot(is.character(modules))
+        pos <- grep("^ *module +load", template)
+        if (length(pos) == 0) {
+            stop("No module load in the template")
+        }
+        new_text <- paste("module load ", modules)
+        template <- append(template, new_text, max(pos))
+    }
 
     # Replace account
     if (is.null(pr_info$account)) {
@@ -246,35 +268,59 @@ worker_slurm <- function(project, resource, rcode) {
         dir.create(sub_folder, recursive = TRUE)
     }
 
-    # Submit each jobs
-    # CPU number can be specified in table resource for all projects or
+
+    # Submit jobs
+    # workers number can be specified in table resource for all projects or
     # table project_resource for this project. The minimum of two values
     # is used
-    cpus <- resource_info$cpus
-    if (is.null(cpus)) {
-        stop("CPU number has to be spcefied for resource: ", resource)
+    workers <- resource_info$workers
+    if (is.null(workers)) {
+        stop("workers number has to be spcefied for resource: ", resource)
     }
-    if (!is.null(pr_info$cpus)) {
-        cpus <- min(resource_info$cpus, pr_info$cpus)
+    if (!is.null(pr_info$workers)) {
+        workers <- min(resource_info$workers, pr_info$workers)
     }
+
+    #template <- gsub("\\$workers", workers, template)
+
+    # # Job name
+    # job_name <- paste0(project,"-", resource)
+    # template <- gsub("\\$job", job_name, template)
+    #
+    # # create submit file for slurm
+    # sub_file <- file.path(sub_folder, job_name)
+    # template <- gsub("\\$rout", sub_file, template)
+    # writeLines(template, sub_file)
+    #
+    # # Submit a job to cluster
+    # cmd <- sprintf("ssh %s 'cd %s;sbatch %s'",
+    #                resource_info$host, sub_folder, sub_file)
+    # Sys.sleep(1)
+    # system(cmd)
+
+    sub_files <- c()
     i <- 1
-    for (i in seq_len(pr_info$cpus)) {
+    for (i in seq_len(workers)) {
         template_i <- template
+        file_str <- stringi::stri_rand_strings(1, 16, "[a-zA-Z]")
         # Job name
-        job_name <- paste0(project,"-", resource, "-", i)
+        job_name <- paste0(project,"-", resource, "-", file_str)
         template_i <- gsub("\\$job", job_name, template_i)
 
         # create submit file for slurm
         sub_file <- file.path(sub_folder, job_name)
         template_i <- gsub("\\$rout", sub_file, template_i)
         writeLines(template_i, sub_file)
+        sub_files <- c(sub_files, sub_file)
+    }
 
-        # Submit a job to cluster
+    # Submit a job to cluster
 
-        cmd <- sprintf("ssh %s 'cd %s;sbatch %s'",
-                       resource_info$host, sub_folder, sub_file)
-        Sys.sleep(1)
-        system(cmd)
+    cmds <- sprintf("ssh %s 'cd %s;sbatch %s'",
+                   resource_info$host, sub_folder, sub_files)
+    Sys.sleep(1)
+    for (i in seq_along(cmds)) {
+        system(cmds[i])
     }
 
 }

@@ -19,5 +19,6 @@ Suggests:
 Imports: 
     settings,
     stats,
+    stringi,
     RPostgres,
     DBI
