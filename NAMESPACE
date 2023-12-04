@@ -3,6 +3,7 @@
 export(db_connect)
 export(db_disconnect)
 export(project_add)
+export(project_delete)
 export(project_get)
 export(project_reset)
 export(project_resource_add)

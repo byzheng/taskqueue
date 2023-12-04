@@ -4,10 +4,10 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=10g
 #SBATCH --job-name=$job
-#SBATCH --output=$job.out
-#SBATCH --error=$job.err
+#SBATCH --output=$job_%j.out
+#SBATCH --error=$job_%j.err
 #SBATCH --account=$account
-
+#SBATCH --array=1-$workers
 
 tic=`date +%s`
 echo "Start Time = "`date`

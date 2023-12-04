@@ -30,6 +30,7 @@ worker <- function(project, fun) {
     # database at the same time
     Sys.sleep(runif(1) * 10)
     task_table <- sprintf("task_%s", project)
+    message("Start on this worker.")
     # Working on tasks
     while (TRUE) {
 
@@ -73,11 +74,12 @@ worker <- function(project, fun) {
                                     task_table)
                 id <- DBI::dbGetQuery(db_worker, sql_task)
                 if (nrow(id) == 0) {
+                    message("No more task to process")
                     break
                 }
                 id <- id$id
                 sql_update <- sprintf("UPDATE %s
-                                      SET status=FALSE
+                                      SET status='working'
                                       WHERE id=%s;",
                                       task_table,
                                       id)
@@ -102,7 +104,22 @@ worker <- function(project, fun) {
         if (inherits(x, "try-error")) {
             message(paste("Failed to work on ", id, " as error: ", x))
             message("Try it again later")
+
+            # Mark as failed
+            db_worker <- db_connect()
+            DBI::dbWithTransaction(db_worker, {
+                sql <- sprintf("LOCK TABLE %s IN ROW EXCLUSIVE MODE;", task_table)
+                DBI::dbExecute(db_worker, sql)
+                sql_update <- sprintf("UPDATE %s
+                                      SET status='failed'
+                                      WHERE id=%s;",
+                                      task_table,
+                                      id)
+                DBI::dbExecute(db_worker, sql_update)
+            })
+            db_disconnect(db_worker)
             Sys.sleep(runif(1) * 10)
+
             next
         }
 
@@ -114,7 +131,7 @@ worker <- function(project, fun) {
             DBI::dbWithTransaction(db_worker, {
                 sql <- sprintf("LOCK TABLE %s IN ROW EXCLUSIVE MODE;", task_table)
                 DBI::dbExecute(db_worker, sql)
-                sql_update <- sprintf("UPDATE %s SET status=TRUE WHERE id=%s;",
+                sql_update <- sprintf("UPDATE %s SET status='finished' WHERE id=%s;",
                                       task_table, id)
                 DBI::dbExecute(db_worker, sql_update)
             })
@@ -126,10 +143,9 @@ worker <- function(project, fun) {
             Sys.sleep(runif(1) * 10)
             next
         }
-
-
     }
-    message("No more task to process")
+    message("Finish to run on this worker. Now clean the environment")
+
 }
 
 #' Create a worker on slurm cluster
@@ -216,46 +232,46 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
         workers <- min(resource_info$workers, pr_info$workers)
     }
 
-    #template <- gsub("\\$workers", workers, template)
+    template <- gsub("\\$workers", workers, template)
 
-    # # Job name
-    # job_name <- paste0(project,"-", resource)
-    # template <- gsub("\\$job", job_name, template)
-    #
-    # # create submit file for slurm
-    # sub_file <- file.path(sub_folder, job_name)
-    # template <- gsub("\\$rout", sub_file, template)
-    # writeLines(template, sub_file)
-    #
-    # # Submit a job to cluster
-    # cmd <- sprintf("ssh %s 'cd %s;sbatch %s'",
-    #                resource_info$host, sub_folder, sub_file)
-    # Sys.sleep(1)
-    # system(cmd)
+    # Job name
+    job_name <- paste0(project,"-", resource)
+    template <- gsub("\\$job", job_name, template)
 
-    sub_files <- c()
-    i <- 1
-    for (i in seq_len(workers)) {
-        template_i <- template
-        file_str <- stringi::stri_rand_strings(1, 16, "[a-zA-Z]")
-        # Job name
-        job_name <- paste0(project,"-", resource, "-", file_str)
-        template_i <- gsub("\\$job", job_name, template_i)
-
-        # create submit file for slurm
-        sub_file <- file.path(sub_folder, job_name)
-        template_i <- gsub("\\$rout", sub_file, template_i)
-        writeLines(template_i, sub_file)
-        sub_files <- c(sub_files, sub_file)
-    }
+    # create submit file for slurm
+    sub_file <- file.path(sub_folder, job_name)
+    template <- gsub("\\$rout", sub_file, template)
+    writeLines(template, sub_file)
 
     # Submit a job to cluster
-
-    cmds <- sprintf("ssh %s 'cd %s;sbatch %s'",
-                   resource_info$host, sub_folder, sub_files)
+    cmd <- sprintf("ssh %s 'cd %s;sbatch %s'",
+                   resource_info$host, sub_folder, sub_file)
     Sys.sleep(1)
-    for (i in seq_along(cmds)) {
-        system(cmds[i])
-    }
+    system(cmd)
+
+    # sub_files <- c()
+    # i <- 1
+    # for (i in seq_len(workers)) {
+    #     template_i <- template
+    #     file_str <- stringi::stri_rand_strings(1, 16, "[a-zA-Z]")
+    #     # Job name
+    #     job_name <- paste0(project,"-", resource, "-", file_str)
+    #     template_i <- gsub("\\$job", job_name, template_i)
+    #
+    #     # create submit file for slurm
+    #     sub_file <- file.path(sub_folder, job_name)
+    #     template_i <- gsub("\\$rout", sub_file, template_i)
+    #     writeLines(template_i, sub_file)
+    #     sub_files <- c(sub_files, sub_file)
+    # }
+    #
+    # # Submit a job to cluster
+    #
+    # cmds <- sprintf("ssh %s 'cd %s;sbatch %s'",
+    #                resource_info$host, sub_folder, sub_files)
+    # Sys.sleep(1)
+    # for (i in seq_along(cmds)) {
+    #     system(cmds[i])
+    # }
 
 }

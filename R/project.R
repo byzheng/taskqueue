@@ -19,12 +19,12 @@
 #' Create project to database
 #'
 #' @param project project name
-#' @param table A table name for this project.
 #' @param ... Other arguments for project setting
 #' @export
-project_add <- function(project,
-                       table = paste('task', project, sep = '_'), ...)
+project_add <- function(project, ...)
 {
+    # Some SQl to prepare database
+    # CREATE TYPE TASK_STATUS AS ENUM ('working', 'finished', 'failed');
     if (length(project) != 1) {
         stop("Please use a single name")
     }
@@ -32,6 +32,7 @@ project_add <- function(project,
     if (project %in% conserved_name) {
         stop("Cannot use ", project)
     }
+    table <- paste('task', project, sep = '_')
     con <- db_connect()
     settings <- list(...)
     settings$table <- table
@@ -60,7 +61,7 @@ project_add <- function(project,
     # create a new table
     sql <- sprintf('CREATE TABLE IF NOT EXISTS %s (
          	"id" INTEGER NULL DEFAULT NULL,
-        	"status" BOOLEAN NULL DEFAULT NULL,
+        	"status" task_status NULL DEFAULT NULL,
         	PRIMARY KEY ("id")
         )
         ;', table)
@@ -142,6 +143,29 @@ project_list <- function() {
 
 }
 
+#' Delete a project
+#'
+#' @param project project name
+#' @param con connection to database
+#'
+#' @return
+#' @export
 project_delete <- function(project, con = NULL) {
+    project_info <- project_get(project, con)
+    if (nrow(project_info) != 1) {
+        stop("Cannot find project ", project)
+    }
+    # Drop task table
+    sql <- sprintf("DROP TABLE task_%s", project)
+    db_sql(sql, DBI::dbExecute, con)
+
+    # Drop resource
+    sql <- sprintf("DELETE FROM project_resource where project_id='%s'",
+                   project_info$id)
+    db_sql(sql, DBI::dbExecute, con)
+
+    # Delete project
+    sql <- sprintf("DELETE FROM project where name='%s'", project)
+    db_sql(sql, DBI::dbExecute, con)
 
 }

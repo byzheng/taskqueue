@@ -4,12 +4,10 @@
 \alias{project_add}
 \title{Create project to database}
 \usage{
-project_add(project, table = paste("task", project, sep = "_"), ...)
+project_add(project, ...)
 }
 \arguments{
 \item{project}{project name}
-
-\item{table}{A table name for this project.}
 
 \item{...}{Other arguments for project setting}
 }
