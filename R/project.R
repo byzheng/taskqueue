@@ -21,10 +21,8 @@
 #' @param project project name
 #' @param ... Other arguments for project setting
 #' @export
-project_add <- function(project, ...)
+project_add <- function(project)
 {
-    # Some SQl to prepare database
-    # CREATE TYPE TASK_STATUS AS ENUM ('working', 'finished', 'failed');
     if (length(project) != 1) {
         stop("Please use a single name")
     }
@@ -34,7 +32,15 @@ project_add <- function(project, ...)
     }
     table <- paste('task', project, sep = '_')
     con <- db_connect()
-    settings <- list(...)
+    # Add types
+    sql <- "SELECT * FROM pg_type WHERE typname = 'task_status'"
+    status_types <- db_sql(sql, DBI::dbGetQuery, con)
+    if (nrow(status_types) == 0) {
+        sql <- "CREATE TYPE task_status AS ENUM ('working', 'finished', 'failed');"
+        db_sql(sql, DBI::dbExecute, con)
+    }
+    # Add settings
+    settings <- list()
     settings$table <- table
     settings$name <- project
     settings$status <- FALSE

@@ -4,7 +4,7 @@
 \alias{project_add}
 \title{Create project to database}
 \usage{
-project_add(project, ...)
+project_add(project)
 }
 \arguments{
 \item{project}{project name}

@@ -89,7 +89,7 @@ worker <- function(project, fun) {
         })
         if (inherits(x, "try-error")) {
             message(paste("Failed to get a new task as error: ", x))
-            message("Disconnect database. Try it again later")
+            message("Try it again later.")
             db_disconnect(db_worker)
             Sys.sleep(runif(1) * 10)
             next
