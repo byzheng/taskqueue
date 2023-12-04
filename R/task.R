@@ -38,8 +38,6 @@ task_count <- function(name) {
 #'
 #' @return
 #' @export
-#'
-#' @examples
 task_clean <- function(project, con = NULL) {
     new_connection <- ifelse(is.null(con), TRUE, FALSE)
     sql <- sprintf("TRUNCATE TABLE task_%s;", project)
@@ -49,3 +47,19 @@ task_clean <- function(project, con = NULL) {
         db_disconnect(con)
     }
 }
+
+
+#' Get task status in a project
+#'
+#' @param project project name
+#' @param con a connection to database
+#'
+#' @return
+#' @export
+task_status <- function(project, con = NULL) {
+    sql <- sprintf("SELECT status, COUNT(*) FROM task_%s GROUP BY status", project)
+    res <- db_sql(sql, DBI::dbGetQuery, con)
+    res$status <- ifelse(is.na(res$status), "idle", res$status)
+    res
+}
+
