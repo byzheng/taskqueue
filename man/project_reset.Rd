@@ -4,10 +4,12 @@
 \alias{project_reset}
 \title{Reset status of all tasks in a project to NULL}
 \usage{
-project_reset(project, con = NULL)
+project_reset(project, status = c("working", "failed"), con = NULL)
 }
 \arguments{
 \item{project}{project name}
+
+\item{status}{status to reset}
 
 \item{con}{connection to database}
 }

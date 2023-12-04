@@ -123,7 +123,7 @@ worker <- function(project, fun) {
             next
         }
 
-        message("Finsih to process task: ", id)
+        message("Finish to process task: ", id)
         # Reconnect database and update table
         # Might run this codes for couple times to updates
         x <- try({
@@ -144,7 +144,7 @@ worker <- function(project, fun) {
             next
         }
     }
-    message("Finish to run on this worker. Now clean the environment")
+    message("Finish to run on this worker.")
 
 }
 

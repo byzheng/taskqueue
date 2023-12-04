@@ -105,13 +105,28 @@ project_stop <- function(project, con = NULL) {
 #' Reset status of all tasks in a project to NULL
 #'
 #' @param project project name
+#' @param status status to reset
 #' @param con connection to database
 #'
 #' @return
 #' @export
-project_reset <- function(project, con = NULL) {
-    sql <- sprintf("UPDATE task_%s SET status=NULL WHERE TRUE", project)
+project_reset <- function(project, status = c("working", "failed"), con = NULL) {
+    new_connection <- ifelse(is.null(con), TRUE, FALSE)
+    con <- db_connect(con)
+
+    sql <- "SELECT unnest(enum_range(NULL::task_status));"
+    define_status <- db_sql(sql, DBI::dbGetQuery, con)
+    pos <- !(status %in% define_status$unnest )
+    if (sum(pos) > 0) {
+        stop("Cannot find status: ", paste(status[pos], sep = ", "))
+    }
+    status_sql <- paste(paste0("'", status, "'"), collapse = ", ")
+    sql <- sprintf("UPDATE task_%s SET status=NULL WHERE status  in (%s);",
+                   project, status_sql)
     a <- db_sql(sql, DBI::dbExecute, con)
+    if (new_connection) {
+        db_disconnect(con)
+    }
 }
 #' Get a project
 #'
@@ -157,10 +172,13 @@ project_list <- function() {
 #' @return
 #' @export
 project_delete <- function(project, con = NULL) {
+    new_connection <- ifelse(is.null(con), TRUE, FALSE)
+    con <- db_connect(con)
     project_info <- project_get(project, con)
     if (nrow(project_info) != 1) {
         stop("Cannot find project ", project)
     }
+
     # Drop task table
     sql <- sprintf("DROP TABLE task_%s", project)
     db_sql(sql, DBI::dbExecute, con)
@@ -173,5 +191,7 @@ project_delete <- function(project, con = NULL) {
     # Delete project
     sql <- sprintf("DELETE FROM project where name='%s'", project)
     db_sql(sql, DBI::dbExecute, con)
-
+    if (new_connection) {
+        db_disconnect(con)
+    }
 }
