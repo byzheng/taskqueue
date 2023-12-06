@@ -1,7 +1,60 @@
 # Resource for project
 
 
-#' Assign a resouce to a project
+.table_project_resource <- function(con) {
+    DBI::dbExecute(con, "
+       -- Table: public.project_resource
+
+-- DROP TABLE IF EXISTS public.project_resource;
+
+CREATE TABLE IF NOT EXISTS public.project_resource
+(
+    project_id integer NOT NULL,
+    resource_id integer NOT NULL,
+    working_dir character varying COLLATE pg_catalog.\"default\",
+    account character varying COLLATE pg_catalog.\"default\",
+    workers integer,
+    times integer,
+    CONSTRAINT pr_unique_project_resource UNIQUE (project_id, resource_id),
+    CONSTRAINT fk_project_resource_project FOREIGN KEY (project_id)
+        REFERENCES public.project (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT fk_project_resource_resource FOREIGN KEY (resource_id)
+        REFERENCES public.resource (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.project_resource
+    OWNER to postgres;
+
+COMMENT ON COLUMN public.project_resource.times
+    IS 'worker running time in hours';
+-- Index: fki_fk_project_resource_project
+
+-- DROP INDEX IF EXISTS public.fki_fk_project_resource_project;
+
+CREATE INDEX IF NOT EXISTS fki_fk_project_resource_project
+    ON public.project_resource USING btree
+    (project_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_fk_project_resource_resource
+
+-- DROP INDEX IF EXISTS public.fki_fk_project_resource_resource;
+
+CREATE INDEX IF NOT EXISTS fki_fk_project_resource_resource
+    ON public.project_resource USING btree
+    (resource_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+    ")
+}
+
+#' Assign a resource to a project
 #'
 #' @param project project name
 #' @param resource resource name

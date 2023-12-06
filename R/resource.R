@@ -3,14 +3,28 @@
 
 # Create task table if not exist
 .table_resource <- function(con) {
-    DBI::dbExecute(con, '
-        CREATE TABLE IF NOT EXISTS "resource" (
-        	"name" CHAR(50) NOT NULL,
-        	"table" CHAR(100) NOT NULL,
-        	PRIMARY KEY ("name")
+    DBI::dbExecute(con, "
+        -- Table: public.resource
+
+        -- DROP TABLE IF EXISTS public.resource;
+
+        CREATE TABLE IF NOT EXISTS public.resource
+        (
+            id integer NOT NULL DEFAULT nextval('resource_id_seq'::regclass),
+            name character varying COLLATE pg_catalog.\"default\" NOT NULL,
+            type character varying COLLATE pg_catalog.\"default\" NOT NULL,
+            host character varying COLLATE pg_catalog.\"default\",
+            workers integer,
+            log_folder character varying COLLATE pg_catalog.\"default\",
+            CONSTRAINT resource_pkey PRIMARY KEY (id),
+            CONSTRAINT resource_unique_name UNIQUE (name)
         )
-        ;
-    ')
+
+        TABLESPACE pg_default;
+
+        ALTER TABLE IF EXISTS public.resource
+            OWNER to postgres;
+    ")
 }
 
 resource_list <- function() {

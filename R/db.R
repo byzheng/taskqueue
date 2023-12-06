@@ -54,3 +54,41 @@ db_sql <- function(sql, method, con = NULL) {
     }
     p
 }
+
+
+#' Clean all tables and definition
+#'
+#' @param con an existing database connection
+#'
+#' @return No return
+db_clean <- function(con) {
+    # Delete project tables
+    projects <- project_list(con)
+    for (i in seq(along = projects[[1]])) {
+        sql <- sprintf("DROP TABLE IF EXISTS public.%s", projects$table[i])
+        a <- db_sql(sql, DBI::dbExecute, con)
+    }
+
+    # Delete project resource
+    sql <- "DROP TABLE IF EXISTS public.project_resource"
+    a <- db_sql(sql, DBI::dbExecute, con)
+
+    # Delete project
+    sql <- "DROP TABLE IF EXISTS public.project"
+    a <- db_sql(sql, DBI::dbExecute, con)
+    # Delete resource
+    sql <- "DROP TABLE IF EXISTS public.resource"
+    a <- db_sql(sql, DBI::dbExecute, con)
+
+    # Delete any other tables
+    sql <- "select * from information_schema.tables where table_schema='public'"
+    tables <- db_sql(sql, DBI::dbGetQuery, con)
+
+    for (i in seq(along = tables$table_name)) {
+        sql <- sprintf("DROP TABLE IF EXISTS public.%s", tables$table_name[i])
+        a <- db_sql(sql, DBI::dbExecute, con)
+    }
+    # delete types
+    sql <- "DROP TYPE IF EXISTS public.task_status;"
+    a <- db_sql(sql, DBI::dbExecute, con)
+}

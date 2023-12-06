@@ -1,18 +1,37 @@
 
 # Projects
 
+.types <- function(con) {
+
+    # CREATE TYPE public.task_status AS ENUM
+    # ('working', 'finished', 'failed');
+    #
+    # ALTER TYPE public.task_status
+    # OWNER TO postgres;
+    #
+}
 # Create task table if not exist
-.table_taskconfig <- function(con) {
+.table_project <- function(con) {
     DBI::dbExecute(con, "
-        CREATE TABLE IF NOT EXISTS \"project\" (
-        	\"id\" SERIAL NOT NULL,
-        	\"name\" VARCHAR NOT NULL,
-        	\"table\" VARCHAR NOT NULL,
-        	\"status\" BOOLEAN NULL DEFAULT NULL,
-        	\"memory\" integer NULL DEFAULT 10,
-        	PRIMARY KEY (\"id\")
+        -- DROP TABLE IF EXISTS public.project;
+        CREATE TABLE IF NOT EXISTS public.project
+        (
+            id integer NOT NULL DEFAULT nextval('project_id_seq'::regclass),
+            name character varying COLLATE pg_catalog.\"default\" NOT NULL,
+            \"table\" character varying COLLATE pg_catalog.\"default\" NOT NULL,
+            status boolean,
+            memory integer,
+            CONSTRAINT project_pkey PRIMARY KEY (id),
+            CONSTRAINT project_unique_name UNIQUE (name)
         )
-        ;
+
+        TABLESPACE pg_default;
+
+        ALTER TABLE IF EXISTS public.project
+            OWNER to postgres;
+
+        COMMENT ON COLUMN public.project.memory
+            IS 'Memory requirement in GB';
     ")
 }
 
@@ -59,7 +78,7 @@ project_add <- function(project, memory = 10)
                                           return(x)
                                       }))
     names(setting_db) <- names(settings)
-    .table_taskconfig(con)
+    .table_project(con)
 
     tc_col <- DBI::dbGetQuery(con, 'select * from project where false;')
     tc_col <- names(tc_col)
@@ -167,8 +186,16 @@ project_resource_get <- function(project, con = NULL) {
     p_r
 }
 
-project_list <- function() {
-
+#' List all projects
+#'
+#' @param con a db connection
+#'
+#' @return
+#' @export
+project_list <- function(con = NULL) {
+    sql <- "SELECT * FROM public.project"
+    projects <- db_sql(sql, DBI::dbGetQuery, con = con)
+    projects
 }
 
 #' Delete a project
