@@ -1,30 +1,25 @@
 
 # Projects
 
-# Create task table if not exist
-.table_resource <- function(con) {
-    DBI::dbExecute(con, "
-        -- Table: public.resource
-
-        -- DROP TABLE IF EXISTS public.resource;
-
+# Create resource table if not exist
+.table_resource <- function(con = NULL) {
+    sql <- c("
         CREATE TABLE IF NOT EXISTS public.resource
         (
-            id integer NOT NULL DEFAULT nextval('resource_id_seq'::regclass),
+            id SERIAL NOT NULL,
             name character varying COLLATE pg_catalog.\"default\" NOT NULL,
             type character varying COLLATE pg_catalog.\"default\" NOT NULL,
-            host character varying COLLATE pg_catalog.\"default\",
-            workers integer,
+            host character varying COLLATE pg_catalog.\"default\" NOT NULL,
+            nodename character varying COLLATE pg_catalog.\"default\" NOT NULL,
+            workers integer NOT NULL,
             log_folder character varying COLLATE pg_catalog.\"default\",
             CONSTRAINT resource_pkey PRIMARY KEY (id),
-            CONSTRAINT resource_unique_name UNIQUE (name)
-        )
-
-        TABLESPACE pg_default;
-
-        ALTER TABLE IF EXISTS public.resource
-            OWNER to postgres;
-    ")
+            CONSTRAINT resource_unique_name UNIQUE (name),
+            CONSTRAINT resource_unique_host UNIQUE (host),
+            CONSTRAINT resource_unique_namename UNIQUE (nodename)
+        );")
+    db_sql(sql, DBI::dbExecute, con)
+    return(invisible())
 }
 
 resource_list <- function() {

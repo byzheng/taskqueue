@@ -1,38 +1,33 @@
 
 # Projects
+# Create types
+.types <- function(con = NULL) {
 
-.types <- function(con) {
-
-    # CREATE TYPE public.task_status AS ENUM
-    # ('working', 'finished', 'failed');
-    #
-    # ALTER TYPE public.task_status
-    # OWNER TO postgres;
-    #
+    sql <- "SELECT * FROM pg_type WHERE typname = 'task_status'"
+    status_types <- db_sql(sql, DBI::dbGetQuery, con)
+    if (nrow(status_types) == 0) {
+        sql <- "CREATE TYPE task_status AS ENUM ('working', 'finished', 'failed');"
+        db_sql(sql, DBI::dbExecute, con)
+    }
 }
-# Create task table if not exist
-.table_project <- function(con) {
-    DBI::dbExecute(con, "
-        -- DROP TABLE IF EXISTS public.project;
+# Create project table if not exist
+.table_project <- function(con = NULL) {
+    sql <- c("
         CREATE TABLE IF NOT EXISTS public.project
         (
-            id integer NOT NULL DEFAULT nextval('project_id_seq'::regclass),
+            id SERIAL NOT NULL,
             name character varying COLLATE pg_catalog.\"default\" NOT NULL,
             \"table\" character varying COLLATE pg_catalog.\"default\" NOT NULL,
             status boolean,
-            memory integer,
+            memory integer NOT NULL DEFAULT 10,
             CONSTRAINT project_pkey PRIMARY KEY (id),
             CONSTRAINT project_unique_name UNIQUE (name)
-        )
-
-        TABLESPACE pg_default;
-
-        ALTER TABLE IF EXISTS public.project
-            OWNER to postgres;
-
-        COMMENT ON COLUMN public.project.memory
+        );",
+        "COMMENT ON COLUMN public.project.memory
             IS 'Memory requirement in GB';
     ")
+    db_sql(sql, DBI::dbExecute, con)
+    return(invisible())
 }
 
 

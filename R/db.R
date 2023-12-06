@@ -42,26 +42,25 @@ db_disconnect <- function(con)
     invisible(RPostgres::dbDisconnect(con))
 }
 
-db_sql <- function(sql, method, con = NULL) {
-
-    reconnect <- is.null(con)
-    if (reconnect) {
-        con <- db_connect()
-    }
-    p <- method(con, sql)
-    if (reconnect) {
-        db_disconnect(con)
-    }
-    p
+#' Initialize PostgreSQL database for taskqueue
+#'
+#' @return no return
+#' @export
+db_init <- function() {
+    con <- db_connect()
+    .types(con)
+    .table_project(con)
+    .table_resource(con)
+    db_disconnect(con)
 }
-
 
 #' Clean all tables and definition
 #'
 #' @param con an existing database connection
 #'
 #' @return No return
-db_clean <- function(con) {
+db_clean <- function() {
+    con <- db_connect()
     # Delete project tables
     projects <- project_list(con)
     for (i in seq(along = projects[[1]])) {
@@ -91,4 +90,31 @@ db_clean <- function(con) {
     # delete types
     sql <- "DROP TYPE IF EXISTS public.task_status;"
     a <- db_sql(sql, DBI::dbExecute, con)
+
+    db_disconnect(con)
 }
+
+
+#' A Wrapper function for DBI interface
+#'
+#' @param sql multile sql statements
+#' @param method method of DBI
+#' @param con a connection
+#'
+#' @return Results of last sql statement with method for DBI interface
+db_sql <- function(sql, method, con = NULL) {
+
+    reconnect <- is.null(con)
+    if (reconnect) {
+        con <- db_connect()
+    }
+    for (i in seq(along = sql)) {
+        p <- method(con, sql[i])
+    }
+    if (reconnect) {
+        db_disconnect(con)
+    }
+    p
+}
+
+

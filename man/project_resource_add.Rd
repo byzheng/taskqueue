@@ -2,7 +2,7 @@
 % Please edit documentation in R/project_resource.R
 \name{project_resource_add}
 \alias{project_resource_add}
-\title{Assign a resouce to a project}
+\title{Assign a resource to a project}
 \usage{
 project_resource_add(
   project,
@@ -27,5 +27,5 @@ project_resource_add(
 \item{workers}{maximum workers for this project.}
 }
 \description{
-Assign a resouce to a project
+Assign a resource to a project
 }
