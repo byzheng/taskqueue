@@ -4,12 +4,12 @@
 \alias{project_add}
 \title{Create project to database}
 \usage{
-project_add(project)
+project_add(project, memory = 10)
 }
 \arguments{
 \item{project}{project name}
 
-\item{...}{Other arguments for project setting}
+\item{memory}{Memory usage in GB}
 }
 \description{
 Create project to database

@@ -164,6 +164,7 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     project_info <- project_get(project, con)
     resource_info <- resource_get(resource, con)
     pr_info <- project_resource_get(project, con)
+    t_status <- task_status(project, con)
     db_disconnect(con)
     pr_info <- pr_info[pr_info$resource_id == resource_info$id,]
 
@@ -194,7 +195,7 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     template <- gsub("\\$rcode", rcode, template)
     template <- gsub("\\$working_dir", pr_info$working_dir, template)
     template <- gsub("\\$times", pr_info$times, template)
-
+    template <- gsub("\\$memory", project_info$memory, template)
     # modules
     if (!is.null(modules)) {
         stopifnot(is.character(modules))
@@ -232,6 +233,11 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
         workers <- min(resource_info$workers, pr_info$workers)
     }
 
+    # Consider current idle tasks.
+    idle_task <- t_status$count[t_status$status == "idle"]
+    if (length(idle_task) > 0) {
+        workers <- min(workers, idle_task)
+    }
     template <- gsub("\\$workers", workers, template)
 
     # Job name

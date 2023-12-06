@@ -9,6 +9,7 @@
         	\"name\" VARCHAR NOT NULL,
         	\"table\" VARCHAR NOT NULL,
         	\"status\" BOOLEAN NULL DEFAULT NULL,
+        	\"memory\" integer NULL DEFAULT 10,
         	PRIMARY KEY (\"id\")
         )
         ;
@@ -19,9 +20,9 @@
 #' Create project to database
 #'
 #' @param project project name
-#' @param ... Other arguments for project setting
+#' @param memory Memory usage in GB
 #' @export
-project_add <- function(project)
+project_add <- function(project, memory = 10)
 {
     if (length(project) != 1) {
         stop("Please use a single name")
@@ -30,6 +31,11 @@ project_add <- function(project)
     if (project %in% conserved_name) {
         stop("Cannot use ", project)
     }
+    stopifnot(is.numeric(memory))
+    if (length(memory) != 1) {
+        stop("Please use a single value for memory")
+    }
+
     table <- paste('task', project, sep = '_')
     con <- db_connect()
     # Add types
@@ -43,6 +49,7 @@ project_add <- function(project)
     settings <- list()
     settings$table <- table
     settings$name <- project
+    settings$memory <- memory
     settings$status <- FALSE
     setting_db <- as.character(lapply(settings,
                                       function(x)
