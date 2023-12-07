@@ -11,6 +11,9 @@ project_resource_get(project, con = NULL)
 
 \item{con}{connection to database}
 }
+\value{
+a table of resources used in the project
+}
 \description{
 Get resources of a project
 }

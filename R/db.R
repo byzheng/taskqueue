@@ -51,12 +51,12 @@ db_init <- function() {
     .types(con)
     .table_project(con)
     .table_resource(con)
+    .table_resource(con)
     db_disconnect(con)
+    return(invisible())
 }
 
 #' Clean all tables and definition
-#'
-#' @param con an existing database connection
 #'
 #' @return No return
 db_clean <- function() {

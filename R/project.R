@@ -34,7 +34,8 @@
 #' Create project to database
 #'
 #' @param project project name
-#' @param memory Memory usage in GB
+#' @param memory memory usage in GB
+#' @return no returns
 #' @export
 project_add <- function(project, memory = 10)
 {
@@ -94,6 +95,7 @@ project_add <- function(project, memory = 10)
         ;', table)
     res <- DBI::dbExecute(con, sql)
     db_disconnect(con)
+    return(invisible())
 }
 
 
@@ -103,11 +105,12 @@ project_add <- function(project, memory = 10)
 #' @param project project name
 #' @param con connection to database
 #'
-#' @return
+#' @return no return
 #' @export
 project_start <- function(project, con = NULL) {
     sql <- sprintf("UPDATE project SET status=TRUE where name='%s'", project)
     db_sql(sql, DBI::dbExecute, con)
+    return(invisible())
 }
 
 
@@ -116,11 +119,12 @@ project_start <- function(project, con = NULL) {
 #' @param project project name
 #' @param con connection to database
 #'
-#' @return
+#' @return no return
 #' @export
 project_stop <- function(project, con = NULL) {
     sql <- sprintf("UPDATE project SET status=FALSE where name='%s'", project)
     db_sql(sql, DBI::dbExecute, con)
+    return(invisible())
 }
 
 #' Reset status of all tasks in a project to NULL
@@ -129,7 +133,7 @@ project_stop <- function(project, con = NULL) {
 #' @param status status to reset
 #' @param con connection to database
 #'
-#' @return
+#' @return no return
 #' @export
 project_reset <- function(project, status = c("working", "failed"), con = NULL) {
     new_connection <- ifelse(is.null(con), TRUE, FALSE)
@@ -148,13 +152,14 @@ project_reset <- function(project, status = c("working", "failed"), con = NULL) 
     if (new_connection) {
         db_disconnect(con)
     }
+    return(invisible())
 }
 #' Get a project
 #'
 #' @param project project name
 #' @param con connection to database
 #'
-#' @return
+#' @return a table of project information
 #' @export
 project_get <- function(project, con = NULL) {
     sql <- sprintf("SELECT * from project where name='%s'", project)
@@ -171,7 +176,7 @@ project_get <- function(project, con = NULL) {
 #' @param project project name
 #' @param con connection to database
 #'
-#' @return
+#' @return a table of resources used in the project
 #' @export
 project_resource_get <- function(project, con = NULL) {
     project_info <- project_get(project, con)
@@ -185,7 +190,7 @@ project_resource_get <- function(project, con = NULL) {
 #'
 #' @param con a db connection
 #'
-#' @return
+#' @return a table for all projects
 #' @export
 project_list <- function(con = NULL) {
     sql <- "SELECT * FROM public.project"
@@ -198,7 +203,7 @@ project_list <- function(con = NULL) {
 #' @param project project name
 #' @param con connection to database
 #'
-#' @return
+#' @return no return
 #' @export
 project_delete <- function(project, con = NULL) {
     new_connection <- ifelse(is.null(con), TRUE, FALSE)
@@ -223,4 +228,5 @@ project_delete <- function(project, con = NULL) {
     if (new_connection) {
         db_disconnect(con)
     }
+    return(invisible())
 }

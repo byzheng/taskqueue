@@ -9,6 +9,9 @@ project_list(con = NULL)
 \arguments{
 \item{con}{a db connection}
 }
+\value{
+a table for all projects
+}
 \description{
 List all projects
 }

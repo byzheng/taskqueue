@@ -15,6 +15,9 @@ task_add(project, num, clean = TRUE, con = NULL)
 
 \item{con}{a connection to database}
 }
+\value{
+no return
+}
 \description{
 Add tasks into a project
 }

@@ -7,7 +7,7 @@
 #' @param clean whether to clean existing tasks
 #' @param con a connection to database
 #'
-#' @return
+#' @return no return
 #' @export
 task_add <- function(project, num, clean = TRUE, con = NULL) {
     new_connection <- ifelse(is.null(con), TRUE, FALSE)
@@ -25,18 +25,16 @@ task_add <- function(project, num, clean = TRUE, con = NULL) {
     if (new_connection) {
         db_disconnect(con)
     }
+    return(invisible())
 }
 
-task_count <- function(name) {
-
-}
 
 #' Clear all tasks in a project
 #'
 #' @param project project name
 #' @param con a connection to database
 #'
-#' @return
+#' @return no return
 #' @export
 task_clean <- function(project, con = NULL) {
     new_connection <- ifelse(is.null(con), TRUE, FALSE)
@@ -46,6 +44,7 @@ task_clean <- function(project, con = NULL) {
     if (new_connection) {
         db_disconnect(con)
     }
+    return(invisible())
 }
 
 
@@ -54,12 +53,12 @@ task_clean <- function(project, con = NULL) {
 #' @param project project name
 #' @param con a connection to database
 #'
-#' @return
+#' @return a table to show task status
 #' @export
 task_status <- function(project, con = NULL) {
     sql <- sprintf("SELECT status, COUNT(*) FROM task_%s GROUP BY status", project)
     res <- db_sql(sql, DBI::dbGetQuery, con)
     res$status <- ifelse(is.na(res$status), "idle", res$status)
-    res
+    return(res)
 }
 

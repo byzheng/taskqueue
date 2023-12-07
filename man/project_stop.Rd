@@ -11,6 +11,9 @@ project_stop(project, con = NULL)
 
 \item{con}{connection to database}
 }
+\value{
+no return
+}
 \description{
 Stop a project
 }

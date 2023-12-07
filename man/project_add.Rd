@@ -9,7 +9,10 @@ project_add(project, memory = 10)
 \arguments{
 \item{project}{project name}
 
-\item{memory}{Memory usage in GB}
+\item{memory}{memory usage in GB}
+}
+\value{
+no returns
 }
 \description{
 Create project to database

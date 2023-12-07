@@ -11,6 +11,9 @@ task_clean(project, con = NULL)
 
 \item{con}{a connection to database}
 }
+\value{
+no return
+}
 \description{
 Clear all tasks in a project
 }

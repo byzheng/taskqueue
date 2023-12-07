@@ -11,6 +11,9 @@ project_start(project, con = NULL)
 
 \item{con}{connection to database}
 }
+\value{
+no return
+}
 \description{
 Start a project
 }

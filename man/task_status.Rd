@@ -11,6 +11,9 @@ task_status(project, con = NULL)
 
 \item{con}{a connection to database}
 }
+\value{
+a table to show task status
+}
 \description{
 Get task status in a project
 }

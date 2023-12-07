@@ -11,6 +11,9 @@ project_get(project, con = NULL)
 
 \item{con}{connection to database}
 }
+\value{
+a table of project information
+}
 \description{
 Get a project
 }

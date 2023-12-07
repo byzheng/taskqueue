@@ -11,6 +11,9 @@ project_delete(project, con = NULL)
 
 \item{con}{connection to database}
 }
+\value{
+no return
+}
 \description{
 Delete a project
 }

@@ -13,6 +13,9 @@ project_reset(project, status = c("working", "failed"), con = NULL)
 
 \item{con}{connection to database}
 }
+\value{
+no return
+}
 \description{
 Reset status of all tasks in a project to NULL
 }

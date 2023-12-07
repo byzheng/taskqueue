@@ -4,10 +4,7 @@
 \alias{db_clean}
 \title{Clean all tables and definition}
 \usage{
-db_clean(con)
-}
-\arguments{
-\item{con}{an existing database connection}
+db_clean()
 }
 \value{
 No return
