@@ -61,29 +61,14 @@ project_add <- function(project, memory = 10)
         db_sql(sql, DBI::dbExecute, con)
     }
     # Add settings
-    settings <- list()
-    settings$table <- table
-    settings$name <- project
-    settings$memory <- memory
-    settings$status <- FALSE
-    setting_db <- as.character(lapply(settings,
-                                      function(x)
-                                      {
-                                          x <- paste(x, collapse = ';')
-                                          x <- gsub('\\\\', '\\\\\\\\', x)
-                                          return(x)
-                                      }))
-    names(setting_db) <- names(settings)
     .table_project(con)
 
-    tc_col <- DBI::dbGetQuery(con, 'select * from project where false;')
-    tc_col <- names(tc_col)
-    tc_col <- tc_col[!(tc_col %in% "id")]
-    pos <- match(tc_col, names(setting_db))
-    setting_db <- setting_db[pos]
-    sql <- sprintf('INSERT INTO project (%s) VALUES (%s)  ON CONFLICT DO NOTHING',
-                   paste(sprintf('"%s"', names(setting_db)), collapse = ','),
-                   paste(sprintf('\'%s\'', setting_db), collapse = ','))
+    sql <- sprintf("INSERT INTO project
+                           (name, \"table\", status, memory)
+                    VALUES ('%s', '%s', FALSE, '%s')
+                    ON CONFLICT ON CONSTRAINT project_unique_name
+                    DO UPDATE SET memory='%s'",
+                    project, table, memory, memory)
     res <- DBI::dbExecute(con, sql)
 
     # create a new table

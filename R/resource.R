@@ -46,7 +46,7 @@ resource_get <- function(resource, con = NULL) {
 #' @param type resource type (slurm or computer)
 #' @param host host name
 #' @param workers worker number
-#' @param log_folder log folder
+#' @param log_folder log folder which has to be absolute path.
 #' @param nodename nodename obtained by Sys.info()
 #' @param con a db connection
 #'
