@@ -19,11 +19,11 @@ db_connect <- function(con = NULL)
     }
     con <- DBI::dbConnect(
         RPostgres::Postgres(),
-        dbname = SCHEDULE_OPTIONS("database"),
-        host = SCHEDULE_OPTIONS("host"),
-        port = SCHEDULE_OPTIONS("port"),
-        user = SCHEDULE_OPTIONS("user"),
-        password = SCHEDULE_OPTIONS("password"))
+        dbname = TASKQUEUE_OPTIONS("database"),
+        host = TASKQUEUE_OPTIONS("host"),
+        port = TASKQUEUE_OPTIONS("port"),
+        user = TASKQUEUE_OPTIONS("user"),
+        password = TASKQUEUE_OPTIONS("password"))
     DBI::dbExecute(con, "set client_min_messages to WARNING")
     return(con)
 }

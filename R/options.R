@@ -2,7 +2,7 @@
 
 # Variable, global to package's namespace.
 # This function is not exported to user space and does not need to be documented.
-SCHEDULE_OPTIONS <- settings::options_manager(
+TASKQUEUE_OPTIONS <- settings::options_manager(
     host = Sys.getenv("PGHOST"),
     port = Sys.getenv("PGPORT"),
     user = Sys.getenv("PGUSER"),
@@ -18,23 +18,27 @@ SCHEDULE_OPTIONS <- settings::options_manager(
 #' @section Supported options:
 #' The following options are supported
 #' \itemize{
-#'  \item{\code{sensor_url}}{ The url for sensor API}
+#'  \item{\code{host}}{host of postgreSQL database}
+#'  \item{\code{port}}{port of postgreSQL database}
+#'  \item{\code{user}}{user name of postgreSQL database}
+#'  \item{\code{password}}{pasword of postgreSQL database}
+#'  \item{\code{database}}{database name of postgreSQL database}
 #' }
 #'
 #' @export
-schedule_options <- function(...){
+taskqueue_options <- function(...){
     # protect against the use of reserved words.
     settings::stop_if_reserved(...)
     args <- list(...)
     if (sum(nchar(names(args)) == 0) > 0) {
         stop("all arguments should be named")
     }
-    SCHEDULE_OPTIONS(...)
+    TASKQUEUE_OPTIONS(...)
 }
 
 #' Reset global options for pkg
 #'
 #' @export
-schedule_reset <- function() {
-    settings::reset(SCHEDULE_OPTIONS)
+taskqueue_reset <- function() {
+    settings::reset(TASKQUEUE_OPTIONS)
 }
