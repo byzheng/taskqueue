@@ -12,6 +12,13 @@ Several R packages have been using for parallel computing (e.g. [High-Performanc
 
 ## Installation 
 
+Install the developing version from [Github](https://github.com/byzheng/taskqueue).
+
+```r
+devtools::install_github('byzheng/taskqueue')
+```
+
+
 ## Resource
 
 A computing resource is defined as a facility/computer which can run multiple jobs/workers.
