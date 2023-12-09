@@ -3,11 +3,11 @@
 # Variable, global to package's namespace.
 # This function is not exported to user space and does not need to be documented.
 TASKQUEUE_OPTIONS <- settings::options_manager(
-    host = Sys.getenv("PGHOST"),
-    port = Sys.getenv("PGPORT"),
-    user = Sys.getenv("PGUSER"),
-    password = Sys.getenv("PGPASSWORD"),
-    database = Sys.getenv("PGDATABASE")
+    host = Sys.getenv("TQ_HOST"),
+    port = Sys.getenv("TQ_PORT"),
+    user = Sys.getenv("TQ_USER"),
+    password = Sys.getenv("TQ_PASSWORD"),
+    database = Sys.getenv("TQ_DATABASE")
     )
 
 
@@ -26,6 +26,7 @@ TASKQUEUE_OPTIONS <- settings::options_manager(
 #' }
 #'
 #' @export
+#' @return Options for task queue
 taskqueue_options <- function(...){
     # protect against the use of reserved words.
     settings::stop_if_reserved(...)
@@ -39,6 +40,7 @@ taskqueue_options <- function(...){
 #' Reset global options for pkg
 #'
 #' @export
+#' @return no return
 taskqueue_reset <- function() {
     settings::reset(TASKQUEUE_OPTIONS)
 }

@@ -42,6 +42,22 @@ db_disconnect <- function(con)
     invisible(RPostgres::dbDisconnect(con))
 }
 
+
+#' Test whether db can be connected
+#'
+#' @return TRUE if db is available.
+#' @export
+db_test <- function() {
+    x <- try({
+        con <- db_connect()
+    })
+    if (inherits(x, "try-error")) {
+        return(FALSE)
+    }
+    db_disconnect(con)
+    return(TRUE)
+}
+
 #' Initialize PostgreSQL database for taskqueue
 #'
 #' @return no return

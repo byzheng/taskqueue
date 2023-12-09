@@ -26,6 +26,9 @@ project_resource_add(
 
 \item{workers}{maximum workers for this project.}
 }
+\value{
+no return
+}
 \description{
 Assign a resource to a project
 }

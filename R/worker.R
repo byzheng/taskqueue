@@ -155,7 +155,7 @@ worker <- function(project, fun) {
 #' @param rcode rscript file path
 #' @param modules extra modules to load in slurm
 #'
-#' @return
+#' @return no return
 #' @export
 worker_slurm <- function(project, resource, rcode, modules = NULL) {
 
@@ -279,5 +279,5 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     # for (i in seq_along(cmds)) {
     #     system(cmds[i])
     # }
-
+    return(invisible())
 }

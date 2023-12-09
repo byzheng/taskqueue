@@ -15,9 +15,10 @@ RoxygenNote: 7.2.3
 Depends:
     R (>= 3.0.0),
 Suggests:
-    testthat (>= 2.1.0)
+    testthat (>= 3.0.0)
 Imports: 
     settings,
     stats,
     RPostgres,
     DBI
+Config/testthat/edition: 3

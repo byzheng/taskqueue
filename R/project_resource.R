@@ -49,7 +49,7 @@
 #' @param times worker wall times for this resource
 #' @param workers maximum workers for this project.
 #'
-#' @return
+#' @return no return
 #' @export
 project_resource_add <- function(project,
                                  resource,

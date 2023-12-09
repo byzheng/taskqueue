@@ -15,6 +15,9 @@ worker_slurm(project, resource, rcode, modules = NULL)
 
 \item{modules}{extra modules to load in slurm}
 }
+\value{
+no return
+}
 \description{
 Create a worker on slurm cluster
 }

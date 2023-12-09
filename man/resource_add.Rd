@@ -23,7 +23,7 @@ resource_add(
 
 \item{workers}{worker number}
 
-\item{log_folder}{log folder}
+\item{log_folder}{log folder which has to be absolute path.}
 
 \item{nodename}{nodename obtained by Sys.info()}
 
