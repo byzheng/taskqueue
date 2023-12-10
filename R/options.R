@@ -7,7 +7,8 @@ TASKQUEUE_OPTIONS <- settings::options_manager(
     port = Sys.getenv("TQ_PORT"),
     user = Sys.getenv("TQ_USER"),
     password = Sys.getenv("TQ_PASSWORD"),
-    database = Sys.getenv("TQ_DATABASE")
+    database = Sys.getenv("TQ_DATABASE"),
+    is_test = Sys.getenv("TQ_TEST")
     )
 
 

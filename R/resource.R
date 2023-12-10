@@ -61,16 +61,18 @@ resource_add <- function(name,
                          con = NULL)
 {
     # Check argument
-    stopifnot(is.character(name))
+
     stopifnot(length(name) == 1)
-    stopifnot(is.character(type))
     stopifnot(length(type) == 1)
-    stopifnot(is.character(host))
     stopifnot(length(host) == 1)
-    stopifnot(is.character(log_folder))
     stopifnot(length(log_folder) == 1)
-    stopifnot(is.numeric(workers))
     stopifnot(length(workers) == 1)
+    stopifnot(is.character(name))
+    stopifnot(is.character(type))
+    stopifnot(is.character(host))
+    stopifnot(is.character(log_folder))
+    stopifnot(is.numeric(workers))
+    stopifnot(workers > 0)
     match.arg(type)
 
     if (!(.check_windows_absolute_path(log_folder) |

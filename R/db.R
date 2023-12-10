@@ -47,7 +47,7 @@ db_disconnect <- function(con)
 #'
 #' @return TRUE if db is available.
 #' @export
-db_test <- function() {
+db_is_connect <- function() {
     x <- try({
         con <- db_connect()
     })
@@ -74,6 +74,7 @@ db_init <- function() {
 
 #' Clean all tables and definition
 #'
+#' @export
 #' @return No return
 db_clean <- function() {
     con <- db_connect()
