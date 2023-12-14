@@ -59,11 +59,11 @@
 <div class="section level1">
 <div class="page-header"><h1 id="taskqueue">taskqueue<a class="anchor" aria-label="anchor" href="#taskqueue"></a>
 </h1></div>
-<p>Task Queue is implemented in R based on <a href="https://www.postgresql.org/" class="external-link">PostgreSQL</a> database. This package is only suitable for parallel computing without any communication among parallel tasks (i.e. <a href="https://en.wikipedia.org/wiki/Embarrassingly_parallel" class="external-link">Embarrassingly parallel</a>).</p>
+<p>Task Queue is implemented in R for asynchronous tasks based on <a href="https://www.postgresql.org/" class="external-link">PostgreSQL</a> database. This package is only suitable for parallel computing without any communication among parallel tasks (i.e. <a href="https://en.wikipedia.org/wiki/Embarrassingly_parallel" class="external-link">Embarrassingly parallel</a>).</p>
 <div class="section level2">
 <h2 id="challenge-of-parallel-computing-in-r">Challenge of parallel computing in R<a class="anchor" aria-label="anchor" href="#challenge-of-parallel-computing-in-r"></a>
 </h2>
-<p>Several R packages have been using for parallel computing (e.g. <a href="https://cran.r-project.org/web/views/HighPerformanceComputing.html" class="external-link">High-Performance and Parallel Computing with R</a>.</p>
+<p>Several R packages have been using for parallel computing (e.g. <a href="https://cran.r-project.org/web/views/HighPerformanceComputing.html" class="external-link">High-Performance and Parallel Computing with R</a> which are not suitable for asynchronous tasks.</p>
 <ul>
 <li>Uneven load among cores/workers. Some workers run faster than others and then wait for others to stop.</li>
 </ul>
