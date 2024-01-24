@@ -1,5 +1,12 @@
 # taskqueue
 
+[![](https://www.r-pkg.org/badges/version/taskqueue?color=green)](https://cran.r-project.org/package=taskqueue)
+![R-CMD-check](https://github.com/byzheng/taskqueue/workflows/R-CMD-check/badge.svg) 
+
+[![](http://cranlogs.r-pkg.org/badges/grand-total/taskqueue?color=green)](https://cran.r-project.org/package=taskqueue)
+[![](http://cranlogs.r-pkg.org/badges/last-month/taskqueue?color=green)](https://cran.r-project.org/package=taskqueue)
+[![](http://cranlogs.r-pkg.org/badges/last-week/taskqueue?color=green)](https://cran.r-project.org/package=taskqueue)
+
 Task Queue is implemented in R for asynchronous tasks based on [PostgreSQL](https://www.postgresql.org/) database. This package is only suitable for parallel computing without any communication among parallel tasks (i.e. [Embarrassingly parallel](https://en.wikipedia.org/wiki/Embarrassingly_parallel)).
 
 ## Challenge of parallel computing in R
