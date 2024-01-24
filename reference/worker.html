@@ -52,7 +52,7 @@ is finished until get a shutdown message to stop this function.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">worker</span><span class="op">(</span><span class="va">project</span>, <span class="va">fun</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">worker</span><span class="op">(</span><span class="va">project</span>, <span class="va">fun</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -62,7 +62,11 @@ is finished until get a shutdown message to stop this function.</p>
 
 
 <dt>fun</dt>
-<dd><p>function to run actual works</p></dd>
+<dd><p>function to run actual works which will take task id as the first argument</p></dd>
+
+
+<dt>...</dt>
+<dd><p>other arguments passed to fun</p></dd>
 
 </dl></div>
     <div id="value">

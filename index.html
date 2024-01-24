@@ -72,7 +72,9 @@
 <p>Several R packages have been using for parallel computing (e.g. <a href="https://cran.r-project.org/web/views/HighPerformanceComputing.html" class="external-link">High-Performance and Parallel Computing with R</a> which are not suitable for asynchronous tasks.</p>
 <ul>
 <li>Uneven load among cores/workers. Some workers run faster than others and then wait for others to stop.</li>
+<li>Cannot utilise the new available workers after a parallel task is started.</li>
 </ul>
+<p><code>taskqueue</code> is designed to utilise all available computing resources until all tasks are finished through dynamic allocating tasks to workers.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -80,6 +82,17 @@
 <p>Install the developing version from <a href="https://github.com/byzheng/taskqueue" class="external-link">Github</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'byzheng/taskqueue'</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="postgresql-installation-and-configuration">PostgreSQL installation and configuration<a class="anchor" aria-label="anchor" href="#postgresql-installation-and-configuration"></a>
+</h2>
+<p>As large amount of concurrent requests might simultaneously reach the database, a specific server is preferred to install PostgreSQL database and can be connected by all workers. Following the <a href="https://www.postgresql.org/download/" class="external-link">PostgreSQL website</a> to install and configure PostgreSQL. A database should be created for each user.</p>
+<p>In all workers, five environmental variables should be added to <code>.Renviron</code> file to connect database, i.e.</p>
+<pre><code>PGHOST=
+PGPORT=
+PGUSER=
+PGPASSWORD=
+PGDATABASE=</code></pre>
 </div>
 <div class="section level2">
 <h2 id="resource">Resource<a class="anchor" aria-label="anchor" href="#resource"></a>
@@ -100,27 +113,50 @@
 <li>
 <code>log_folder</code> folder to store log files in the resource</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>Currently only <code>slurm</code> is supported although I plan to implement other types of resource.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/resource_add.html">resource_add</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"hpc"</span>, </span>
 <span>            type <span class="op">=</span> <span class="st">"slurm"</span>, </span>
 <span>            host <span class="op">=</span> <span class="st">"hpc.example.com"</span>, </span>
 <span>            nodename <span class="op">=</span> <span class="st">"hpc"</span>,</span>
 <span>            workers <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>            log_folder <span class="op">=</span> <span class="st">"/home/user/log_folder/"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="slurm">slurm<a class="anchor" aria-label="anchor" href="#slurm"></a>
-</h3>
-</div>
 </div>
 <div class="section level2">
 <h2 id="project">Project<a class="anchor" aria-label="anchor" href="#project"></a>
 </h2>
-<p><code>taskqueue</code> manages tasks by project which has its own resources, working directory and runtime requirements.</p>
-<p>A project can be created by <code>project_add</code> function and assign common common requirements (e.g. memory).</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p><code>taskqueue</code> manages tasks by project which has its own resources, working directory, runtime requirements and other configurations.</p>
+<p>A project with unique name can be created by <code>project_add</code> function and assign common requirements (e.g. memory).</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/project_add.html">project_add</a></span><span class="op">(</span><span class="st">"test_project"</span>, memory <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
-<p>Assign a <code>resource</code> to <code>project</code> which can be used to schedule workers.</p>
-<p>```r project_resource_add(project = “test_project”, resource = “hpc”)</p>
+<p>Assign a <code>resource</code> to <code>project</code> which can be used to schedule workers with configurations (e.g. working directory, total runtimes, project specified workers).</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/project_resource_add.html">project_resource_add</a></span><span class="op">(</span>project <span class="op">=</span> <span class="st">"test_project"</span>, </span>
+<span>                     resource <span class="op">=</span> <span class="st">"hpc"</span><span class="op">)</span></span></code></pre></div>
+<p>Now tasks can be added into database through function <code>task_add</code>, e.g. </p>
+<pre><code><span><span class="fu"><a href="reference/task_add.html">task_add</a></span><span class="op">(</span><span class="va">project</span>, num <span class="op">=</span> <span class="fl">100</span>, clean <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
+<p>Now we can develop a function to actually perform data processing, which</p>
+<ul>
+<li>takes task <code>id</code> as the first argument,</li>
+<li>expect no return values,</li>
+<li>save final output into file system and check whether this task is finished.</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">taskqueue</span><span class="op">)</span></span>
+<span><span class="va">fun_test</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># Check output file</span></span>
+<span>    <span class="va">out_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s.Rds"</span>, <span class="va">i</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">out_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="co"># Perform the actual computing</span></span>
+<span>    <span class="co"># ....</span></span>
+<span>    </span>
+<span>    <span class="co"># Save final output</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">out_file</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/worker.html">worker</a></span><span class="op">(</span><span class="st">"test1"</span>, <span class="va">fun_test</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </div>
