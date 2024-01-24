@@ -76,6 +76,12 @@
     <loc>https://taskqueue.bangyou.me/reference/resource_add.html</loc>
   </url>
   <url>
+    <loc>https://taskqueue.bangyou.me/reference/resource_get.html</loc>
+  </url>
+  <url>
+    <loc>https://taskqueue.bangyou.me/reference/resource_list.html</loc>
+  </url>
+  <url>
     <loc>https://taskqueue.bangyou.me/reference/task_add.html</loc>
   </url>
   <url>
