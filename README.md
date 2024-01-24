@@ -45,7 +45,7 @@ A new resource can be added by `resource_add` with configurations.
 * `type` resource type. Only support `slurm` at this stage
 * `host` network name to access resource
 * `nodename` obtain by `Sys.info()` in the resource
-* `workers` maximum number of available cores in resouirce
+* `workers` maximum number of available cores in resource
 * `log_folder` folder to store log files in the resource
 
 
@@ -60,7 +60,7 @@ resource_add(name = "hpc",
             log_folder = "/home/user/log_folder/")
 ```
 
-
+`log_folder` is important for troubleshooting and split by `project`. It wouble be better to store in the high speed hard drive as the frequent I/O process to write log files.
 
 ## Project
 
@@ -92,6 +92,8 @@ Now we can develop a function to actually perform data processing, which
 * expect no return values,
 * save final output into file system and check whether this task is finished.
 
+Finally, call `worker` to run wrapper function with project name.
+
 ```r
 library(taskqueue)
 fun_test <- function(i) {
@@ -109,3 +111,33 @@ fun_test <- function(i) {
 
 worker("test1", fun_test)
 ```
+
+After developing and testing the wrapper function, we can save it into a file (e.g. `rcode.R`) and then schedule to run it with following functions.
+
+* Reset all or `failed`/`working` tasks to `idle` status with `project_reset`
+* Start the project to allow workers consuming tasks with `project_start`
+* Schedule tasks into resources (e.g. `worker_slurm` for slurm cluster)
+* Check task status with `task_status`
+* Stop project with `project_stop`
+
+
+```r
+# Reset status for all tasks in a project 
+project_reset("test1")
+# Start project
+project_start("test1")
+# Schedule task on slurm resource `hpc`
+worker_slurm("test1", "hpc", "rcode.R", modules = "sqlite/3.43.1")
+# Check status of all tasks
+task_status("test1")
+# Stop the project
+project_stop("test1")
+
+```
+
+A task has four status 
+
+* `idle`: task is not running.
+* `working`: task is still running on one of worker.
+* `failed`: task is failed with some reason. Check the log folder for trouble shooting.
+* `finished`: task is finished without errors.
