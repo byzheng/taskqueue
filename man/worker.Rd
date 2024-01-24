@@ -4,12 +4,14 @@
 \alias{worker}
 \title{Execute a job on cluster}
 \usage{
-worker(project, fun)
+worker(project, fun, ...)
 }
 \arguments{
 \item{project}{project name}
 
-\item{fun}{function to run actual works}
+\item{fun}{function to run actual works which will take task id as the first argument}
+
+\item{...}{other arguments passed to fun}
 }
 \value{
 No return is expected from this function

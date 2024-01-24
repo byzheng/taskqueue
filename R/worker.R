@@ -6,7 +6,8 @@
 #' A worker will listen task channel to get a new job, run this job and mark job
 #' is finished until get a shutdown message to stop this function.
 #' @param project project name
-#' @param fun function to run actual works
+#' @param fun function to run actual works which will take task id as the first argument
+#' @param ... other arguments passed to fun
 #'
 #' @return No return is expected from this function
 #' @examples
@@ -14,7 +15,7 @@
 #' worker("test_project", mean)
 #' }
 #' @export
-worker <- function(project, fun) {
+worker <- function(project, fun, ...) {
 
     # Test fun
     if (!is.function(fun)) {
@@ -99,7 +100,7 @@ worker <- function(project, fun) {
 
         # Conduct actual work
         x <- try({
-            fun(id)
+            fun(id, ...)
         }, silent = TRUE)
         if (inherits(x, "try-error")) {
             message(paste("Failed to work on ", id, " as error: ", x))

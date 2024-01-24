@@ -54,6 +54,7 @@ test_that("resource", {
                      workers = 10,
                      log_folder = "log_folder")
     })
+    skip_if(Sys.info()["sysname"] != "windows")
     expect_no_error({
         resource_add(name = "this-computer",
                      type = "slurm",
