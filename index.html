@@ -109,7 +109,7 @@ PGDATABASE=</code></pre>
 <li>
 <code>nodename</code> obtain by <code><a href="https://rdrr.io/r/base/Sys.info.html" class="external-link">Sys.info()</a></code> in the resource</li>
 <li>
-<code>workers</code> maximum number of available cores in resouirce</li>
+<code>workers</code> maximum number of available cores in resource</li>
 <li>
 <code>log_folder</code> folder to store log files in the resource</li>
 </ul>
@@ -121,6 +121,7 @@ PGDATABASE=</code></pre>
 <span>            nodename <span class="op">=</span> <span class="st">"hpc"</span>,</span>
 <span>            workers <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>            log_folder <span class="op">=</span> <span class="st">"/home/user/log_folder/"</span><span class="op">)</span></span></code></pre></div>
+<p><code>log_folder</code> is important for troubleshooting and split by <code>project</code>. It wouble be better to store in the high speed hard drive as the frequent I/O process to write log files.</p>
 </div>
 <div class="section level2">
 <h2 id="project">Project<a class="anchor" aria-label="anchor" href="#project"></a>
@@ -141,6 +142,7 @@ PGDATABASE=</code></pre>
 <li>expect no return values,</li>
 <li>save final output into file system and check whether this task is finished.</li>
 </ul>
+<p>Finally, call <code>worker</code> to run wrapper function with project name.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">taskqueue</span><span class="op">)</span></span>
 <span><span class="va">fun_test</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
@@ -157,6 +159,40 @@ PGDATABASE=</code></pre>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/worker.html">worker</a></span><span class="op">(</span><span class="st">"test1"</span>, <span class="va">fun_test</span><span class="op">)</span></span></code></pre></div>
+<p>After developing and testing the wrapper function, we can save it into a file (e.g. <code>rcode.R</code>) and then schedule to run it with following functions.</p>
+<ul>
+<li>Reset all or <code>failed</code>/<code>working</code> tasks to <code>idle</code> status with <code>project_reset</code>
+</li>
+<li>Start the project to allow workers consuming tasks with <code>project_start</code>
+</li>
+<li>Schedule tasks into resources (e.g. <code>worker_slurm</code> for slurm cluster)</li>
+<li>Check task status with <code>task_status</code>
+</li>
+<li>Stop project with <code>project_stop</code>
+</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reset status for all tasks in a project </span></span>
+<span><span class="fu"><a href="reference/project_reset.html">project_reset</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></span>
+<span><span class="co"># Start project</span></span>
+<span><span class="fu"><a href="reference/project_start.html">project_start</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></span>
+<span><span class="co"># Schedule task on slurm resource `hpc`</span></span>
+<span><span class="fu"><a href="reference/worker_slurm.html">worker_slurm</a></span><span class="op">(</span><span class="st">"test1"</span>, <span class="st">"hpc"</span>, <span class="st">"rcode.R"</span>, modules <span class="op">=</span> <span class="st">"sqlite/3.43.1"</span><span class="op">)</span></span>
+<span><span class="co"># Check status of all tasks</span></span>
+<span><span class="fu"><a href="reference/task_status.html">task_status</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></span>
+<span><span class="co"># Stop the project</span></span>
+<span><span class="fu"><a href="reference/project_stop.html">project_stop</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></span></code></pre></div>
+<p>A task has four status</p>
+<ul>
+<li>
+<code>idle</code>: task is not running.</li>
+<li>
+<code>working</code>: task is still running on one of worker.</li>
+<li>
+<code>failed</code>: task is failed with some reason. Check the log folder for trouble shooting.</li>
+<li>
+<code>finished</code>: task is finished without errors.</li>
+</ul>
 </div>
 </div>
   </div>
