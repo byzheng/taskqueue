@@ -6,8 +6,12 @@ Maintainer: Bangyou Zheng <bangyou.zheng@csiro.au>
 Authors@R: person("Bangyou", "Zheng", 
                email = "bangyou.zheng@csiro.au", 
                role = c("aut", "cre"))
-Description: Tasks of embarrassingly parallel are scheduled 
-        based on postgreSQL.
+Description: Task Queue is implemented in R for asynchronous tasks based on 
+             'PostgreSQL' <https://www.postgresql.org/> database to deal with 
+             uneven load balance among workers and utilise new available workers. 
+             This package is only suitable for parallel computing without 
+             any communication among parallel tasks and to distribute asynchronous tasks
+             to multiple workers. 
 URL: https://taskqueue.bangyou.me/,
     https://github.com/byzheng/taskqueue
 BugReports: https://github.com/byzheng/taskqueue/issues
