@@ -8,6 +8,9 @@ Authors@R: person("Bangyou", "Zheng",
                role = c("aut", "cre"))
 Description: Tasks of embarrassingly parallel are scheduled 
         based on postgreSQL.
+URL: https://taskqueue.bangyou.me/,
+    https://github.com/byzheng/taskqueue
+BugReports: https://github.com/byzheng/taskqueue/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
