@@ -242,7 +242,8 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     template <- gsub("\\$workers", workers, template)
 
     # Job name
-    job_name <- paste0(project,"-", resource)
+    job_suffix <- stringi::stri_rand_strings(1, 6, '[a-z]')
+    job_name <- paste0(project,"-", resource, "-", job_suffix)
     template <- gsub("\\$job", job_name, template)
 
     # create submit file for slurm

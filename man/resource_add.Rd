@@ -17,7 +17,7 @@ resource_add(
 \arguments{
 \item{name}{resource name}
 
-\item{type}{resource type (slurm or computer)}
+\item{type}{resource type (e.g. slurm or computer)}
 
 \item{host}{host name}
 

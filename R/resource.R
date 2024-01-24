@@ -22,6 +22,10 @@
     return(invisible())
 }
 
+#' Get all resource
+#'
+#' @return a data frame for all resources
+#' @export
 resource_list <- function() {
     sql <- "SELECT * FROM resource where TRUE"
     con <- db_connect()
@@ -30,6 +34,13 @@ resource_list <- function() {
     resources
 }
 
+#' Get a resource
+#'
+#' @param resource resource name
+#' @param con a db connection
+#'
+#' @return a data frame for selected resource
+#' @export
 resource_get <- function(resource, con = NULL) {
     sql <- sprintf("SELECT * from resource where name='%s'", resource)
     r <- db_sql(sql, DBI::dbGetQuery, con)
@@ -43,7 +54,7 @@ resource_get <- function(resource, con = NULL) {
 #' Add a new resource
 #'
 #' @param name resource name
-#' @param type resource type (slurm or computer)
+#' @param type resource type (e.g. slurm or computer)
 #' @param host host name
 #' @param workers worker number
 #' @param log_folder log folder which has to be absolute path.
