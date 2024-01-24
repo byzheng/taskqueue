@@ -49,8 +49,18 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/byzheng/taskqueue/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -146,7 +156,7 @@ PGDATABASE=</code></pre>
 </ul>
 <p>Finally, call <code>worker</code> to run wrapper function with project name.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">taskqueue</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://taskqueue.bangyou.me/">taskqueue</a></span><span class="op">)</span></span>
 <span><span class="va">fun_test</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Check output file</span></span>
 <span>    <span class="va">out_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s.Rds"</span>, <span class="va">i</span><span class="op">)</span></span>
@@ -200,7 +210,15 @@ PGDATABASE=</code></pre>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/byzheng/taskqueue/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/byzheng/taskqueue/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
