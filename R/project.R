@@ -165,7 +165,10 @@ project_get <- function(project, con = NULL) {
 #' @export
 project_resource_get <- function(project, con = NULL) {
     project_info <- project_get(project, con)
-    sql <- sprintf("SELECT * from project_resource where project_id='%s'",
+    sql <- sprintf("SELECT project_resource.*, resource.name AS resource, resource.type
+                        from project_resource
+                        LEFT JOIN resource ON project_resource.resource_id = resource.id
+                   where project_id='%s'",
                    project_info$id)
     p_r <- db_sql(sql, DBI::dbGetQuery, con)
     p_r
