@@ -164,13 +164,13 @@ worker <- function(project, fun, ...) {
             next
         }
         # Check run time
-        if (total_runtime > 0) {
+        if (walltime > 0) {
 
             # Stop this worker if total runtime is almost longer than walltime
             task_runtime <- as.numeric(Sys.time()) - task_start_time
             tasks_runtime <- c(tasks_runtime, task_runtime)
 
-            gap_time <- quantile(tasks_runtime, 0.9)
+            gap_time <- stats::quantile(tasks_runtime, 0.9)
             if (sum(tasks_runtime) + gap_time > walltime) {
                 break
             }
