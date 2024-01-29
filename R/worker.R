@@ -40,13 +40,13 @@ worker <- function(project, fun, ...) {
     resource_name <- Sys.getenv("TASKQUEUE_RESOURCE")
 
     if (nchar(resource_name) > 0) {
-        stop("get environment variable TASKQUEUE_RESOURCE")
         pos <- project_resource$resource == resource_name & project_resource$type == "slurm"
         project_resource  <- project_resource[pos,]
         if (nrow(project_resource) == 0) {
             stop("Cannot find the resource: ", resource_name, " in the database.")
         }
         walltime <- project_resource$times[1] * 3600
+        message("The maximum runtime for this worker is ", walltime, "s")
     }
 
     tasks_runtime <- c()
@@ -164,14 +164,17 @@ worker <- function(project, fun, ...) {
             next
         }
         # Check run time
+        task_runtime <- as.numeric(Sys.time()) - task_start_time
+        tasks_runtime <- c(tasks_runtime, task_runtime)
+        message("The runtime for this task is ", round(task_runtime), "s")
+        message("The average runtime for all tasks until now is ", round(mean(tasks_runtime)), "s")
         if (walltime > 0) {
 
             # Stop this worker if total runtime is almost longer than walltime
-            task_runtime <- as.numeric(Sys.time()) - task_start_time
-            tasks_runtime <- c(tasks_runtime, task_runtime)
 
             gap_time <- stats::quantile(tasks_runtime, 0.9)
             if (sum(tasks_runtime) + gap_time > walltime) {
+                message("No more tasks as no enough runtime now.")
                 break
             }
         }
