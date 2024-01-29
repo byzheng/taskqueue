@@ -37,10 +37,10 @@ worker <- function(project, fun, ...) {
     walltime <- -1
     # Get maximum runtime for slurm resource
     project_resource <- project_resource_get(project)
-    resource_name <- Sys.getenv("$TASKQUEUE_RESOURCE")
+    resource_name <- Sys.getenv("TASKQUEUE_RESOURCE")
 
     if (nchar(resource_name) > 0) {
-        stop()
+        stop("get environment variable TASKQUEUE_RESOURCE")
         pos <- project_resource$resource == resource_name & project_resource$type == "slurm"
         project_resource  <- project_resource[pos,]
         if (nrow(project_resource) == 0) {
@@ -266,7 +266,7 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     }
 
     # Consider current idle tasks.
-    idle_task <- t_status$count[t_status$status == "idle"]
+    idle_task <- as.integer(t_status$count[t_status$status == "idle"])
     if (length(idle_task) > 0) {
         workers <- min(workers, idle_task)
     }

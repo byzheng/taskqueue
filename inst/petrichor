@@ -8,7 +8,8 @@
 #SBATCH --error=$job_%j.err
 #SBATCH --account=$account
 #SBATCH --array=1-$workers
-#SBATCH --export=TASKQUEUE_RESOURCE=petrichor
+
+SET TASKQUEUE_RESOURCE="petrichor""
 tic=`date +%s`
 echo "Start Time = "`date`
 
