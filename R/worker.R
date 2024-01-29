@@ -52,7 +52,7 @@ worker <- function(project, fun, ...) {
     tasks_runtime <- c()
     # Working on tasks
     while (TRUE) {
-
+        message("")
         task_start_time <- as.numeric(Sys.time())
         # Try to connect database
         x <- try({
