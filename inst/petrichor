@@ -9,6 +9,7 @@
 #SBATCH --account=$account
 #SBATCH --array=1-$workers
 
+export TASKQUEUE_RESOURCE="petrichor"
 tic=`date +%s`
 echo "Start Time = "`date`
 

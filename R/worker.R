@@ -27,14 +27,33 @@ worker <- function(project, fun, ...) {
     if (!is.character(project)) {
         stop("Project is not a character")
     }
+    start_time <- as.numeric(Sys.time())
     # Wait for a random time to reduce the probability of all workers to reach
     # database at the same time
     Sys.sleep(runif(1) * 10)
     task_table <- sprintf("task_%s", project)
     message("Start on this worker.")
+
+    walltime <- -1
+    # Get maximum runtime for slurm resource
+    project_resource <- project_resource_get(project)
+    resource_name <- Sys.getenv("TASKQUEUE_RESOURCE")
+
+    if (nchar(resource_name) > 0) {
+        pos <- project_resource$resource == resource_name & project_resource$type == "slurm"
+        project_resource  <- project_resource[pos,]
+        if (nrow(project_resource) == 0) {
+            stop("Cannot find the resource: ", resource_name, " in the database.")
+        }
+        walltime <- project_resource$times[1] * 3600
+        message("The maximum runtime for this worker is ", walltime, "s")
+    }
+
+    tasks_runtime <- c()
     # Working on tasks
     while (TRUE) {
-
+        message("")
+        task_start_time <- as.numeric(Sys.time())
         # Try to connect database
         x <- try({
             db_worker <- db_connect()
@@ -144,6 +163,21 @@ worker <- function(project, fun, ...) {
             Sys.sleep(runif(1) * 10)
             next
         }
+        # Check run time
+        task_runtime <- as.numeric(Sys.time()) - task_start_time
+        tasks_runtime <- c(tasks_runtime, task_runtime)
+        message("The runtime for this task is ", round(task_runtime), "s")
+        message("The average runtime for all tasks until now is ", round(mean(tasks_runtime)), "s")
+        if (walltime > 0) {
+
+            # Stop this worker if total runtime is almost longer than walltime
+
+            gap_time <- stats::quantile(tasks_runtime, 0.9)
+            if (sum(tasks_runtime) + gap_time > walltime) {
+                message("No more tasks as no enough runtime now.")
+                break
+            }
+        }
     }
     message("Finish to run on this worker.")
 
@@ -235,7 +269,7 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     }
 
     # Consider current idle tasks.
-    idle_task <- t_status$count[t_status$status == "idle"]
+    idle_task <- as.integer(t_status$count[t_status$status == "idle"])
     if (length(idle_task) > 0) {
         workers <- min(workers, idle_task)
     }
