@@ -194,6 +194,8 @@ worker <- function(project, fun, ...) {
 #' @export
 worker_slurm <- function(project, resource, rcode, modules = NULL) {
 
+    message("Schedule workers...")
+    message("Project: ", project)
     # Get relative information
     con <- db_connect()
     project_info <- project_get(project, con)
@@ -201,11 +203,19 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     pr_info <- project_resource_get(project, con)
     t_status <- task_status(project, con)
     db_disconnect(con)
+
     pr_info <- pr_info[pr_info$resource_id == resource_info$id,]
 
     if (nrow(pr_info) != 1) {
         stop("Cannot find resource (", resource, ") for project (", project, ")")
     }
+
+    message("Resource name: ", resource_info$name)
+    message("Resource host: ", resource_info$host)
+    message("Resource type: ", resource_info$type)
+    message("Resource log folder: ", resource_info$log_folder)
+
+
     # Check template file for petrichor
     template <- system.file("petrichor", package = "taskqueue")
     if (!file.exists(template)) {
@@ -227,6 +237,10 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     if (!file.exists(rcode_path)) {
         stop("Cannot find rcode file: ", rcode_path)
     }
+    message("RScript: ", rcode_path)
+    message("Working director: ", pr_info$working_dir)
+    message("Walltime: ", pr_info$times, "h")
+    message("Memory: ", project_info$memory, "GB")
     template <- gsub("\\$rcode", rcode, template)
     template <- gsub("\\$working_dir", pr_info$working_dir, template)
     template <- gsub("\\$times", pr_info$times, template)
@@ -273,47 +287,30 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
     if (length(idle_task) > 0) {
         workers <- min(workers, idle_task)
     }
+    message("Workers: ", workers)
     template <- gsub("\\$workers", workers, template)
 
     # Job name
     job_suffix <- stringi::stri_rand_strings(1, 6, '[a-z]')
     job_name <- paste0(project,"-", resource, "-", job_suffix)
+
+    message("Job name on ", resource_info$host, ": ", job_name)
     template <- gsub("\\$job", job_name, template)
 
     # create submit file for slurm
     sub_file <- file.path(sub_folder, job_name)
     template <- gsub("\\$rout", sub_file, template)
+
+    message("Submit file: ", sub_file)
     writeLines(template, sub_file)
 
     # Submit a job to cluster
+    message("Run sbatch on ", resource_info$host)
     cmd <- sprintf("ssh %s 'cd %s;sbatch %s'",
                    resource_info$host, sub_folder, sub_file)
     Sys.sleep(1)
     system(cmd)
 
-    # sub_files <- c()
-    # i <- 1
-    # for (i in seq_len(workers)) {
-    #     template_i <- template
-    #     file_str <- stringi::stri_rand_strings(1, 16, "[a-zA-Z]")
-    #     # Job name
-    #     job_name <- paste0(project,"-", resource, "-", file_str)
-    #     template_i <- gsub("\\$job", job_name, template_i)
-    #
-    #     # create submit file for slurm
-    #     sub_file <- file.path(sub_folder, job_name)
-    #     template_i <- gsub("\\$rout", sub_file, template_i)
-    #     writeLines(template_i, sub_file)
-    #     sub_files <- c(sub_files, sub_file)
-    # }
-    #
-    # # Submit a job to cluster
-    #
-    # cmds <- sprintf("ssh %s 'cd %s;sbatch %s'",
-    #                resource_info$host, sub_folder, sub_files)
-    # Sys.sleep(1)
-    # for (i in seq_along(cmds)) {
-    #     system(cmds[i])
-    # }
+    message("Finish to schedule workers")
     return(invisible())
 }
