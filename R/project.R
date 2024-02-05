@@ -115,12 +115,15 @@ project_stop <- function(project, con = NULL) {
 #' Reset status of all tasks in a project to NULL
 #'
 #' @param project project name
-#' @param status status to reset
+#' @param status status to reset (e.g. working, failed, or all), all tasks if status = all
 #' @param con connection to database
 #'
 #' @return no return
 #' @export
 project_reset <- function(project, status = c("working", "failed"), con = NULL) {
+    if ("all" %in% status) {
+        status <- c("working", "failed", "finished")
+    }
     new_connection <- ifelse(is.null(con), TRUE, FALSE)
     con <- db_connect(con)
 
@@ -218,3 +221,28 @@ project_delete <- function(project, con = NULL) {
     }
     return(invisible())
 }
+
+
+
+#' Get project status
+#'
+#' @param project project name
+#' @param con a connection to database
+#'
+#' @return no return
+#' @export
+project_status <- function(project, con = NULL) {
+    project_info <- project_get(project, con = con)
+
+    if (project_info$status) {
+        message("Project is running...")
+    } else {
+        message("Project is stopped.")
+    }
+    message("Task status: ")
+    tasks <- task_status(project, con = con)
+    print(tasks)
+    return(invisible())
+}
+
+

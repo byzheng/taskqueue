@@ -238,7 +238,7 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
         stop("Cannot find rcode file: ", rcode_path)
     }
     message("RScript: ", rcode_path)
-    message("Working director: ", pr_info$working_dir)
+    message("Working directory: ", pr_info$working_dir)
     message("Walltime: ", pr_info$times, "h")
     message("Memory: ", project_info$memory, "GB")
     template <- gsub("\\$rcode", rcode, template)

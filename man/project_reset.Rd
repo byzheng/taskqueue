@@ -9,7 +9,7 @@ project_reset(project, status = c("working", "failed"), con = NULL)
 \arguments{
 \item{project}{project name}
 
-\item{status}{status to reset}
+\item{status}{status to reset (e.g. working, failed, or all), all tasks if status = all}
 
 \item{con}{connection to database}
 }
