@@ -62,3 +62,36 @@ task_status <- function(project, con = NULL) {
     return(res)
 }
 
+
+
+
+#' Reset status of all tasks in a project to NULL
+#'
+#' @param project project name
+#' @param status status to reset (e.g. working, failed, or all), all tasks if status = all
+#' @param con connection to database
+#'
+#' @return no return
+#' @export
+task_reset <- function(project, status = c("working", "failed"), con = NULL) {
+    if ("all" %in% status) {
+        status <- c("working", "failed", "finished")
+    }
+    new_connection <- ifelse(is.null(con), TRUE, FALSE)
+    con <- db_connect(con)
+
+    sql <- "SELECT unnest(enum_range(NULL::task_status));"
+    define_status <- db_sql(sql, DBI::dbGetQuery, con)
+    pos <- !(status %in% define_status$unnest )
+    if (sum(pos) > 0) {
+        stop("Cannot find status: ", paste(status[pos], sep = ", "))
+    }
+    status_sql <- paste(paste0("'", status, "'"), collapse = ", ")
+    sql <- sprintf("UPDATE task_%s SET status=NULL WHERE status  in (%s);",
+                   project, status_sql)
+    a <- db_sql(sql, DBI::dbExecute, con)
+    if (new_connection) {
+        db_disconnect(con)
+    }
+    return(invisible())
+}

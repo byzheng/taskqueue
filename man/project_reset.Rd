@@ -2,14 +2,12 @@
 % Please edit documentation in R/project.R
 \name{project_reset}
 \alias{project_reset}
-\title{Reset status of all tasks in a project to NULL}
+\title{Reset a project}
 \usage{
-project_reset(project, status = c("working", "failed"), con = NULL)
+project_reset(project, con = NULL)
 }
 \arguments{
 \item{project}{project name}
-
-\item{status}{status to reset (e.g. working, failed, or all), all tasks if status = all}
 
 \item{con}{connection to database}
 }
@@ -17,5 +15,5 @@ project_reset(project, status = c("working", "failed"), con = NULL)
 no return
 }
 \description{
-Reset status of all tasks in a project to NULL
+Reset a project
 }
