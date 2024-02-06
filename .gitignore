@@ -9,4 +9,3 @@ CRAN-RELEASE
 *.db-shm
 *.db-wal
 docs
-deploy.R

@@ -118,3 +118,38 @@ project_resource_add <- function(project,
     res <- DBI::dbExecute(con, sql)
     db_disconnect(con)
 }
+
+
+#' Delete all logs for a project resource
+#'
+#' @param project project name
+#' @param resource resource name
+#' @param con connection to database
+#'
+#' @return no return
+#' @export
+project_resource_log_delete <- function(project,
+                                 resource, con = NULL) {
+
+    if (length(project) != 1 || length(resource) != 1) {
+        stop("Require a single project or resource")
+    }
+    pr_info <- project_resource_get(project, con = con)
+    r_info <- resource_get(resource, con = con)
+    if (r_info$type != "slurm") {
+        stop("Only support slurm now")
+    }
+
+    if (!(r_info$id %in% pr_info$resource_id)) {
+        stop("Resource ", resource, " is not for project ", project)
+    }
+    log_folder <- file.path(r_info$log_folder, project)
+    if (!dir.exists(log_folder)) {
+        warning("Cannot find log folder")
+        return(invisible())
+    }
+
+    files <- list.files(log_folder, sprintf("^%s-%s.*$", project, resource), full.names = TRUE)
+    a <- lapply(files, file.remove)
+    return(invisible())
+}
