@@ -70,7 +70,13 @@
     <loc>https://taskqueue.bangyou.me/reference/project_resource_get.html</loc>
   </url>
   <url>
+    <loc>https://taskqueue.bangyou.me/reference/project_resource_log_delete.html</loc>
+  </url>
+  <url>
     <loc>https://taskqueue.bangyou.me/reference/project_start.html</loc>
+  </url>
+  <url>
+    <loc>https://taskqueue.bangyou.me/reference/project_status.html</loc>
   </url>
   <url>
     <loc>https://taskqueue.bangyou.me/reference/project_stop.html</loc>
@@ -85,10 +91,16 @@
     <loc>https://taskqueue.bangyou.me/reference/resource_list.html</loc>
   </url>
   <url>
+    <loc>https://taskqueue.bangyou.me/reference/slurm_deploy.html</loc>
+  </url>
+  <url>
     <loc>https://taskqueue.bangyou.me/reference/task_add.html</loc>
   </url>
   <url>
     <loc>https://taskqueue.bangyou.me/reference/task_clean.html</loc>
+  </url>
+  <url>
+    <loc>https://taskqueue.bangyou.me/reference/task_reset.html</loc>
   </url>
   <url>
     <loc>https://taskqueue.bangyou.me/reference/task_status.html</loc>
