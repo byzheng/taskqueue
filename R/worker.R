@@ -52,7 +52,7 @@ worker <- function(project, fun, ...) {
     tasks_runtime <- c()
     # Working on tasks
     while (TRUE) {
-        message("")
+        message("Request a new task")
         task_start_time <- as.numeric(Sys.time())
         # Try to connect database
         x <- try({
@@ -99,7 +99,8 @@ worker <- function(project, fun, ...) {
                 }
                 id <- id$id
                 sql_update <- sprintf("UPDATE %s
-                                      SET status='working'
+                                      SET status='working',
+                                          start=current_timestamp
                                       WHERE id=%s;",
                                       task_table,
                                       id)
@@ -125,15 +126,19 @@ worker <- function(project, fun, ...) {
             message(paste("Failed to work on ", id, " as error: ", x))
             message("Try it again later")
 
+
             # Mark as failed
             db_worker <- db_connect()
             DBI::dbWithTransaction(db_worker, {
                 sql <- sprintf("LOCK TABLE %s IN ROW EXCLUSIVE MODE;", task_table)
                 DBI::dbExecute(db_worker, sql)
                 sql_update <- sprintf("UPDATE %s
-                                      SET status='failed'
+                                      SET status='failed',
+                                          finish=current_timestamp,
+                                          message=%s
                                       WHERE id=%s;",
                                       task_table,
+                                      RPostgres::dbQuoteString(db_worker, x),
                                       id)
                 DBI::dbExecute(db_worker, sql_update)
             })
@@ -151,7 +156,10 @@ worker <- function(project, fun, ...) {
             DBI::dbWithTransaction(db_worker, {
                 sql <- sprintf("LOCK TABLE %s IN ROW EXCLUSIVE MODE;", task_table)
                 DBI::dbExecute(db_worker, sql)
-                sql_update <- sprintf("UPDATE %s SET status='finished' WHERE id=%s;",
+                sql_update <- sprintf("UPDATE %s
+                                      SET status='finished',
+                                          finish=current_timestamp
+                                      WHERE id=%s;",
                                       task_table, id)
                 DBI::dbExecute(db_worker, sql_update)
             })

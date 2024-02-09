@@ -37,7 +37,7 @@
 }
 
 
-.is_bin_on_path = function(bin) {
+.is_bin_on_path <- function(bin) {
     if (.Platform$OS.type == "unix") {
         exit_code <- suppressWarnings(system2("command", args = c("-v", bin), stdout = FALSE))
     } else if (.Platform$OS.type == "windows") {

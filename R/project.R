@@ -75,6 +75,9 @@ project_add <- function(project, memory = 10)
     sql <- sprintf('CREATE TABLE IF NOT EXISTS %s (
          	"id" INTEGER NULL DEFAULT NULL,
         	"status" task_status NULL DEFAULT NULL,
+        	"start" timestamp with time zone,
+            "finish" timestamp with time zone,
+            "message" text COLLATE pg_catalog."default",
         	PRIMARY KEY ("id")
         )
         ;', table)
@@ -121,11 +124,14 @@ project_stop <- function(project, con = NULL) {
 #' @export
 project_reset <- function(project, con = NULL) {
     # Reset all tasks
+    message("Reset all tasks")
     task_reset(project, status = "all", con = con)
     # Stop project
+    message("Stop project")
     project_stop(project, con = con)
 
     # Clear log files
+    message("Clear log files")
     pr_info <- project_resource_get(project, con = con)
     for (i in seq_len(nrow(pr_info))) {
         project_resource_log_delete(project, pr_info$resource, con = con)

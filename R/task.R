@@ -82,12 +82,17 @@ task_reset <- function(project, status = c("working", "failed"), con = NULL) {
 
     sql <- "SELECT unnest(enum_range(NULL::task_status));"
     define_status <- db_sql(sql, DBI::dbGetQuery, con)
-    pos <- !(status %in% define_status$unnest )
+    pos <- !(status %in% define_status$unnest)
     if (sum(pos) > 0) {
         stop("Cannot find status: ", paste(status[pos], sep = ", "))
     }
     status_sql <- paste(paste0("'", status, "'"), collapse = ", ")
-    sql <- sprintf("UPDATE task_%s SET status=NULL WHERE status  in (%s);",
+    sql <- sprintf("UPDATE task_%s
+                   SET status=NULL,
+                       start=NULL,
+                       finish=NULL,
+                       message=NULL
+                   WHERE status in (%s);",
                    project, status_sql)
     a <- db_sql(sql, DBI::dbExecute, con)
     if (new_connection) {
