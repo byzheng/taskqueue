@@ -46,7 +46,7 @@
 #' @param resource resource name
 #' @param working_dir working directory for this resource
 #' @param account optional for account to use this resource
-#' @param times worker wall times for this resource
+#' @param hours worker wall times in hours for this resource
 #' @param workers maximum workers for this project.
 #'
 #' @return no return
@@ -55,18 +55,18 @@ project_resource_add <- function(project,
                                  resource,
                                  working_dir,
                                  account = NULL,
-                                 times = 1,
+                                 hours = 1,
                                  workers = NULL) {
     # Checking arguments
     stopifnot(is.character(project))
     stopifnot(is.character(resource))
     stopifnot(is.character(working_dir))
-    stopifnot(is.numeric(times))
+    stopifnot(is.numeric(hours))
     if (length(working_dir) != 1) {
         stop("working_dir should be single value")
     }
-    if (length(times) != 1) {
-        stop("times should be single value")
+    if (length(hours) != 1) {
+        stop("hours should be single value")
     }
 
     # insert/update database
@@ -97,12 +97,12 @@ project_resource_add <- function(project,
         settings$workers <- workers
     }
 
-    if (!is.null(times)) {
-        stopifnot(is.numeric(times))
-        if (length(times) != 1) {
-            stop("times should be single value")
+    if (!is.null(hours)) {
+        stopifnot(is.numeric(hours))
+        if (length(hours) != 1) {
+            stop("hours should be single value")
         }
-        settings$times <- times
+        settings$times <- hours
     }
 
     settings_values <- settings[!grepl("_id", names(settings))]

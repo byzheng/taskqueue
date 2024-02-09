@@ -9,7 +9,7 @@ project_resource_add(
   resource,
   working_dir,
   account = NULL,
-  times = 1,
+  hours = 1,
   workers = NULL
 )
 }
@@ -22,7 +22,7 @@ project_resource_add(
 
 \item{account}{optional for account to use this resource}
 
-\item{times}{worker wall times for this resource}
+\item{hours}{worker wall times in hours for this resource}
 
 \item{workers}{maximum workers for this project.}
 }

@@ -95,3 +95,42 @@ task_reset <- function(project, status = c("working", "failed"), con = NULL) {
     }
     return(invisible())
 }
+
+#' Get tasks by status
+#'
+#' @param project project name
+#' @param status status to reset (e.g. working, failed, or all), all tasks if status = all
+#' @param limit number of rows to return
+#' @param con connection to database
+#'
+#' @return A data frame of tasks
+#' @export
+task_get <- function(project, status = c("failed"), limit = 10, con = NULL) {
+    if ("all" %in% status) {
+        status <- c("working", "failed", "finished")
+    }
+
+    stopifnot(is.numeric(limit))
+    if (length(limit) != 1) {
+        stop("limit should be single value")
+    }
+
+    new_connection <- ifelse(is.null(con), TRUE, FALSE)
+    con <- db_connect(con)
+
+    sql <- "SELECT unnest(enum_range(NULL::task_status));"
+    define_status <- db_sql(sql, DBI::dbGetQuery, con)
+    pos <- !(status %in% define_status$unnest )
+    if (sum(pos) > 0) {
+        stop("Cannot find status: ", paste(status[pos], sep = ", "))
+    }
+    status_sql <- paste(paste0("'", status, "'"), collapse = ", ")
+    sql <- sprintf("SELECT * FROM task_%s WHERE status  in (%s) LIMIT %s;",
+                   project, status_sql, limit)
+    a <- db_sql(sql, DBI::dbGetQuery, con)
+
+    if (new_connection) {
+        db_disconnect(con)
+    }
+    a
+}
