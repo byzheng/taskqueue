@@ -35,3 +35,16 @@
     }
     r
 }
+
+
+.is_bin_on_path = function(bin) {
+    if (.Platform$OS.type == "unix") {
+        exit_code <- suppressWarnings(system2("command", args = c("-v", bin), stdout = FALSE))
+    } else if (.Platform$OS.type == "windows") {
+        exit_code = suppressWarnings(system2("where", args = bin, stdout = FALSE,
+                                             stderr = FALSE))
+    } else {
+        stop("Only support unix and windows")
+    }
+    return(exit_code == 0)
+}

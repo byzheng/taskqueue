@@ -306,10 +306,14 @@ worker_slurm <- function(project, resource, rcode, modules = NULL) {
 
     # Submit a job to cluster
     message("Run sbatch on ", resource_info$host)
-    cmd <- sprintf("ssh %s 'cd %s;sbatch %s'",
-                   resource_info$host, sub_folder, sub_file)
-    Sys.sleep(1)
-    system(cmd)
+    if (.is_bin_on_path("ssh")) {
+        cmd <- sprintf("ssh %s 'cd %s;sbatch %s'",
+                       resource_info$host, sub_folder, sub_file)
+        Sys.sleep(1)
+        system(cmd)
+    } else {
+        stop("Cannot find ssh command")
+    }
 
     message("Finish to schedule workers")
     return(invisible())
