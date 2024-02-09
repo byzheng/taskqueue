@@ -100,6 +100,9 @@
     <loc>https://taskqueue.bangyou.me/reference/task_clean.html</loc>
   </url>
   <url>
+    <loc>https://taskqueue.bangyou.me/reference/task_get.html</loc>
+  </url>
+  <url>
     <loc>https://taskqueue.bangyou.me/reference/task_reset.html</loc>
   </url>
   <url>
