@@ -137,5 +137,6 @@ task_get <- function(project, status = c("failed"), limit = 10, con = NULL) {
     if (new_connection) {
         db_disconnect(con)
     }
+    a$runtime <- (as.numeric(tasks$finish) - as.numeric(tasks$start))
     a
 }
