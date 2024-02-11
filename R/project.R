@@ -118,11 +118,16 @@ project_stop <- function(project, con = NULL) {
 #' Reset a project
 #'
 #' @param project project name
+#' @param log_clean whether to clean log files
 #' @param con connection to database
 #'
 #' @return no return
 #' @export
-project_reset <- function(project, con = NULL) {
+project_reset <- function(project, log_clean = TRUE, con = NULL) {
+    stopifnot(length(project) == 1)
+    stopifnot(is.character(project))
+    stopifnot(length(log_clean) == 1)
+    stopifnot(is.logical(log_clean))
     # Reset all tasks
     message("Reset all tasks")
     task_reset(project, status = "all", con = con)
@@ -130,11 +135,13 @@ project_reset <- function(project, con = NULL) {
     message("Stop project")
     project_stop(project, con = con)
 
-    # Clear log files
-    message("Clear log files")
-    pr_info <- project_resource_get(project, con = con)
-    for (i in seq_len(nrow(pr_info))) {
-        project_resource_log_delete(project, pr_info$resource, con = con)
+    if (log_clean) {
+        # Clear log files
+        message("Clear log files")
+        pr_info <- project_resource_get(project, con = con)
+        for (i in seq_len(nrow(pr_info))) {
+            project_resource_log_delete(project, pr_info$resource, con = con)
+        }
     }
     return(invisible())
 }
