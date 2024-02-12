@@ -111,10 +111,6 @@ task_reset <- function(project, status = c("working", "failed"), con = NULL) {
 #' @return A data frame of tasks
 #' @export
 task_get <- function(project, status = c("failed"), limit = 10, con = NULL) {
-    if ("all" %in% status) {
-        status <- c("working", "failed", "finished")
-    }
-
     stopifnot(is.numeric(limit))
     if (length(limit) != 1) {
         stop("limit should be single value")
@@ -123,20 +119,24 @@ task_get <- function(project, status = c("failed"), limit = 10, con = NULL) {
     new_connection <- ifelse(is.null(con), TRUE, FALSE)
     con <- db_connect(con)
 
-    sql <- "SELECT unnest(enum_range(NULL::task_status));"
-    define_status <- db_sql(sql, DBI::dbGetQuery, con)
-    pos <- !(status %in% define_status$unnest )
-    if (sum(pos) > 0) {
-        stop("Cannot find status: ", paste(status[pos], sep = ", "))
+    if ("all" %in% status) {
+        status_sql <- "true"
+    } else {
+        sql <- "SELECT unnest(enum_range(NULL::task_status));"
+        define_status <- db_sql(sql, DBI::dbGetQuery, con)
+        pos <- !(status %in% define_status$unnest )
+        if (sum(pos) > 0) {
+            stop("Cannot find status: ", paste(status[pos], sep = ", "))
+        }
+        status_sql <- paste0("in (", paste(paste0("'", status, "'"), collapse = ", "), ")")
     }
-    status_sql <- paste(paste0("'", status, "'"), collapse = ", ")
-    sql <- sprintf("SELECT * FROM task_%s WHERE status  in (%s) LIMIT %s;",
+    sql <- sprintf("SELECT * FROM task_%s WHERE status  %s LIMIT %s;",
                    project, status_sql, limit)
     a <- db_sql(sql, DBI::dbGetQuery, con)
 
     if (new_connection) {
         db_disconnect(con)
     }
-    a$runtime <- (as.numeric(tasks$finish) - as.numeric(tasks$start))
+    a$runtime <- (as.numeric(a$finish) - as.numeric(a$start))
     a
 }
