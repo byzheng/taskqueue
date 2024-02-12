@@ -128,9 +128,9 @@ task_get <- function(project, status = c("failed"), limit = 10, con = NULL) {
         if (sum(pos) > 0) {
             stop("Cannot find status: ", paste(status[pos], sep = ", "))
         }
-        status_sql <- paste0("in (", paste(paste0("'", status, "'"), collapse = ", "), ")")
+        status_sql <- paste0("status in (", paste(paste0("'", status, "'"), collapse = ", "), ")")
     }
-    sql <- sprintf("SELECT * FROM task_%s WHERE status  %s LIMIT %s;",
+    sql <- sprintf("SELECT * FROM task_%s WHERE %s LIMIT %s;",
                    project, status_sql, limit)
     a <- db_sql(sql, DBI::dbGetQuery, con)
 
