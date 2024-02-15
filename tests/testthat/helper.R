@@ -11,8 +11,9 @@ is_test_db <- function() {
                       password = Sys.getenv("PGTESTPASSWORD"),
                       database = Sys.getenv("PGTESTDATABASE"))
     opt <- taskqueue_options()
-    stopifnot(opt$user == "cluster_test")
-    stopifnot(opt$database == "cluster_test")
+    if (opt$user != "cluster_test" || opt$database != "cluster_test") {
+        return(FALSE)
+    }
     x <- try({
         con <- db_connect()
         on.exit(db_disconnect(con), add = TRUE)
