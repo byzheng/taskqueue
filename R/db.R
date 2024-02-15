@@ -39,23 +39,10 @@ db_connect <- function(con = NULL)
 #' @export
 db_disconnect <- function(con)
 {
-    invisible(RPostgres::dbDisconnect(con))
-}
-
-
-#' Test whether db can be connected
-#'
-#' @return TRUE if db is available.
-#' @export
-db_is_connect <- function() {
-    x <- try({
-        con <- db_connect()
-    })
-    if (inherits(x, "try-error")) {
-        return(FALSE)
+    if (DBI::dbIsValid(con)) {
+        invisible(RPostgres::dbDisconnect(con))
     }
-    db_disconnect(con)
-    return(TRUE)
+    return(invisible())
 }
 
 #' Initialize PostgreSQL database for taskqueue
@@ -64,11 +51,11 @@ db_is_connect <- function() {
 #' @export
 db_init <- function() {
     con <- db_connect()
+    on.exit(db_disconnect(con), add = TRUE)
     .types(con)
     .table_project(con)
     .table_resource(con)
     .table_project_resource(con)
-    db_disconnect(con)
     return(invisible())
 }
 
@@ -78,13 +65,15 @@ db_init <- function() {
 #' @return No return
 db_clean <- function() {
     con <- db_connect()
+    on.exit(db_disconnect(con), add = TRUE)
     # Delete project tables
     projects <- project_list(con)
-    for (i in seq(along = projects[[1]])) {
-        sql <- sprintf("DROP TABLE IF EXISTS public.%s", projects$table[i])
-        a <- db_sql(sql, DBI::dbExecute, con)
+    if (!is.null(projects)) {
+        for (i in seq(along = projects[[1]])) {
+            sql <- sprintf("DROP TABLE IF EXISTS public.%s", projects$table[i])
+            a <- db_sql(sql, DBI::dbExecute, con)
+        }
     }
-
     # Delete project resource
     sql <- "DROP TABLE IF EXISTS public.project_resource"
     a <- db_sql(sql, DBI::dbExecute, con)
@@ -107,8 +96,7 @@ db_clean <- function() {
     # delete types
     sql <- "DROP TYPE IF EXISTS public.task_status;"
     a <- db_sql(sql, DBI::dbExecute, con)
-
-    db_disconnect(con)
+    return(invisible())
 }
 
 
@@ -124,14 +112,29 @@ db_sql <- function(sql, method, con = NULL) {
     reconnect <- is.null(con)
     if (reconnect) {
         con <- db_connect()
+        on.exit(db_disconnect(con), add = TRUE)
     }
     for (i in seq(along = sql)) {
         p <- method(con, sql[i])
-    }
-    if (reconnect) {
-        db_disconnect(con)
     }
     p
 }
 
 
+
+#' Check whether a table is existed
+#'
+#' @param table table name
+#' @param con a connection
+#'
+#' @return logical value
+table_exist <- function(table, con = NULL) {
+    stopifnot(length(table) == 1)
+    sql <- sprintf("SELECT EXISTS (
+        SELECT 1
+        FROM pg_tables
+        WHERE schemaname = 'public'
+        AND tablename = '%s'
+    );", table)
+    as.logical(db_sql(sql, DBI::dbGetQuery, con = con))
+}

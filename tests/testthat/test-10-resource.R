@@ -1,5 +1,6 @@
 test_that("resource", {
-    skip_if(!db_is_connect())
+    skip_if(!is_test_db())
+
 
     ## Add resource
     resource <- "this-computer"
@@ -54,12 +55,11 @@ test_that("resource", {
                      workers = 10,
                      log_folder = "log_folder")
     })
-    skip_if(Sys.info()["sysname"] != "windows")
     expect_no_error({
-        resource_add(name = "this-computer",
-                     type = "slurm",
-                     host = "this-computer.com",
+        resource_add(name = "localhost",
+                     type = "computer",
+                     host = "localhost",
                      workers = 2,
-                     log_folder = "c:/log_folder")
+                     log_folder = tempdir())
     })
 })

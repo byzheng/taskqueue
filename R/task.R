@@ -59,6 +59,7 @@ task_status <- function(project, con = NULL) {
     sql <- sprintf("SELECT status, COUNT(*) FROM task_%s GROUP BY status", project)
     res <- db_sql(sql, DBI::dbGetQuery, con)
     res$status <- ifelse(is.na(res$status), "idle", res$status)
+    res$ratio <- res$count / sum(res$count)
     return(res)
 }
 

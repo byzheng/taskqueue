@@ -3,12 +3,11 @@
 # Variable, global to package's namespace.
 # This function is not exported to user space and does not need to be documented.
 TASKQUEUE_OPTIONS <- settings::options_manager(
-    host = Sys.getenv("TQ_HOST"),
-    port = Sys.getenv("TQ_PORT"),
-    user = Sys.getenv("TQ_USER"),
-    password = Sys.getenv("TQ_PASSWORD"),
-    database = Sys.getenv("TQ_DATABASE"),
-    is_test = Sys.getenv("TQ_TEST")
+    host = Sys.getenv("PGHOST"),
+    port = Sys.getenv("PGPORT"),
+    user = Sys.getenv("PGUSER"),
+    password = Sys.getenv("PGPASSWORD"),
+    database = Sys.getenv("PGDATABASE")
     )
 
 
@@ -35,7 +34,23 @@ taskqueue_options <- function(...){
     if (sum(nchar(names(args)) == 0) > 0) {
         stop("all arguments should be named")
     }
+    if (sum(nchar(args) == 0) > 0) {
+        stop("All arguments shouldnot have empty character.")
+    }
+    old_options <- TASKQUEUE_OPTIONS()
     TASKQUEUE_OPTIONS(...)
+
+    # Test connection
+    x <- try({
+        con <- db_connect()
+        db_disconnect(con)
+    })
+    if (inherits(x, "try-error")) {
+        do.call(TASKQUEUE_OPTIONS, args = old_options)
+        stop("New options cannot connect database. Restore to old options")
+    }
+
+    TASKQUEUE_OPTIONS()
 }
 
 #' Reset global options for pkg

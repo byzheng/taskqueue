@@ -187,6 +187,9 @@ project_resource_get <- function(project, con = NULL) {
 #' @return a table for all projects
 #' @export
 project_list <- function(con = NULL) {
+    if (!table_exist("project", con)) {
+        return(NULL)
+    }
     sql <- "SELECT * FROM public.project"
     projects <- db_sql(sql, DBI::dbGetQuery, con = con)
     projects

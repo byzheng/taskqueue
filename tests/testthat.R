@@ -8,5 +8,6 @@
 
 library(testthat)
 library(taskqueue)
+#taskqueue_reset()
 
 test_check("taskqueue")
