@@ -31,9 +31,6 @@
     <loc>https://taskqueue.bangyou.me/reference/db_init.html</loc>
   </url>
   <url>
-    <loc>https://taskqueue.bangyou.me/reference/db_is_connect.html</loc>
-  </url>
-  <url>
     <loc>https://taskqueue.bangyou.me/reference/db_sql.html</loc>
   </url>
   <url>
@@ -92,6 +89,9 @@
   </url>
   <url>
     <loc>https://taskqueue.bangyou.me/reference/slurm_deploy.html</loc>
+  </url>
+  <url>
+    <loc>https://taskqueue.bangyou.me/reference/table_exist.html</loc>
   </url>
   <url>
     <loc>https://taskqueue.bangyou.me/reference/task_add.html</loc>
