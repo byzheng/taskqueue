@@ -20,4 +20,5 @@ is_test_db <- function() {
     if (inherits(x, "try-error")) {
         return(FALSE)
     }
+    return(TRUE)
 }
