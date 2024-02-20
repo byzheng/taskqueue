@@ -138,3 +138,21 @@ table_exist <- function(table, con = NULL) {
     );", table)
     as.logical(db_sql(sql, DBI::dbGetQuery, con = con))
 }
+
+
+
+
+#' Test whether db can be connected
+#'
+#' @return TRUE if test db is available.
+#' @export
+is_db_connect <- function() {
+    x <- try({
+        con <- db_connect()
+        on.exit(db_disconnect(con), add = TRUE)
+    })
+    if (inherits(x, "try-error")) {
+        return(FALSE)
+    }
+    return(TRUE)
+}
