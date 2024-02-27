@@ -1,0 +1,12 @@
+
+# R script to run on workers
+
+{{#pkgs}}
+library({{.}}, quietly = TRUE)
+{{/pkgs}}
+
+
+arguments <- readRDS("{{{rds_file}}}")
+do.call(taskqueue_options, args = arguments$options)
+arguments$options <- NULL
+do.call(worker, args = arguments)

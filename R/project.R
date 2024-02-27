@@ -39,16 +39,14 @@
 #' @export
 project_add <- function(project, memory = 10)
 {
-    if (length(project) != 1) {
-        stop("Please use a single name")
-    }
+    stopifnot(length(project) == 1)
+    stopifnot(is.character(project))
+    stopifnot(length(memory) == 1)
+    stopifnot(is.numeric(memory))
+
     conserved_name <- c("config")
     if (project %in% conserved_name) {
         stop("Cannot use ", project)
-    }
-    stopifnot(is.numeric(memory))
-    if (length(memory) != 1) {
-        stop("Please use a single value for memory")
     }
 
     table <- paste('task', project, sep = '_')

@@ -1,22 +1,25 @@
 #!/bin/bash
-#SBATCH --time=$times:00:00
+#SBATCH --time={{{times}}}:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --mem=$memoryg
-#SBATCH --job-name=$job
-#SBATCH --output=$job_%j.out
-#SBATCH --error=$job_%j.err
-#SBATCH --account=$account
-#SBATCH --array=1-$workers
+#SBATCH --mem={{{memory}}}
+#SBATCH --job-name={{{job}}}
+#SBATCH --output={{{job}}}_%j.out
+#SBATCH --error={{{job}}}_%j.err
+#SBATCH --account={{{account}}}
+#SBATCH --array=1-{{{workers}}}
 
-export TASKQUEUE_RESOURCE="petrichor"
+export TASKQUEUE_RESOURCE="{{{resource}}}"
 tic=`date +%s`
 echo "Start Time = "`date`
 
-cd $working_dir
-echo "working directory = "$working_dir
-module load R/4.3.1
-module load postgresql/16.0
+cd {{{working_dir}}}
+echo "Working directory = {{{working_dir}}}"
+
+{{#modules}}
+module load {{.}}
+{{/modules}}
+
 #module load openmpi
 
 module list
@@ -32,8 +35,7 @@ nodelist=`srun hostname -s | sort | tr '\n' ' '`
 
 echo "Launching script using R"
 
-#mpirun $R_HOME/library/snow/RMPISNOW --no-save --no-restore < $rfile > $rout.Rout
-Rscript $rcode > $rout.Rout
+Rscript {{{rfile}}} > {{{rout}}}.Rout
 
 echo "All Done!"
 

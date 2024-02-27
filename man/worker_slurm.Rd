@@ -4,20 +4,57 @@
 \alias{worker_slurm}
 \title{Create a worker on slurm cluster}
 \usage{
-worker_slurm(project, resource, rcode, modules = NULL)
+worker_slurm(
+  project,
+  resource,
+  fun,
+  rfile,
+  module_r = "R/4.3.1",
+  module_pg = "postgresql/16.0",
+  modules = NULL,
+  pkgs = rev(.packages()),
+  submit = TRUE,
+  ...
+)
 }
 \arguments{
-\item{project}{Project name}
+\item{project}{Project name.}
 
-\item{resource}{Resource name}
+\item{resource}{Resource name.}
 
-\item{rcode}{rscript file path}
+\item{fun}{Function running on workers. See details.}
 
-\item{modules}{extra modules to load in slurm}
+\item{rfile}{R script file path. See details.}
+
+\item{module_r}{Module name for R.}
+
+\item{module_pg}{Module name for postgresql. See details.}
+
+\item{modules}{extra modules to load in slurm. See details.}
+
+\item{pkgs}{A character vector containing the names of packages that must
+be loaded on worker including all packages in default when \code{worker_slurm}
+is called.}
+
+\item{submit}{Whether to submit to slurm cluster (TRUE in default). See details.}
+
+\item{...}{Extra arguments for fun.}
 }
 \value{
 no return
 }
 \description{
 Create a worker on slurm cluster
+}
+\details{
+There are two ways to pass R scripts into workers (i.e. \code{fun} or \code{file}).
+* \code{fun} is used for general and simple case. A new r script is created in the log
+ folder and running in the workers. The required packages are passed using \code{pkgs}.
+ Extra arguments are specified through \code{...}. \code{taskqueue_options()} is passed
+ into workers.
+ * \code{rfile} is used more complicated case. Function \code{worker} has to be
+ called at the end of file. No \code{taskqueue_options()} is passed into workers.
+ * \code{fun} is higher priority with \code{file}.
+A submit file is created in the log folder for each project/resource with random file name.
+Then system command \code{ssh} is used to connect remote slurm host if \code{submit = TRUE}.
 }

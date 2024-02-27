@@ -62,4 +62,12 @@ test_that("resource", {
                      workers = 2,
                      log_folder = tempdir())
     })
+
+    skip_if(!is_slurm())
+
+    expect_no_error(resource_add(name = test_slurm_resource,
+                 host = Sys.getenv("PGTESTSLURMHOST"),
+                 type = "slurm",
+                 workers = 5,
+                 log_folder = Sys.getenv("PGTESTSLURMLOG")))
 })

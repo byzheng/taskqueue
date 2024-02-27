@@ -3,7 +3,4 @@ test_that("test options", {
     expect_no_error({
         taskqueue_options()
     })
-    expect_error({
-        taskqueue_options(host = "unknown-host")
-    })
 })

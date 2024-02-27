@@ -28,5 +28,7 @@ Imports:
     stats,
     stringi,
     RPostgres,
+    whisker,
+    shiny,
     DBI
 Config/testthat/edition: 3

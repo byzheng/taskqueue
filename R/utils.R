@@ -48,3 +48,35 @@
     }
     return(exit_code == 0)
 }
+
+
+.hostname <- function() {
+    if (.Platform$OS.type == "unix") {
+        hosts <- system("hostname -A", intern = TRUE)
+        hosts <- tolower(strsplit(hosts, " ")[[1]])
+    } else if (.Platform$OS.type == "windows") {
+        hosts <- tolower(paste0(Sys.getenv("COMPUTERNAME"), ".",
+                       Sys.getenv("USERDNSDOMAIN")))
+    } else {
+        stop("Not support")
+    }
+    hosts
+}
+
+.is_local <- function(h) {
+    hosts <- .hostname()
+    if (h %in% hosts) {
+        return(TRUE)
+    }
+    return(FALSE)
+}
+
+.check_arg_name <- function(arguments) {
+    if (is.null(arguments) || length(arguments) == 0) {
+        return(invisible())
+    }
+    n_arguments <- names(arguments)
+    if (sum(is.null(n_arguments)) > 0 | sum(nchar(n_arguments) == 0)) {
+        stop("All arguments should be names")
+    }
+}
