@@ -8,6 +8,7 @@ test_that("worker", {
     }
 
     expect_no_error(task_reset(test_project, status = "all"))
+    expect_no_error(project_start(test_project))
     # test workers
     expect_no_error(worker(test_project, fun_test, prefix = "a"))
 
@@ -33,8 +34,6 @@ test_that("worker", {
     expect_no_error(task_reset(test_project, status = "all"))
     expect_error(worker_slurm(test_project, test_slurm_resource, rfile = "no-exist.R"))
 
-
-    expect_no_error(project_start(test_project))
     prj <- project_get(test_project)
     expect_equal(prj$status, TRUE)
     expect_no_error(
