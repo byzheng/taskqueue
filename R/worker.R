@@ -210,7 +210,7 @@ worker <- function(project, fun, ...) {
 #'
 #' @details
 #'  There are two ways to pass R scripts into workers (i.e. \code{fun} or \code{file}).
-#' * \code{fun} is used for general and simple case. A new r script is created in the log
+#' * \code{fun} is used for general and simple case which takes the task id as the first argument. A new r script is created in the log
 #'  folder and running in the workers. The required packages are passed using \code{pkgs}.
 #'  Extra arguments are specified through \code{...}. \code{taskqueue_options()} is passed
 #'  into workers.
@@ -221,6 +221,17 @@ worker <- function(project, fun, ...) {
 #' Then system command \code{ssh} is used to connect remote slurm host if \code{submit = TRUE}.
 #' @return no return
 #' @export
+#' @examples
+#' \dontrun{
+#' fun_test <- function(i, prefix) {
+#'     Sys.sleep(runif(1) * 2)
+#' }
+#' worker_slurm("test_project", "slurm", fun = fun_test)
+#' worker_slurm("test_project", "slurm", fun = fun_test, prefix = "a")
+#' worker_slurm("test_project", "slurm", rfile = "rfile.R")
+#' worker_slurm("test_project", "slurm", fun = fun_test, submit = FALSE)
+#' }
+#'
 worker_slurm <- function(project, resource, fun, rfile,
                          module_r = "R/4.3.1",
                          module_pg = "postgresql/16.0",
