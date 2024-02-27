@@ -1,7 +1,7 @@
 Package: taskqueue
 Type: Package
 Title: Task Queue in R Based On PostgreSQL 
-Version: 0.0.1
+Version: 0.1.0
 Maintainer: Bangyou Zheng <bangyou.zheng@csiro.au>
 Authors@R: person("Bangyou", "Zheng", 
                email = "bangyou.zheng@csiro.au", 
