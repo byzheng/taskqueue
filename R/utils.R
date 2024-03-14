@@ -80,3 +80,8 @@
         stop("All arguments should be names")
     }
 }
+
+
+.sys_now <- function() {
+    format(Sys.time(), "%Y-%m-%d %H:%H:%S")
+}

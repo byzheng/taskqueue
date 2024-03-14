@@ -32,7 +32,14 @@ worker <- function(project, fun, ...) {
     # database at the same time
     Sys.sleep(runif(1) * 10)
     task_table <- sprintf("task_%s", project)
-    message("Start on this worker.")
+    message(.sys_now(), ": ", "Start on this worker.")
+
+    sys_info <- Sys.info()
+
+    message("nodename: ", sys_info["nodename"])
+    message("sysname: ", sys_info["sysname"])
+    message("release: ", sys_info["release"])
+    message("user: ", sys_info["user"])
 
     walltime <- -1
     # Get maximum runtime for slurm resource
@@ -53,15 +60,15 @@ worker <- function(project, fun, ...) {
     # Working on tasks
     while (TRUE) {
         message("")
-        message("-------------------------------------------------------------------------------")
-        message("Request a new task")
+        message("-------------------------------------------------")
+        message(.sys_now(), ": ", "Request a new task")
         task_start_time <- as.numeric(Sys.time())
         # Try to connect database
         x <- try({
             db_worker <- db_connect()
         }, silent = TRUE)
         if (inherits(x, "try-error")) {
-            message("Cannot connect database. Reconnect it later.")
+            message(.sys_now(), ": ", "Cannot connect database. Reconnect it later.")
             Sys.sleep(runif(1) * 10)
             next
         }
@@ -72,17 +79,17 @@ worker <- function(project, fun, ...) {
             p_info <- DBI::dbGetQuery(db_worker, sql)
         })
         if (inherits(x, "try-error")) {
-            message("Cannot query on database. Try it later")
+            message(.sys_now(), ": ", "Cannot query on database. Try it later")
             db_disconnect(db_worker)
             Sys.sleep(runif(1) * 10)
             next
         }
 
         if (nrow(p_info) != 1) {
-            stop("Cannot find the project: ", project)
+            stop(.sys_now(), ": ", "Cannot find the project: ", project)
         }
         if (!p_info$status) {
-            stop("Project is not started: ", project)
+            stop(.sys_now(), ": ", "Project is not started: ", project)
         }
 
 
@@ -96,7 +103,7 @@ worker <- function(project, fun, ...) {
                                     task_table)
                 id <- DBI::dbGetQuery(db_worker, sql_task)
                 if (nrow(id) == 0) {
-                    message("No more task to process")
+                    message(.sys_now(), ": ", "No more task to process")
                     break
                 }
                 id <- id$id
@@ -111,22 +118,22 @@ worker <- function(project, fun, ...) {
             db_disconnect(db_worker)
         })
         if (inherits(x, "try-error")) {
-            message(paste("Failed to get a new task as error: ", x))
-            message("Try it again later.")
+            message(.sys_now(), ": ", paste("Failed to get a new task as error: ", x))
+            message(.sys_now(), ": ", "Try it again later.")
             db_disconnect(db_worker)
             Sys.sleep(runif(1) * 10)
             next
         }
 
-        message("Working on task: ", id)
+        message(.sys_now(), ": ", "Working on task: ", id)
 
         # Conduct actual work
         x <- try({
             fun(id, ...)
         }, silent = TRUE)
         if (inherits(x, "try-error")) {
-            message(paste("Failed to work on ", id, " as error: ", x))
-            message("Try it again later")
+            message(.sys_now(), ": ", paste("Failed to work on ", id, " as error: ", x))
+            message(.sys_now(), ": ", "Try it again later")
 
 
             # Mark as failed
@@ -150,7 +157,7 @@ worker <- function(project, fun, ...) {
             next
         }
 
-        message("Finish to process task: ", id)
+        message(.sys_now(), ": ", "Finish to process task: ", id)
         # Reconnect database and update table
         # Might run this codes for couple times to updates
         x <- try({
@@ -168,28 +175,28 @@ worker <- function(project, fun, ...) {
             db_disconnect(db_worker)
         }, silent = TRUE)
         if (inherits(x, "try-error")) {
-            message(paste("Failed to mark task (", id, ") is finished as error: ", x))
-            message("Try it again later")
+            message(.sys_now(), ": ", paste("Failed to mark task (", id, ") is finished as error: ", x))
+            message(.sys_now(), ": ", "Try it again later")
             Sys.sleep(runif(1) * 10)
             next
         }
         # Check run time
         task_runtime <- as.numeric(Sys.time()) - task_start_time
         tasks_runtime <- c(tasks_runtime, task_runtime)
-        message("The runtime for this task is ", round(task_runtime), "s")
-        message("The average runtime for all tasks until now is ", round(mean(tasks_runtime)), "s")
+        message(.sys_now(), ": ", "The runtime for this task is ", round(task_runtime), "s")
+        message(.sys_now(), ": ", "The average runtime for all tasks until now is ", round(mean(tasks_runtime)), "s")
         if (walltime > 0) {
 
             # Stop this worker if total runtime is almost longer than walltime
 
             gap_time <- stats::quantile(tasks_runtime, 0.9)
             if (sum(tasks_runtime) + gap_time > walltime) {
-                message("No more tasks as no enough runtime now.")
+                message(.sys_now(), ": ", "No more tasks as no enough runtime now.")
                 break
             }
         }
     }
-    message("Finish to run on this worker.")
+    message(.sys_now(), ": ", "Finish to run on this worker.")
 
 }
 
