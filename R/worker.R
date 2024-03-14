@@ -50,10 +50,10 @@ worker <- function(project, fun, ...) {
         pos <- project_resource$resource == resource_name & project_resource$type == "slurm"
         project_resource  <- project_resource[pos,]
         if (nrow(project_resource) == 0) {
-            stop("Cannot find the resource: ", resource_name, " in the database.")
+            stop(.sys_now(), ": ", "Cannot find the resource: ", resource_name, " in the database.")
         }
         walltime <- project_resource$times[1] * 3600
-        message("The maximum runtime for this worker is ", walltime, "s")
+        message(.sys_now(), ": ", "The maximum runtime for this worker is ", walltime, "s")
     }
 
     tasks_runtime <- c()
