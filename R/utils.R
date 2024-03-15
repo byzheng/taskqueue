@@ -83,5 +83,5 @@
 
 
 .sys_now <- function() {
-    format(Sys.time(), "%Y-%m-%d %H:%H:%S")
+    format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 }
