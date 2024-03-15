@@ -2,7 +2,7 @@
 #SBATCH --time={{{times}}}:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --mem={{{memory}}}
+#SBATCH --mem={{{memory}}}GB
 #SBATCH --job-name={{{job}}}
 #SBATCH --output={{{job}}}_%j.out
 #SBATCH --error={{{job}}}_%j.err
