@@ -18,7 +18,6 @@ shiny_app <- function() {
             # invalidate 6 hrs later
             shiny::invalidateLater(1000 * 5)
             prj <- input$project
-            res <- list()
             res <- task_status(prj)
             res$project <- prj
             res <- res[,c("project", "status", "count", "ratio")]

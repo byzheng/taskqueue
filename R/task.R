@@ -120,7 +120,9 @@ task_get <- function(project, status = c("failed"), limit = 10, con = NULL) {
 
     new_connection <- ifelse(is.null(con), TRUE, FALSE)
     con <- db_connect(con)
-
+    if (new_connection) {
+        on.exit(db_disconnect(con), add = TRUE)
+    }
     if ("all" %in% status) {
         status_sql <- "true"
     } else {
