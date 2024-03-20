@@ -93,8 +93,9 @@ resource_add <- function(name,
     }
 
     if (!dir.exists(log_folder)) {
-        warning("Cannot find folder in the local computer.",
-                " Please make sure the log_folder is existed and accessable in the target host.")
+        dir.create(log_folder, recursive = TRUE)
+        # warning("Cannot find folder in the local computer.",
+        #         " Please make sure the log_folder is existed and accessable in the target host.")
     }
     .table_resource(con)
     sql <- sprintf("INSERT INTO resource

@@ -40,9 +40,22 @@ test_that("worker", {
                      resource= test_slurm_resource,
                      fun = fun_test)
     )
+
+    # # Check log folder
+    # log_folder <- Sys.getenv("PGTESTSLURMLOG")
+    # log_folder <- file.path(log_folder, test_project)
+    # files <- list.files(log_folder)
+    # expect_equal(sum(grepl("-rcode\\.R$", files)), 1)
+    # expect_equal(sum(grepl("-data\\.Rds$", files)), 1)
+    # expect_equal(sum(grepl("\\.out$", files)), 5)
+    # expect_equal(sum(grepl("\\.err$", files)), 5)
+
     expect_no_error(
         project_stop(test_project)
     )
 
-
+    # test project reset
+    expect_no_error(project_reset(test_project))
+    # files <- list.files(log_folder)
+    # expect_equal(length(files), 0)
 })
