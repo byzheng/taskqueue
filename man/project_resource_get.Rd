@@ -4,10 +4,12 @@
 \alias{project_resource_get}
 \title{Get resources of a project}
 \usage{
-project_resource_get(project, con = NULL)
+project_resource_get(project, resource = NULL, con = NULL)
 }
 \arguments{
 \item{project}{project name}
+
+\item{resource}{resource name}
 
 \item{con}{connection to database}
 }

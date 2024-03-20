@@ -4,12 +4,10 @@
 \alias{project_stop}
 \title{Stop a project}
 \usage{
-project_stop(project, con = NULL)
+project_stop(project)
 }
 \arguments{
 \item{project}{project name}
-
-\item{con}{connection to database}
 }
 \value{
 no return

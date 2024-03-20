@@ -266,10 +266,10 @@ worker_slurm <- function(project, resource, fun, rfile,
     # Get relative information
     con <- db_connect()
     on.exit(db_disconnect(con), add = TRUE)
-    project_info <- project_get(project, con)
-    resource_info <- resource_get(resource, con)
-    pr_info <- project_resource_get(project, con)
-    t_status <- task_status(project, con)
+    project_info <- project_get(project, con = con)
+    resource_info <- resource_get(resource, con = con)
+    pr_info <- project_resource_get(project, con = con)
+    t_status <- task_status(project, con = con)
     db_disconnect(con)
 
     if (resource_info$type != "slurm") {
@@ -296,7 +296,7 @@ worker_slurm <- function(project, resource, fun, rfile,
 
 
     # Job name
-    job_suffix <- stringi::stri_rand_strings(1, 6, '[a-z]')
+    job_suffix <- stringi::stri_rand_strings(1, 12, '[a-z]')
     job_name <- paste0(project,"-", resource, "-", job_suffix)
 
 
@@ -423,23 +423,16 @@ worker_slurm <- function(project, resource, fun, rfile,
     if (submit) {
         # Submit a job to cluster
         message("Run sbatch on ", resource_info$host)
-        if (.is_bin_on_path("ssh")) {
-            if (.is_local(resource_info$host)) {
-                cmd <- sprintf("cd %s;sbatch %s",
-                               sub_folder, sub_file)
-            } else {
-                cmd <- sprintf("ssh %s 'cd %s;sbatch %s'",
-                           resource_info$host, sub_folder, sub_file)
-            }
-            Sys.sleep(1)
-            system(cmd)
+        cmd <- sprintf("cd %s;sbatch %s",
+                       sub_folder, sub_file)
+        cmd <- .cmd_remote(resource_info$host, cmd)
+        Sys.sleep(1)
+        system(cmd)
 
-            # Add jobs to project_resource table
-            project_resource_add_jobs(project, resource, job_name)
+        # Add jobs to project_resource table
+        project_resource_add_jobs(project, resource, job_name)
 
-        } else {
-            stop("Cannot find ssh command")
-        }
+
     } else {
         message("Call command below in ", resource_info$host)
         message("sbatch ", sub_file)

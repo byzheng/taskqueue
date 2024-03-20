@@ -85,3 +85,15 @@
 .sys_now <- function() {
     format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 }
+
+.cmd_remote <- function(host, cmd) {
+    if (!.is_local(host)) {
+        if (.is_bin_on_path("ssh")) {
+            cmd <- sprintf("ssh %s '%s'",
+                           host, cmd)
+        } else {
+            stop("Cannot find ssh command")
+        }
+    }
+    cmd
+}

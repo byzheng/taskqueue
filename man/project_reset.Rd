@@ -4,14 +4,12 @@
 \alias{project_reset}
 \title{Reset a project}
 \usage{
-project_reset(project, log_clean = TRUE, con = NULL)
+project_reset(project, log_clean = TRUE)
 }
 \arguments{
 \item{project}{project name}
 
 \item{log_clean}{whether to clean log files}
-
-\item{con}{connection to database}
 }
 \value{
 no return

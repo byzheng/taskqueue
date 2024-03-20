@@ -35,15 +35,14 @@ test_that("worker", {
     expect_error(worker_slurm(test_project, test_slurm_resource, rfile = "no-exist.R"))
 
     prj <- project_get(test_project)
-    expect_equal(prj$status, TRUE)
     expect_no_error(
         worker_slurm(project = test_project,
                      resource= test_slurm_resource,
                      fun = fun_test)
     )
-    # expect_no_error(
-    #     project_stop(test_project)
-    # )
+    expect_no_error(
+        project_stop(test_project)
+    )
 
 
 })

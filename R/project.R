@@ -103,13 +103,40 @@ project_start <- function(project, con = NULL) {
 #' Stop a project
 #'
 #' @param project project name
-#' @param con connection to database
 #'
 #' @return no return
 #' @export
-project_stop <- function(project, con = NULL) {
+project_stop <- function(project) {
+    stopifnot(length(project) == 1)
+    stopifnot(is.character(project))
+    con <- db_connect()
+    on.exit(db_disconnect(con), add = TRUE)
     sql <- sprintf("UPDATE project SET status=FALSE where name='%s'", project)
     db_sql(sql, DBI::dbExecute, con)
+
+    # Cancel running jobs
+    pr <- project_resource_get(project, con = con)
+    # Cancel slurm jobs
+    pr_slurm <- pr[pr$type == "slurm",]
+
+    if (nrow(pr_slurm) > 0) {
+        for (i in seq_len(nrow(pr_slurm))) {
+            # skip if no jobs
+            if (is.na(pr_slurm$jobs[i]) || nchar(pr_slurm$jobs[i]) == 0) {
+                next
+            }
+            jobs <- strsplit(pr_slurm$jobs[i], ";")[[1]]
+            r <- resource_get(pr_slurm$resource[i], con = con)
+            cmds <- sprintf('scancel --jobname="%s"', jobs)
+            cmds <- .cmd_remote(r$host, cmds)
+            for (j in seq(along = cmds)) {
+                Sys.sleep(1)
+                system(cmds[j])
+            }
+            project_resource_add_jobs(project, pr_slurm$resource[i], reset = TRUE)
+        }
+    }
+
     return(invisible())
 }
 
@@ -117,28 +144,31 @@ project_stop <- function(project, con = NULL) {
 #'
 #' @param project project name
 #' @param log_clean whether to clean log files
-#' @param con connection to database
 #'
 #' @return no return
 #' @export
-project_reset <- function(project, log_clean = TRUE, con = NULL) {
+project_reset <- function(project, log_clean = TRUE) {
     stopifnot(length(project) == 1)
     stopifnot(is.character(project))
     stopifnot(length(log_clean) == 1)
     stopifnot(is.logical(log_clean))
+    con <- db_connect()
+    on.exit(db_disconnect(con), add = TRUE)
     # Reset all tasks
     message("Reset all tasks")
     task_reset(project, status = "all", con = con)
     # Stop project
     message("Stop project")
-    project_stop(project, con = con)
+    project_stop(project)
 
     if (log_clean) {
         # Clear log files
         message("Clear log files")
         pr_info <- project_resource_get(project, con = con)
-        for (i in seq_len(nrow(pr_info))) {
-            project_resource_log_delete(project, pr_info$resource, con = con)
+        # Delete slurm types
+        pr_info_slurm <- pr_info[pr_info$type == "slurm",]
+        for (i in seq_len(nrow(pr_info_slurm))) {
+            project_resource_log_delete(project, pr_info_slurm$resource[i], con = con)
         }
     }
     return(invisible())
@@ -163,17 +193,24 @@ project_get <- function(project, con = NULL) {
 #' Get resources of a project
 #'
 #' @param project project name
+#' @param resource resource name
 #' @param con connection to database
 #'
 #' @return a table of resources used in the project
 #' @export
-project_resource_get <- function(project, con = NULL) {
+project_resource_get <- function(project, resource = NULL, con = NULL) {
     project_info <- project_get(project, con)
     sql <- sprintf("SELECT project_resource.*, resource.name AS resource, resource.type
                         from project_resource
                         LEFT JOIN resource ON project_resource.resource_id = resource.id
                    where project_id='%s'",
                    project_info$id)
+    if (!is.null(resource)) {
+        stopifnot(length(resource) == 1)
+        stopifnot(is.character(resource))
+        sql <- paste0(sql, " AND resource.name='", resource, "'")
+    }
+
     p_r <- db_sql(sql, DBI::dbGetQuery, con)
     p_r
 }

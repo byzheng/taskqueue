@@ -157,19 +157,43 @@ project_resource_log_delete <- function(project,
 }
 
 
-project_resource_add_jobs <- function(project, resource, job) {
+#' Add a job to project/resource
+#'
+#' @param project project name
+#' @param resource resource name
+#' @param job job name. If missing, reset to empty
+#' @param reset whether to reset jobs
+#'
+#' @return no return
+#' @export
+project_resource_add_jobs <- function(project, resource, job, reset = FALSE) {
     if (length(project) != 1 || length(resource) != 1) {
         stop("Require a single project or resource")
     }
+    if (missing(job)) {
+        job <- ""
+        reset <- TRUE
+    }
+    stopifnot(length(reset) == 1)
+    stopifnot(is.logical(reset))
     stopifnot(length(job) == 1)
     stopifnot(is.character(job))
     con <- db_connect()
     on.exit(db_disconnect(con), add = TRUE)
-    pr_info <- project_resource_get(project, con = con)
-    if (is.na(pr_info$jobs)) {
-        all_jobs <- job
+    pr_info <- project_resource_get(project, resource, con = con)
+
+    if (pr_info$type != "slurm") {
+        stop("Only support slurm resource")
+    }
+
+    if (reset) {
+        all_jobs <- ""
     } else {
-        all_jobs <- paste0(pr_info$jobs, ";", job)
+        if (is.na(pr_info$jobs)) {
+            all_jobs <- job
+        } else {
+            all_jobs <- paste0(pr_info$jobs, ";", job)
+        }
     }
     sql <- sprintf("UPDATE project_resource
                 SET jobs='%s'
