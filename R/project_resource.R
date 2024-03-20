@@ -12,6 +12,7 @@
         account character varying COLLATE pg_catalog.\"default\",
         workers integer,
         times integer,
+        jobs character varying COLLATE pg_catalog.\"default\",
         CONSTRAINT pr_unique_project_resource UNIQUE (project_id, resource_id),
         CONSTRAINT fk_project_resource_project FOREIGN KEY (project_id)
             REFERENCES public.project (id) MATCH SIMPLE
@@ -72,6 +73,7 @@ project_resource_add <- function(project,
     # insert/update database
 
     con <- db_connect()
+    on.exit(db_disconnect(con), add = TRUE)
     # Create project is not existed
     .table_project_resource(con)
     project_info <- project_get(project, con)
@@ -152,4 +154,28 @@ project_resource_log_delete <- function(project,
     files <- list.files(log_folder, sprintf("^%s-%s.*$", project, resource), full.names = TRUE)
     a <- lapply(files, file.remove)
     return(invisible())
+}
+
+
+project_resource_add_jobs <- function(project, resource, job) {
+    if (length(project) != 1 || length(resource) != 1) {
+        stop("Require a single project or resource")
+    }
+    stopifnot(length(job) == 1)
+    stopifnot(is.character(job))
+    con <- db_connect()
+    on.exit(db_disconnect(con), add = TRUE)
+    pr_info <- project_resource_get(project, con = con)
+    if (is.na(pr_info$jobs)) {
+        all_jobs <- job
+    } else {
+        all_jobs <- paste0(pr_info$jobs, ";", job)
+    }
+    sql <- sprintf("UPDATE project_resource
+                SET jobs='%s'
+                   WHERE project_id=%s AND resource_id=%s;",
+                   all_jobs,
+                   pr_info$project_id, pr_info$resource_id)
+
+    res <- DBI::dbExecute(con, sql)
 }

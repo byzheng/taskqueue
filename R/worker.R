@@ -433,6 +433,10 @@ worker_slurm <- function(project, resource, fun, rfile,
             }
             Sys.sleep(1)
             system(cmd)
+
+            # Add jobs to project_resource table
+            project_resource_add_jobs(project, resource, job_name)
+
         } else {
             stop("Cannot find ssh command")
         }
