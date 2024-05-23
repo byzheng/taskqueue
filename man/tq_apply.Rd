@@ -5,10 +5,11 @@
 \title{Apply a function with task queue}
 \usage{
 tq_apply(
-  x,
+  n,
   fun,
   project,
   resource,
+  memory = 20,
   hour = 24,
   account = NULL,
   working_dir = getwd(),
@@ -16,13 +17,15 @@ tq_apply(
 )
 }
 \arguments{
-\item{x}{A numeric vector for parallel}
+\item{n}{Number of task}
 
 \item{fun}{A function}
 
 \item{project}{Project name}
 
 \item{resource}{Resource name}
+
+\item{memory}{Memory in GB}
 
 \item{hour}{Maximum runtime in cluster}
 

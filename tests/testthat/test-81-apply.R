@@ -12,7 +12,7 @@ test_that("worker", {
     skip_if(!is_slurm())
 
     expect_no_error(
-        tq_apply(x = seq_len(10),
+        tq_apply(n = 10,
                  fun = fun_test,
                  project = test_project,
                  resource= test_slurm_resource,

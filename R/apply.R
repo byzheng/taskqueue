@@ -1,10 +1,11 @@
 
 #' Apply a function with task queue
 #'
-#' @param x A numeric vector for parallel
+#' @param n Number of task
 #' @param fun A function
 #' @param project Project name
 #' @param resource Resource name
+#' @param memory Memory in GB
 #' @param hour Maximum runtime in cluster
 #' @param account Optional. Account for cluster
 #' @param working_dir Working directory in cluster
@@ -12,12 +13,14 @@
 #'
 #' @return No return values
 #' @export
-tq_apply <- function(x, fun, project, resource, hour = 24,
+tq_apply <- function(n, fun, project, resource,
+                     memory = 20,
+                     hour = 24,
                      account = NULL,
                      working_dir = getwd(), ...) {
     # Check arguments
-    stopifnot(is.numeric(x))
-    stopifnot(length(x) > 0)
+    stopifnot(is.numeric(n))
+    stopifnot(length(n) == 1)
     stopifnot(is.function(fun))
     stopifnot(length(project) == 1)
     stopifnot(is.character(project))
@@ -45,11 +48,12 @@ tq_apply <- function(x, fun, project, resource, hour = 24,
     # Update resource for project if existed
     project_resource_add(project, resource,
                          working_dir = working_dir,
-                         workers = length(x),
+                         workers = n,
                          hours = hour,
                          account = account)
+    message("Add tasks to project.")
+    task_add(project, num = n, clean = TRUE)
     # Reset project
-
     message("Reset project status.")
     project_reset(project)
     # Schedule workers
