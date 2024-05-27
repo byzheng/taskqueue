@@ -124,6 +124,9 @@
     <loc>https://taskqueue.bangyou.me/reference/taskqueue_reset.html</loc>
   </url>
   <url>
+    <loc>https://taskqueue.bangyou.me/reference/tq_apply.html</loc>
+  </url>
+  <url>
     <loc>https://taskqueue.bangyou.me/reference/worker.html</loc>
   </url>
   <url>
