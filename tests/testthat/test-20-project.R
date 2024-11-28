@@ -6,10 +6,15 @@ test_that("project", {
 
     expect_no_error(project_add(test_project))
 
+    expect_no_error(project_add(test_project, memory = 20))
+
     prjs <- project_list()
     expect_equal(nrow(prjs), 1)
+
     prj <- project_get(test_project)
     expect_equal(nrow(prj), 1)
+    expect_equal(prj$memory, 20)
+    expect_equal(prj$name, test_project)
     expect_no_error(project_delete(test_project))
 
     expect_no_error(project_add(test_project))

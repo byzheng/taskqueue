@@ -9,7 +9,7 @@ tq_apply(
   fun,
   project,
   resource,
-  memory = 20,
+  memory = 10,
   hour = 24,
   account = NULL,
   working_dir = getwd(),

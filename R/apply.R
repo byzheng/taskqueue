@@ -14,7 +14,7 @@
 #' @return No return values
 #' @export
 tq_apply <- function(n, fun, project, resource,
-                     memory = 20,
+                     memory = 10,
                      hour = 24,
                      account = NULL,
                      working_dir = getwd(), ...) {
@@ -36,11 +36,16 @@ tq_apply <- function(n, fun, project, resource,
     message("Update project and resource if existed.")
     # Stop if resource is not existed
     resource_info <- resource_get(resource, con = con)
-    # Create project if not existed
-    prjs <- project_list()
-    if (!(project %in% prjs$name)) {
-        project_add(project)
-    }
+    # Create/update project if not existed
+    project_add(project, memory = memory)
+
+
+    # prjs <- project_list()
+    # if (!(project %in% prjs$name)) {
+    #
+    # } else {
+    #
+    # }
     project_info <- project_get(project, con = con)
     db_disconnect(con)
 
