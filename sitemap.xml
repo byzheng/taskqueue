@@ -1,135 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://taskqueue.bangyou.me/404.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/index.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/db_clean.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/db_connect.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/db_disconnect.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/db_init.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/db_sql.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/dot-check_absolute_path.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/dot-check_linux_absolute_path.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/dot-check_windows_absolute_path.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/is_db_connect.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_add.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_delete.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_get.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_list.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_reset.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_resource_add.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_resource_add_jobs.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_resource_get.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_resource_log_delete.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_start.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_status.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/project_stop.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/resource_add.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/resource_get.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/resource_list.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/shiny_app.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/slurm_deploy.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/table_exist.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/task_add.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/task_clean.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/task_get.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/task_reset.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/task_status.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/taskqueue_options.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/taskqueue_reset.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/tq_apply.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/worker.html</loc>
-  </url>
-  <url>
-    <loc>https://taskqueue.bangyou.me/reference/worker_slurm.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://taskqueue.bangyou.me/404.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/LICENSE-text.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/authors.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/index.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/news/index.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/db_clean.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/db_connect.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/db_disconnect.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/db_init.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/db_sql.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/dot-check_absolute_path.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/dot-check_linux_absolute_path.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/dot-check_windows_absolute_path.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/index.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/is_db_connect.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_add.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_delete.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_get.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_list.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_reset.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_resource_add.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_resource_add_jobs.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_resource_get.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_resource_log_delete.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_start.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_status.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/project_stop.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/resource_add.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/resource_get.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/resource_list.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/shiny_app.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/slurm_deploy.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/table_exist.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/task_add.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/task_clean.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/task_get.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/task_reset.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/task_status.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/taskqueue_options.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/taskqueue_reset.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/tq_apply.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/worker.html</loc></url>
+<url><loc>https://taskqueue.bangyou.me/reference/worker_slurm.html</loc></url>
 </urlset>
+
