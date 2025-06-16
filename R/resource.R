@@ -10,6 +10,7 @@
             name character varying COLLATE pg_catalog.\"default\" NOT NULL,
             type character varying COLLATE pg_catalog.\"default\" NOT NULL,
             host character varying COLLATE pg_catalog.\"default\" NOT NULL,
+            username character(255) COLLATE pg_catalog.\"default\",
             nodename character varying COLLATE pg_catalog.\"default\" NOT NULL,
             workers integer NOT NULL,
             log_folder character varying COLLATE pg_catalog.\"default\",
@@ -68,6 +69,7 @@ resource_add <- function(name,
                          host,
                          workers,
                          log_folder,
+                         username = NULL,
                          nodename = strsplit(host, "\\.")[[1]][1],
                          con = NULL)
 {
@@ -83,6 +85,10 @@ resource_add <- function(name,
     stopifnot(is.character(host))
     stopifnot(is.character(log_folder))
     stopifnot(is.numeric(workers))
+    if (!is.null(username)) {
+        stopifnot(length(username) == 1)
+        stopifnot(is.character(username))
+    }
     stopifnot(workers > 0)
     match.arg(type)
 
@@ -98,15 +104,27 @@ resource_add <- function(name,
         #         " Please make sure the log_folder is existed and accessable in the target host.")
     }
     .table_resource(con)
-    sql <- sprintf("INSERT INTO resource
+    if (!is.null(username)) {
+        sql <- sprintf("INSERT INTO resource
+                          (name, type, host, username, nodename, workers, log_folder)
+                   VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')
+                   ON CONFLICT ON CONSTRAINT resource_unique_name
+                   DO UPDATE SET type='%s', host='%s', username='%s',
+                   nodename='%s', workers='%s',
+                   log_folder='%s';",
+                   name, type, host, username, nodename, workers, log_folder,
+                   type, host, username, nodename, workers, log_folder)
+    } else {
+        sql <- sprintf("INSERT INTO resource
                           (name, type, host, nodename, workers, log_folder)
                    VALUES ('%s', '%s', '%s', '%s', '%s', '%s')
                    ON CONFLICT ON CONSTRAINT resource_unique_name
                    DO UPDATE SET type='%s', host='%s',
                    nodename='%s', workers='%s',
                    log_folder='%s';",
-                   name, type, host, nodename, workers, log_folder,
-                   type, host, nodename, workers, log_folder)
+                       name, type, host, nodename, workers, log_folder,
+                       type, host, nodename, workers, log_folder)
+    }
     db_sql(sql, DBI::dbExecute, con)
     return(invisible())
 }

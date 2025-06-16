@@ -19,16 +19,8 @@ module load R/4.3.1
 module load postgresql/16.0
 #module load openmpi
 
-module list
 ulimit -s unlimited
 
-
-# count the number of processors
-np=`srun hostname -s | wc -l`
-
-
-# generate nodelist
-nodelist=`srun hostname -s | sort | tr '\n' ' '`
 
 echo "Launching script using R"
 

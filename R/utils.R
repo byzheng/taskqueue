@@ -86,7 +86,10 @@
     format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 }
 
-.cmd_remote <- function(host, cmd) {
+.cmd_remote <- function(host, username, cmd) {
+    if (!is.null(username)) {
+        host <- paste0(stringr::str_trim(username), "@", host)
+    }
     if (!.is_local(host)) {
         if (.is_bin_on_path("ssh")) {
             cmd <- sprintf("ssh %s '%s'",

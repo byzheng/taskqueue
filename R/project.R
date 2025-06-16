@@ -128,7 +128,7 @@ project_stop <- function(project) {
             jobs <- strsplit(pr_slurm$jobs[i], ";")[[1]]
             r <- resource_get(pr_slurm$resource[i], con = con)
             cmds <- sprintf('scancel --jobname="%s"', jobs)
-            cmds <- .cmd_remote(r$host, cmds)
+            cmds <- .cmd_remote(r$host, r$username, cmds)
             for (j in seq(along = cmds)) {
                 Sys.sleep(1)
                 system(cmds[j])

@@ -425,7 +425,7 @@ worker_slurm <- function(project, resource, fun, rfile,
         message("Run sbatch on ", resource_info$host)
         cmd <- sprintf("cd %s;sbatch %s",
                        sub_folder, sub_file)
-        cmd <- .cmd_remote(resource_info$host, cmd)
+        cmd <- .cmd_remote(resource_info$host, resource_info$username, cmd)
         Sys.sleep(1)
         system(cmd)
 
