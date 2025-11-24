@@ -48,7 +48,7 @@ worker <- function(project, fun, ...) {
 
     if (nchar(resource_name) > 0) {
         pos <- project_resource$resource == resource_name & project_resource$type == "slurm"
-        project_resource  <- project_resource[pos,]
+        project_resource  <- project_resource[pos, ]
         if (nrow(project_resource) == 0) {
             stop(.sys_now(), ": ", "Cannot find the resource: ", resource_name, " in the database.")
         }
@@ -217,7 +217,8 @@ worker <- function(project, fun, ...) {
 #'
 #' @details
 #'  There are two ways to pass R scripts into workers (i.e. \code{fun} or \code{file}).
-#' * \code{fun} is used for general and simple case which takes the task id as the first argument. A new r script is created in the log
+#' * \code{fun} is used for general and simple case which takes the task id as 
+#' the first argument. A new r script is created in the log
 #'  folder and running in the workers. The required packages are passed using \code{pkgs}.
 #'  Extra arguments are specified through \code{...}. \code{taskqueue_options()} is passed
 #'  into workers.
@@ -275,7 +276,7 @@ worker_slurm <- function(project, resource, fun, rfile,
     if (resource_info$type != "slurm") {
         stop("only used for slurm cluster.")
     }
-    pr_info <- pr_info[pr_info$resource_id == resource_info$id,]
+    pr_info <- pr_info[pr_info$resource_id == resource_info$id, ]
 
     if (nrow(pr_info) != 1) {
         stop("Cannot find resource (", resource, ") for project (", project, ")")
@@ -297,7 +298,7 @@ worker_slurm <- function(project, resource, fun, rfile,
 
     # Job name
     job_suffix <- stringr::str_c(sample(letters, 12, replace = TRUE), collapse = "")
-    job_name <- paste0(project,"-", resource, "-", job_suffix)
+    job_name <- paste0(project, "-", resource, "-", job_suffix)
 
 
     # Replace rcodes file path and working dir
@@ -322,11 +323,9 @@ worker_slurm <- function(project, resource, fun, rfile,
         arguments$options <- taskqueue_options()
         datafile <- file.path(sub_folder, sprintf("%s-data.Rds", job_name))
         saveRDS(arguments, datafile)
-        # arguments_str <- paste(paste(names(arguments), names(arguments), sep = " = "), collapse = ", ")
         script_r <- whisker::whisker.render(template_r,
                                             list(pkgs = pkgs,
-                                                 #arguments = arguments_str,
-                                                 rds_file = datafile))
+                                                rds_file = datafile))
 
         rfile <- file.path(sub_folder, sprintf("%s-rcode.R", job_name))
         writeLines(script_r, rfile)
@@ -364,7 +363,7 @@ worker_slurm <- function(project, resource, fun, rfile,
     submit_options$memory <- project_info$memory
 
     # Replace account
-    if (!(is.null(pr_info$account) | is.na(pr_info$account))) {
+    if (!(is.null(pr_info$account) || is.na(pr_info$account))) {
         submit_options$account <- pr_info$account
     } else {
         submit_options$account <- ""
@@ -425,9 +424,7 @@ worker_slurm <- function(project, resource, fun, rfile,
         message("Run sbatch on ", resource_info$host)
         cmd <- sprintf("cd %s;sbatch %s",
                        sub_folder, sub_file)
-        #cmd <- .cmd_remote(resource_info$host, resource_info$username, cmd)
         Sys.sleep(1)
-        #system(cmd)
         .run_slurm_cmd(cmd, resource_info$host, resource_info$username)
 
 

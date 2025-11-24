@@ -37,8 +37,7 @@
 #' @param memory memory usage in GB
 #' @return no returns
 #' @export
-project_add <- function(project, memory = 10)
-{
+project_add <- function(project, memory = 10) {
     stopifnot(length(project) == 1)
     stopifnot(is.character(project))
     stopifnot(length(memory) == 1)
@@ -49,7 +48,7 @@ project_add <- function(project, memory = 10)
         stop("Cannot use ", project)
     }
 
-    table <- paste('task', project, sep = '_')
+    table <- paste("task", project, sep = "_")
     con <- db_connect()
     # Add types
     sql <- "SELECT * FROM pg_type WHERE typname = 'task_status'"
@@ -117,7 +116,7 @@ project_stop <- function(project) {
     # Cancel running jobs
     pr <- project_resource_get(project, con = con)
     # Cancel slurm jobs
-    pr_slurm <- pr[pr$type == "slurm",]
+    pr_slurm <- pr[pr$type == "slurm", ]
 
     if (nrow(pr_slurm) > 0) {
         for (i in seq_len(nrow(pr_slurm))) {
@@ -128,11 +127,9 @@ project_stop <- function(project) {
             jobs <- strsplit(pr_slurm$jobs[i], ";")[[1]]
             r <- resource_get(pr_slurm$resource[i], con = con)
             cmds <- sprintf('scancel --jobname="%s"', jobs)
-            #cmds <- .cmd_remote(r$host, r$username, cmds)
             for (j in seq(along = cmds)) {
                 Sys.sleep(1)
                 .run_slurm_cmd(cmds[j], r$host, r$username)
-                # system(cmds[j])
             }
             project_resource_add_jobs(project, pr_slurm$resource[i], reset = TRUE)
         }
@@ -167,7 +164,7 @@ project_reset <- function(project, log_clean = TRUE) {
         message("Clear log files")
         pr_info <- project_resource_get(project, con = con)
         # Delete slurm types
-        pr_info_slurm <- pr_info[pr_info$type == "slurm",]
+        pr_info_slurm <- pr_info[pr_info$type == "slurm", ]
         for (i in seq_len(nrow(pr_info_slurm))) {
             project_resource_log_delete(project, pr_info_slurm$resource[i], con = con)
         }

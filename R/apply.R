@@ -39,13 +39,6 @@ tq_apply <- function(n, fun, project, resource,
     # Create/update project if not existed
     project_add(project, memory = memory)
 
-
-    # prjs <- project_list()
-    # if (!(project %in% prjs$name)) {
-    #
-    # } else {
-    #
-    # }
     project_info <- project_get(project, con = con)
     db_disconnect(con)
 

@@ -26,8 +26,8 @@
 #' @return No return is expected
 .check_absolute_path <- function(path) {
     r <- NULL
-    if (.Platform$OS.type == 'windows') {
-        r <- .check_windows_absolute_path()
+    if (.Platform$OS.type == "windows") {
+        r <- .check_windows_absolute_path(path)
     } else if (.Platform$OS.type == "unix") {
         r <- .check_linux_absolute_path(path)
     } else {
@@ -41,7 +41,7 @@
     if (.Platform$OS.type == "unix") {
         exit_code <- suppressWarnings(system2("command", args = c("-v", bin), stdout = FALSE))
     } else if (.Platform$OS.type == "windows") {
-        exit_code = suppressWarnings(system2("where", args = bin, stdout = FALSE,
+        exit_code <- suppressWarnings(system2("where", args = bin, stdout = FALSE,
                                              stderr = FALSE))
     } else {
         stop("Only support unix and windows")
@@ -76,7 +76,7 @@
         return(invisible())
     }
     n_arguments <- names(arguments)
-    if (sum(is.null(n_arguments)) > 0 | sum(nchar(n_arguments) == 0)) {
+    if (sum(is.null(n_arguments)) > 0 || sum(nchar(n_arguments) == 0)) {
         stop("All arguments should be names")
     }
 }

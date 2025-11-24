@@ -15,7 +15,7 @@ test_that("worker", {
         tq_apply(n = 10,
                  fun = fun_test,
                  project = test_project,
-                 resource= test_slurm_resource,
+                 resource = test_slurm_resource,
                  working_dir = Sys.getenv("PGTESTSLURMWORKING"),
                  account = Sys.getenv("PGTESTSLURMACCOUNT"),
                  hours = 1)

@@ -8,8 +8,7 @@
 #' con <- db_connect()
 #' }
 #' @export
-db_connect <- function(con = NULL)
-{
+db_connect <- function(con = NULL) {
     # Check existing connection
     if (!is.null(con)) {
         con_class <- class(con)
@@ -37,8 +36,7 @@ db_connect <- function(con = NULL)
 #' }
 #' @return no return values
 #' @export
-db_disconnect <- function(con)
-{
+db_disconnect <- function(con) {
     if (DBI::dbIsValid(con)) {
         invisible(RPostgres::dbDisconnect(con))
     }
