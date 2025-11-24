@@ -1,6 +1,7 @@
-# Get a project
+# Get Project Information
 
-Get a project
+Retrieves detailed information about a specific project from the
+database.
 
 ## Usage
 
@@ -12,12 +13,52 @@ project_get(project, con = NULL)
 
 - project:
 
-  project name
+  Character string specifying the project name.
 
 - con:
 
-  connection to database
+  An optional database connection. If NULL, a new connection is created
+  and closed automatically.
 
 ## Value
 
-a table of project information
+A single-row data frame containing project information with columns:
+
+- id:
+
+  Unique project identifier
+
+- name:
+
+  Project name
+
+- table:
+
+  Name of the task table for this project
+
+- status:
+
+  Logical indicating if project is running (TRUE) or stopped (FALSE)
+
+- memory:
+
+  Memory requirement in GB for tasks
+
+Stops with an error if the project is not found.
+
+## See also
+
+[`project_add`](https://taskqueue.bangyou.me/reference/project_add.md),
+[`project_list`](https://taskqueue.bangyou.me/reference/project_list.md),
+[`project_resource_get`](https://taskqueue.bangyou.me/reference/project_resource_get.md)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Get project details
+info <- project_get("simulation_study")
+print(info$status)  # Check if running
+print(info$memory)  # Memory requirement
+} # }
+```

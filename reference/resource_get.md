@@ -1,6 +1,7 @@
-# Get a resource
+# Get Information for a Specific Resource
 
-Get a resource
+Retrieves detailed information about a single computing resource by
+name.
 
 ## Usage
 
@@ -12,12 +13,36 @@ resource_get(resource, con = NULL)
 
 - resource:
 
-  resource name
+  Character string specifying the resource name.
 
 - con:
 
-  a db connection
+  An optional database connection. If NULL, a new connection is created
+  and closed automatically.
 
 ## Value
 
-a data frame for selected resource
+A single-row data frame containing resource information. Stops with an
+error if the resource is not found.
+
+## Details
+
+The returned data frame contains all resource configuration details
+needed for worker deployment, including connection information and
+resource limits.
+
+## See also
+
+[`resource_add`](https://taskqueue.bangyou.me/reference/resource_add.md),
+[`resource_list`](https://taskqueue.bangyou.me/reference/resource_list.md)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Get specific resource
+hpc_info <- resource_get("hpc")
+print(hpc_info$workers)  # Maximum workers
+print(hpc_info$log_folder)  # Log directory
+} # }
+```

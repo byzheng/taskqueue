@@ -1,6 +1,6 @@
-# Get all resource
+# List All Computing Resources
 
-Get all resource
+Retrieves all computing resources registered in the database.
 
 ## Usage
 
@@ -10,4 +10,54 @@ resource_list()
 
 ## Value
 
-a data frame for all resources
+A data frame containing information about all resources, with columns:
+
+- id:
+
+  Unique resource identifier
+
+- name:
+
+  Resource name
+
+- type:
+
+  Resource type (e.g., "slurm", "computer")
+
+- host:
+
+  Hostname or IP address
+
+- username:
+
+  Username for SSH connection
+
+- nodename:
+
+  Node name as reported by Sys.info()
+
+- workers:
+
+  Maximum number of concurrent workers
+
+- log_folder:
+
+  Absolute path to log file directory
+
+## See also
+
+[`resource_add`](https://taskqueue.bangyou.me/reference/resource_add.md),
+[`resource_get`](https://taskqueue.bangyou.me/reference/resource_get.md)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# List all resources
+resources <- resource_list()
+print(resources)
+
+# Find SLURM resources
+slurm_resources <- resources[resources$type == "slurm", ]
+} # }
+```

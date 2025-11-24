@@ -119,7 +119,8 @@ is called.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>There are two ways to pass R scripts into workers (i.e. <code>fun</code> or <code>file</code>).
-* <code>fun</code> is used for general and simple case which takes the task id as the first argument. A new r script is created in the log
+* <code>fun</code> is used for general and simple case which takes the task id as
+the first argument. A new r script is created in the log
  folder and running in the workers. The required packages are passed using <code>pkgs</code>.
  Extra arguments are specified through <code>...</code>. <code><a href="taskqueue_options.html">taskqueue_options()</a></code> is passed
  into workers.
