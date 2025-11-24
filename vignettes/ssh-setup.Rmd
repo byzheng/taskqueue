@@ -2,7 +2,7 @@
 title: "SSH Setup for taskqueue"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SSH Setup}
+  %\VignetteIndexEntry{SSH Setup for taskqueue}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

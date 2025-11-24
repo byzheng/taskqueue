@@ -24,7 +24,7 @@ Several R packages have been using for parallel computing (e.g. [High-Performanc
 Install the developing version from [Github](https://github.com/byzheng/taskqueue).
 
 ```r
-devtools::install_github('byzheng/taskqueue')
+remotes::install_github('byzheng/taskqueue')
 ```
 
 ## Getting Started

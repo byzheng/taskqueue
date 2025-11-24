@@ -2,7 +2,7 @@
 title: "PostgreSQL Setup for taskqueue"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{PostgreSQL Setup}
+  %\VignetteIndexEntry{PostgreSQL Setup for taskqueue}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
