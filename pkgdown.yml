@@ -6,7 +6,7 @@ articles:
   postgresql-setup: postgresql-setup.html
   simple-workflow: simple-workflow.html
   ssh-setup: ssh-setup.html
-last_built: 2025-11-24T11:23Z
+last_built: 2025-11-24T11:25Z
 urls:
   reference: https://taskqueue.bangyou.me/reference
   article: https://taskqueue.bangyou.me/articles
