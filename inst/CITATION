@@ -1,0 +1,16 @@
+citHeader("To cite taskqueue in publications use:")
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "taskqueue: Task Queue for Parallel Computing Based on PostgreSQL",
+  author   = "Bangyou Zheng",
+  year     = "2025",
+  note     = "R package version 0.2.0",
+  url      = "https://github.com/byzheng/taskqueue",
+  textVersion = paste(
+    "Zheng, B. (2025).",
+    "taskqueue: Task Queue for Parallel Computing Based on PostgreSQL.",
+    "R package version 0.2.0.",
+    "https://github.com/byzheng/taskqueue"
+  )
+)

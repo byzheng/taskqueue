@@ -1,17 +1,17 @@
 Package: taskqueue
 Type: Package
-Title: Task Queue in R Based on PostgreSQL 
+Title: Task Queue for Parallel Computing Based on PostgreSQL
 Version: 0.2.0
-Maintainer: Bangyou Zheng <bangyou.zheng@csiro.au>
 Authors@R: person("Bangyou", "Zheng", 
                email = "bangyou.zheng@csiro.au", 
                role = c("aut", "cre"))
-Description: Task Queue is implemented in R for asynchronous tasks based on 
-             'PostgreSQL' <https://www.postgresql.org/> database to deal with 
-             uneven load balance among workers and utilise new available workers. 
-             This package is only suitable for parallel computing without 
-             any communication among parallel tasks and to distribute asynchronous tasks
-             to multiple workers. 
+Description: Implements a task queue system for asynchronous parallel computing 
+    using 'PostgreSQL' <https://www.postgresql.org/> as a backend. Designed for 
+    embarrassingly parallel problems where tasks do not communicate with each other.
+    Dynamically distributes tasks to workers, handles uneven load balancing, and 
+    allows new workers to join at any time. Particularly useful for running large 
+    numbers of independent tasks on high-performance computing (HPC) clusters with 
+    'SLURM' job schedulers.
 URL: https://taskqueue.bangyou.me/,
     https://github.com/byzheng/taskqueue
 BugReports: https://github.com/byzheng/taskqueue/issues
@@ -20,7 +20,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
 Depends:
-    R (>= 4.1.0),
+    R (>= 4.1.0)
 Suggests:
     knitr,
     rmarkdown,
