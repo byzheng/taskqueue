@@ -67,6 +67,7 @@ test_that("resource", {
 
     expect_no_error(resource_add(name = test_slurm_resource,
                  host = Sys.getenv("PGTESTSLURMHOST"),
+                 username = Sys.getenv("PGTESTSLURMUSERNAME"),
                  type = "slurm",
                  workers = 5,
                  log_folder = Sys.getenv("PGTESTSLURMLOG")))

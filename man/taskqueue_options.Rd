@@ -17,13 +17,12 @@ Set or get options for my package
 }
 \section{Supported options}{
 
-The following options are supported
 \itemize{
- \item{\code{host}}{host of postgreSQL database}
- \item{\code{port}}{port of postgreSQL database}
- \item{\code{user}}{user name of postgreSQL database}
- \item{\code{password}}{pasword of postgreSQL database}
- \item{\code{database}}{database name of postgreSQL database}
+  \item \code{host}: Host of PostgreSQL database
+  \item \code{port}: Port of PostgreSQL database
+  \item \code{user}: User name of PostgreSQL database
+  \item \code{password}: Password of PostgreSQL database
+  \item \code{database}: Database name of PostgreSQL database
 }
 }
 

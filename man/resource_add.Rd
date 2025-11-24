@@ -10,6 +10,7 @@ resource_add(
   host,
   workers,
   log_folder,
+  username = NULL,
   nodename = strsplit(host, "\\\\.")[[1]][1],
   con = NULL
 )
@@ -24,6 +25,8 @@ resource_add(
 \item{workers}{worker number}
 
 \item{log_folder}{log folder which has to be absolute path.}
+
+\item{username}{username to login the host. If null, the user from Sys.info is used.}
 
 \item{nodename}{nodename obtained by Sys.info()}
 

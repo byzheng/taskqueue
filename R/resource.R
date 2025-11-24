@@ -59,6 +59,7 @@ resource_get <- function(resource, con = NULL) {
 #' @param host host name
 #' @param workers worker number
 #' @param log_folder log folder which has to be absolute path.
+#' @param username username to login the host. If null, the user from Sys.info is used.
 #' @param nodename nodename obtained by Sys.info()
 #' @param con a db connection
 #'
@@ -88,6 +89,8 @@ resource_add <- function(name,
     if (!is.null(username)) {
         stopifnot(length(username) == 1)
         stopifnot(is.character(username))
+    } else {
+        username <- Sys.info()[["user"]]
     }
     stopifnot(workers > 0)
     match.arg(type)

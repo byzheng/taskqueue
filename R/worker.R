@@ -296,7 +296,7 @@ worker_slurm <- function(project, resource, fun, rfile,
 
 
     # Job name
-    job_suffix <- stringi::stri_rand_strings(1, 12, '[a-z]')
+    job_suffix <- stringr::str_c(sample(letters, 12, replace = TRUE), collapse = "")
     job_name <- paste0(project,"-", resource, "-", job_suffix)
 
 
