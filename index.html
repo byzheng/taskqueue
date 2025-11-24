@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Task Queue in R Based On PostgreSQL • taskqueue</title>
+<title>Task Queue in R Based on PostgreSQL • taskqueue</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Task Queue in R Based On PostgreSQL">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Task Queue in R Based on PostgreSQL">
 <meta name="description" content="Task Queue is implemented in R for asynchronous tasks based on PostgreSQL &lt;https://www.postgresql.org/&gt; database to deal with uneven load balance among workers and utilise new available workers. This package is only suitable for parallel computing without any communication among parallel tasks and to distribute asynchronous tasks to multiple workers.">
 <meta property="og:description" content="Task Queue is implemented in R for asynchronous tasks based on PostgreSQL &lt;https://www.postgresql.org/&gt; database to deal with uneven load balance among workers and utilise new available workers. This package is only suitable for parallel computing without any communication among parallel tasks and to distribute asynchronous tasks to multiple workers.">
 <!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-4HPNYGL5FT"></script><script>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">taskqueue</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,15 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/getting-started.html">Getting Started with taskqueue</a></li>
+    <li><a class="dropdown-item" href="articles/postgresql-setup.html">PostgreSQL Setup for taskqueue</a></li>
+    <li><a class="dropdown-item" href="articles/simple-workflow.html">Simple Workflow with tq_apply</a></li>
+    <li><a class="dropdown-item" href="articles/ssh-setup.html">SSH Setup for taskqueue</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -74,117 +83,17 @@
 </h2>
 <p>Install the developing version from <a href="https://github.com/byzheng/taskqueue" class="external-link">Github</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'byzheng/taskqueue'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'byzheng/taskqueue'</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="postgresql-installation-and-configuration">PostgreSQL installation and configuration<a class="anchor" aria-label="anchor" href="#postgresql-installation-and-configuration"></a>
+<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>As large amount of concurrent requests might simultaneously reach the database, a specific server is preferred to install PostgreSQL database and can be connected by all workers. Following the <a href="https://www.postgresql.org/download/" class="external-link">PostgreSQL website</a> to install and configure PostgreSQL. A database should be created for each user.</p>
-<p>In all workers, five environmental variables should be added to <code>.Renviron</code> file to connect database, i.e.</p>
-<pre><code>PGHOST=
-PGPORT=
-PGUSER=
-PGPASSWORD=
-PGDATABASE=</code></pre>
-</div>
-<div class="section level2">
-<h2 id="resource">Resource<a class="anchor" aria-label="anchor" href="#resource"></a>
-</h2>
-<p>A computing resource is defined as a facility/computer which can run multiple jobs/workers.</p>
-<p>A new resource can be added by <code>resource_add</code> with configurations.</p>
+<p>Please refer to</p>
 <ul>
 <li>
-<code>name</code> as resource name</li>
+<a href="https://taskqueue.bangyou.me/vignettes/getting-started.html">Getting Started</a> vignette for more details.</li>
 <li>
-<code>type</code> resource type. Only support <code>slurm</code> at this stage</li>
-<li>
-<code>host</code> network name to access resource</li>
-<li>
-<code>nodename</code> obtain by <code><a href="https://rdrr.io/r/base/Sys.info.html" class="external-link">Sys.info()</a></code> in the resource</li>
-<li>
-<code>workers</code> maximum number of available cores in resource</li>
-<li>
-<code>log_folder</code> folder to store log files in the resource</li>
-</ul>
-<p>Currently only <code>slurm</code> is supported although I plan to implement other types of resource.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/resource_add.html">resource_add</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"hpc"</span>, </span>
-<span>            type <span class="op">=</span> <span class="st">"slurm"</span>, </span>
-<span>            host <span class="op">=</span> <span class="st">"hpc.example.com"</span>, </span>
-<span>            nodename <span class="op">=</span> <span class="st">"hpc"</span>,</span>
-<span>            workers <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>            log_folder <span class="op">=</span> <span class="st">"/home/user/log_folder/"</span><span class="op">)</span></span></code></pre></div>
-<p><code>log_folder</code> is important for troubleshooting and split by <code>project</code>. It wouble be better to store in the high speed hard drive as the frequent I/O process to write log files.</p>
-</div>
-<div class="section level2">
-<h2 id="project">Project<a class="anchor" aria-label="anchor" href="#project"></a>
-</h2>
-<p><code>taskqueue</code> manages tasks by project which has its own resources, working directory, runtime requirements and other configurations.</p>
-<p>A project with unique name can be created by <code>project_add</code> function and assign common requirements (e.g. memory).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/project_add.html">project_add</a></span><span class="op">(</span><span class="st">"test_project"</span>, memory <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
-<p>Assign a <code>resource</code> to <code>project</code> which can be used to schedule workers with configurations (e.g. working directory, total runtimes, project specified workers).</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/project_resource_add.html">project_resource_add</a></span><span class="op">(</span>project <span class="op">=</span> <span class="st">"test_project"</span>, </span>
-<span>                     resource <span class="op">=</span> <span class="st">"hpc"</span><span class="op">)</span></span></code></pre></div>
-<p>Now tasks can be added into database through function <code>task_add</code>, e.g. </p>
-<pre><code><span><span class="fu"><a href="reference/task_add.html">task_add</a></span><span class="op">(</span><span class="va">project</span>, num <span class="op">=</span> <span class="fl">100</span>, clean <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
-<p>Now we can develop a function to actually perform data processing, which</p>
-<ul>
-<li>takes task <code>id</code> as the first argument,</li>
-<li>expect no return values,</li>
-<li>save final output into file system and check whether this task is finished.</li>
-</ul>
-<p>Finally, call <code>worker</code> to run wrapper function with project name.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://taskqueue.bangyou.me/">taskqueue</a></span><span class="op">)</span></span>
-<span><span class="va">fun_test</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="co"># Check output file</span></span>
-<span>    <span class="va">out_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s.Rds"</span>, <span class="va">i</span><span class="op">)</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">out_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="co"># Perform the actual computing</span></span>
-<span>    <span class="co"># ....</span></span>
-<span>    </span>
-<span>    <span class="co"># Save final output</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">out_file</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/worker.html">worker</a></span><span class="op">(</span><span class="st">"test1"</span>, <span class="va">fun_test</span><span class="op">)</span></span></code></pre></div>
-<p>After developing and testing the wrapper function, we can save it into a file (e.g. <code>rcode.R</code>) and then schedule to run it with following functions.</p>
-<ul>
-<li>Reset all or <code>failed</code>/<code>working</code> tasks to <code>idle</code> status with <code>project_reset</code>
-</li>
-<li>Start the project to allow workers consuming tasks with <code>project_start</code>
-</li>
-<li>Schedule tasks into resources (e.g. <code>worker_slurm</code> for slurm cluster)</li>
-<li>Check task status with <code>task_status</code>
-</li>
-<li>Stop project with <code>project_stop</code>
-</li>
-</ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Reset status for all tasks in a project </span></span>
-<span><span class="fu"><a href="reference/project_reset.html">project_reset</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></span>
-<span><span class="co"># Start project</span></span>
-<span><span class="fu"><a href="reference/project_start.html">project_start</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></span>
-<span><span class="co"># Schedule task on slurm resource `hpc`</span></span>
-<span><span class="fu"><a href="reference/worker_slurm.html">worker_slurm</a></span><span class="op">(</span><span class="st">"test1"</span>, <span class="st">"hpc"</span>, <span class="st">"rcode.R"</span>, modules <span class="op">=</span> <span class="st">"sqlite/3.43.1"</span><span class="op">)</span></span>
-<span><span class="co"># Check status of all tasks</span></span>
-<span><span class="fu"><a href="reference/task_status.html">task_status</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></span>
-<span><span class="co"># Stop the project</span></span>
-<span><span class="fu"><a href="reference/project_stop.html">project_stop</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></span></code></pre></div>
-<p>A task has four status</p>
-<ul>
-<li>
-<code>idle</code>: task is not running.</li>
-<li>
-<code>working</code>: task is still running on one of worker.</li>
-<li>
-<code>failed</code>: task is failed with some reason. Check the log folder for trouble shooting.</li>
-<li>
-<code>finished</code>: task is finished without errors.</li>
+<a href="https://taskqueue.bangyou.me/articles/simple-workflow-example.html">Simple workflow example</a> article for a complete simplified workflow.</li>
 </ul>
 </div>
 </div>
@@ -222,7 +131,7 @@ PGDATABASE=</code></pre>
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Bangyou Zheng <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Bangyou Zheng <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
@@ -237,7 +146,7 @@ PGDATABASE=</code></pre>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

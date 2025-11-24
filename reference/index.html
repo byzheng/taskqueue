@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">taskqueue</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,13 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started with taskqueue</a></li>
+    <li><a class="dropdown-item" href="../articles/postgresql-setup.html">PostgreSQL Setup for taskqueue</a></li>
+    <li><a class="dropdown-item" href="../articles/simple-workflow.html">Simple Workflow with tq_apply</a></li>
+    <li><a class="dropdown-item" href="../articles/ssh-setup.html">SSH Setup for taskqueue</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -42,8 +49,7 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -54,217 +60,253 @@
 
         </dt>
         <dd>Clean all tables and definition</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="db_connect.html">db_connect()</a></code>
 
         </dt>
         <dd>Connect to postgreSQL db</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="db_disconnect.html">db_disconnect()</a></code>
 
         </dt>
         <dd>Disconnect to db</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="db_init.html">db_init()</a></code>
 
         </dt>
         <dd>Initialize PostgreSQL database for taskqueue</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="db_sql.html">db_sql()</a></code>
 
         </dt>
         <dd>A Wrapper function for DBI interface</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="dot-check_absolute_path.html">.check_absolute_path()</a></code>
 
         </dt>
         <dd>Check absolute path for system</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="dot-check_linux_absolute_path.html">.check_linux_absolute_path()</a></code>
 
         </dt>
         <dd>Check absolute path for Linux</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="dot-check_windows_absolute_path.html">.check_windows_absolute_path()</a></code>
 
         </dt>
         <dd>Check absolute path for Windows</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="is_db_connect.html">is_db_connect()</a></code>
 
         </dt>
         <dd>Test whether db can be connected</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_add.html">project_add()</a></code>
 
         </dt>
         <dd>Create project to database</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_delete.html">project_delete()</a></code>
 
         </dt>
         <dd>Delete a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_get.html">project_get()</a></code>
 
         </dt>
         <dd>Get a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_list.html">project_list()</a></code>
 
         </dt>
         <dd>List all projects</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_reset.html">project_reset()</a></code>
 
         </dt>
         <dd>Reset a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_resource_add.html">project_resource_add()</a></code>
 
         </dt>
         <dd>Assign a resource to a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_resource_add_jobs.html">project_resource_add_jobs()</a></code>
 
         </dt>
         <dd>Add a job to project/resource</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_resource_get.html">project_resource_get()</a></code>
 
         </dt>
         <dd>Get resources of a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_resource_log_delete.html">project_resource_log_delete()</a></code>
 
         </dt>
         <dd>Delete all logs for a project resource</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_start.html">project_start()</a></code>
 
         </dt>
         <dd>Start a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_status.html">project_status()</a></code>
 
         </dt>
         <dd>Get project status</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="project_stop.html">project_stop()</a></code>
 
         </dt>
         <dd>Stop a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="resource_add.html">resource_add()</a></code>
 
         </dt>
         <dd>Add a new resource</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="resource_get.html">resource_get()</a></code>
 
         </dt>
         <dd>Get a resource</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="resource_list.html">resource_list()</a></code>
 
         </dt>
         <dd>Get all resource</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="shiny_app.html">shiny_app()</a></code>
 
         </dt>
         <dd>A shiny app to monitor project status</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="slurm_deploy.html">slurm_deploy()</a></code>
 
         </dt>
         <dd>Deploy taskqueue into slurm resources</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="table_exist.html">table_exist()</a></code>
 
         </dt>
         <dd>Check whether a table is existed</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="task_add.html">task_add()</a></code>
 
         </dt>
         <dd>Add tasks into a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="task_clean.html">task_clean()</a></code>
 
         </dt>
         <dd>Clear all tasks in a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="task_get.html">task_get()</a></code>
 
         </dt>
         <dd>Get tasks by status</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="task_reset.html">task_reset()</a></code>
 
         </dt>
         <dd>Reset status of all tasks in a project to NULL</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="task_status.html">task_status()</a></code>
 
         </dt>
         <dd>Get task status in a project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="taskqueue_options.html">taskqueue_options()</a></code>
 
         </dt>
         <dd>Set or get options for my package</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="taskqueue_reset.html">taskqueue_reset()</a></code>
 
         </dt>
         <dd>Reset global options for pkg</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="tq_apply.html">tq_apply()</a></code>
 
         </dt>
         <dd>Apply a function with task queue</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="worker.html">worker()</a></code>
 
         </dt>
         <dd>Execute a job on cluster</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="worker_slurm.html">worker_slurm()</a></code>
 
@@ -279,7 +321,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

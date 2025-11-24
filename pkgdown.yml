@@ -1,8 +1,12 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.2.0
 pkgdown_sha: ~
-articles: {}
-last_built: 2024-11-28T00:36Z
+articles:
+  getting-started: getting-started.html
+  postgresql-setup: postgresql-setup.html
+  simple-workflow: simple-workflow.html
+  ssh-setup: ssh-setup.html
+last_built: 2025-11-24T11:03Z
 urls:
   reference: https://taskqueue.bangyou.me/reference
   article: https://taskqueue.bangyou.me/articles

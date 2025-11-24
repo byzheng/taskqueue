@@ -1,0 +1,173 @@
+# SSH Setup for taskqueue
+
+## Overview
+
+If you separate your daily working machine from a remote high
+performance cluster (HPC), the `taskqueue` package can connect to the
+remote server using the R `ssh` library to run tasks remotely.
+
+For example, your daily working machine is `daily-work` and the remote
+HPC head/login node is `hpc-login`. You can submit and run tasks on
+`hpc-login` from `daily-work` via an SSH connection.
+
+To run tasks on a remote server, you must enable **passwordless SSH
+login** from `daily-work` to the remote server.
+
+## Prerequisites
+
+- SSH client installed on your local machine (`daily-work`)
+- SSH server running on the remote HPC (`hpc-login`)
+- User account on the remote server
+- R package `ssh` installed: `install.packages("ssh")`
+
+## Setup Steps
+
+### 1. Generate SSH keypair
+
+Generate a new SSH key pair on your local machine (`daily-work`):
+
+``` sh
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+
+**What happens:** - You’ll be prompted to choose a file location (press
+Enter to accept the default: `~/.ssh/id_ed25519`) - You’ll be asked to
+enter a passphrase (press Enter twice for no passphrase, or enter a
+passphrase for additional security) - Two files will be created: -
+`~/.ssh/id_ed25519` (private key - keep this secure!) -
+`~/.ssh/id_ed25519.pub` (public key - this will be copied to the remote
+server)
+
+**Note:** If you already have an existing SSH key pair and want to use
+it, you can skip this step.
+
+### 2. Copy the public key to the remote server
+
+Install your public key on the remote server to enable passwordless
+login:
+
+``` sh
+ssh-copy-id user@hpc-login
+```
+
+Replace `user` with your actual username on the remote server.
+
+**What happens:** - You’ll be prompted to enter your password for the
+remote server - Your public key will be added to
+`~/.ssh/authorized_keys` on the remote server - Future connections will
+not require a password
+
+**Alternative method (if `ssh-copy-id` is not available):**
+
+``` sh
+cat ~/.ssh/id_ed25519.pub | ssh user@hpc-login "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+```
+
+**Windows users:**
+
+If using PowerShell on Windows:
+
+``` powershell
+type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh user@hpc-login "cat >> ~/.ssh/authorized_keys"
+```
+
+Or use a Git Bash terminal for the Unix-style commands.
+
+### 3. Test the connection
+
+Verify that passwordless SSH login works:
+
+``` sh
+ssh user@hpc-login
+```
+
+**Expected result:** - You should be logged into the remote server
+without being prompted for a password - Type `exit` to close the
+connection
+
+### 4. Test with R
+
+Verify the connection works from R:
+
+``` r
+library(ssh)
+
+# Create SSH session
+session <- ssh_connect("user@hpc-login")
+
+# Run a test command
+ssh_exec_wait(session, command = "hostname")
+
+# Disconnect
+ssh_disconnect(session)
+```
+
+If this works without prompting for a password, your setup is complete!
+
+## Troubleshooting
+
+### Connection still asks for password
+
+**Check file permissions on the remote server:**
+
+``` sh
+ssh user@hpc-login "chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys"
+```
+
+**Verify your public key was added:**
+
+``` sh
+ssh user@hpc-login "cat ~/.ssh/authorized_keys"
+```
+
+You should see your public key listed.
+
+### SSH key not found
+
+If you saved your key with a non-default name, you may need to specify
+it:
+
+``` sh
+ssh -i ~/.ssh/my_custom_key user@hpc-login
+```
+
+Or add it to your SSH config file (`~/.ssh/config`):
+
+    Host hpc-login
+        HostName hpc-login.example.com
+        User user
+        IdentityFile ~/.ssh/my_custom_key
+
+### Using SSH agent (optional, for keys with passphrases)
+
+If you used a passphrase for your SSH key, you can use an SSH agent to
+avoid entering it repeatedly:
+
+``` sh
+# Start the SSH agent
+eval "$(ssh-agent -s)"
+
+# Add your key to the agent
+ssh-add ~/.ssh/id_ed25519
+```
+
+## Security Best Practices
+
+1.  **Never share your private key** (`~/.ssh/id_ed25519`) - keep it
+    secure on your local machine only
+2.  **Use a passphrase** for your SSH key for additional security
+    (especially on shared machines)
+3.  **Set proper file permissions:**
+    - Private key: `chmod 600 ~/.ssh/id_ed25519`
+    - SSH directory: `chmod 700 ~/.ssh`
+4.  **Use different keys** for different servers if working with
+    sensitive systems
+5.  **Regularly rotate keys** and remove old keys from `authorized_keys`
+    files
+
+## Additional Resources
+
+- [SSH Academy - SSH Keys](https://www.ssh.com/academy/ssh/keygen)
+- [GitHub SSH
+  Documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+- [R ssh package documentation](https://cran.r-project.org/package=ssh)
