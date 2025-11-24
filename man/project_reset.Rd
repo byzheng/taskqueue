@@ -2,18 +2,54 @@
 % Please edit documentation in R/project.R
 \name{project_reset}
 \alias{project_reset}
-\title{Reset a project}
+\title{Reset a Project}
 \usage{
 project_reset(project, log_clean = TRUE)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{log_clean}{whether to clean log files}
+\item{log_clean}{Logical indicating whether to delete log files. Default is TRUE.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (resetting tasks and logs).
 }
 \description{
-Reset a project
+Resets all tasks in a project to idle status, stops the project, and
+optionally cleans log files. Useful for restarting a project from scratch.
+}
+\details{
+This function performs three operations:
+\enumerate{
+  \item Resets all tasks to idle status (NULL) using \code{\link{task_reset}}
+  \item Stops the project using \code{\link{project_stop}}
+  \item Optionally deletes all log files from resource log folders
+}
+
+Use this when you want to:
+\itemize{
+  \item Restart failed tasks
+  \item Re-run all tasks after fixing code
+  \item Clean up before redeploying workers
+}
+
+\strong{Warning:} Setting \code{log_clean = TRUE} permanently deletes all
+log files, which may contain useful debugging information.
+}
+\examples{
+\dontrun{
+# Reset project and clean logs
+project_reset("simulation_study")
+
+# Reset but keep logs for debugging
+project_reset("simulation_study", log_clean = FALSE)
+
+# Restart after reset
+project_start("simulation_study")
+worker_slurm("simulation_study", "hpc", fun = my_function)
+}
+}
+\seealso{
+\code{\link{task_reset}}, \code{\link{project_stop}},
+  \code{\link{project_start}}
 }

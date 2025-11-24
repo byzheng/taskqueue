@@ -2,13 +2,42 @@
 % Please edit documentation in R/deploy.R
 \name{slurm_deploy}
 \alias{slurm_deploy}
-\title{Deploy taskqueue into slurm resources}
+\title{Deploy taskqueue Package to SLURM Resources}
 \usage{
 slurm_deploy()
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (installing package
+  on remote resources).
 }
 \description{
-Deploy taskqueue into slurm resources
+Installs or updates the taskqueue package on all registered SLURM resources
+by connecting via SSH and installing from GitHub.
+}
+\details{
+For each SLURM resource in the database, this function:
+\enumerate{
+  \item Connects via SSH to the resource host
+  \item Loads the R module (currently hardcoded as R/4.3.1)
+  \item Installs taskqueue from GitHub using devtools
+}
+
+\strong{Requirements:}
+\itemize{
+  \item SSH access to all SLURM resources
+  \item R and devtools installed on each resource
+  \item Internet access from resources to reach GitHub
+}
+
+\strong{Note:} The R module name is currently hardcoded. Modify the function
+if your resources use different module names.
+}
+\examples{
+\dontrun{
+# Deploy to all SLURM resources
+slurm_deploy()
+}
+}
+\seealso{
+\code{\link{resource_add}}, \code{\link{resource_list}}
 }

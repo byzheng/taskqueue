@@ -2,22 +2,37 @@
 % Please edit documentation in R/db.R
 \name{db_disconnect}
 \alias{db_disconnect}
-\title{Disconnect to db}
+\title{Disconnect from PostgreSQL Database}
 \usage{
 db_disconnect(con)
 }
 \arguments{
-\item{con}{a connection object as produced by dbConnect.}
+\item{con}{A connection object as produced by \code{\link{db_connect}} or
+\code{DBI::dbConnect}.}
 }
 \value{
-no return values
+Invisibly returns NULL. Called for side effects.
 }
 \description{
-Disconnect to db
+Safely closes a database connection. Checks if the connection is valid
+before attempting to disconnect.
+}
+\details{
+This function wraps \code{RPostgres::dbDisconnect()} with a validity check
+to avoid errors when disconnecting an already-closed connection.
 }
 \examples{
 \dontrun{
-con <- db_disconnect()
-dbDisconnect(con)
+# Connect and disconnect
+con <- db_connect()
+# ... perform database operations ...
+db_disconnect(con)
+
+# Safe to call on.exit to ensure cleanup
+con <- db_connect()
+on.exit(db_disconnect(con), add = TRUE)
 }
+}
+\seealso{
+\code{\link{db_connect}}
 }

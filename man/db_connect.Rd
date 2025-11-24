@@ -2,21 +2,48 @@
 % Please edit documentation in R/db.R
 \name{db_connect}
 \alias{db_connect}
-\title{Connect to postgreSQL db}
+\title{Connect to PostgreSQL Database}
 \usage{
 db_connect(con = NULL)
 }
 \arguments{
-\item{con}{An existing connection. Return the existing connection if not null}
+\item{con}{An existing database connection object. If provided and valid,
+this connection is returned. If NULL (default), a new connection is created.}
 }
 \value{
-a connection object as produced by dbConnect
+A PqConnection object from the RPostgres package that can be used
+  for database operations.
 }
 \description{
-Connect to postgreSQL db
+Establishes a connection to the PostgreSQL database using credentials from
+environment variables or \code{taskqueue_options()}. If a valid connection
+is provided, it returns that connection instead of creating a new one.
+}
+\details{
+Connection parameters are read from environment variables set in \code{.Renviron}:
+\itemize{
+  \item \code{PGHOST}: Database server hostname
+  \item \code{PGPORT}: Database server port (typically 5432)
+  \item \code{PGUSER}: Database username
+  \item \code{PGPASSWORD}: Database password
+  \item \code{PGDATABASE}: Database name
+}
+
+The function automatically sets \code{client_min_messages} to WARNING to
+reduce console output noise.
 }
 \examples{
 \dontrun{
+# Create a new connection
 con <- db_connect()
+
+# Reuse existing connection
+con2 <- db_connect(con)
+
+# Always disconnect when done
+db_disconnect(con)
 }
+}
+\seealso{
+\code{\link{db_disconnect}}, \code{\link{taskqueue_options}}
 }

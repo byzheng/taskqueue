@@ -2,18 +2,55 @@
 % Please edit documentation in R/project.R
 \name{project_add}
 \alias{project_add}
-\title{Create project to database}
+\title{Create a New Project}
 \usage{
 project_add(project, memory = 10)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string for the project name. Must be unique and
+cannot be a reserved name (e.g., "config").}
 
-\item{memory}{memory usage in GB}
+\item{memory}{Memory requirement in gigabytes (GB) for each task in this
+project. Default is 10 GB.}
 }
 \value{
-no returns
+Invisibly returns NULL. Called for side effects (creating project in database).
 }
 \description{
-Create project to database
+Creates a new project in the database for managing a set of related tasks.
+Each project has its own task table and configuration.
+}
+\details{
+This function:
+\itemize{
+  \item Creates a new entry in the \code{project} table
+  \item Creates a dedicated task table named \code{task_<project>}
+  \item Sets default memory requirements for all tasks
+}
+
+If a project with the same name already exists, the memory requirement is
+updated but the task table remains unchanged.
+
+After creating a project, you must:
+\enumerate{
+  \item Assign resources with \code{\link{project_resource_add}}
+  \item Add tasks with \code{\link{task_add}}
+  \item Start the project with \code{\link{project_start}}
+}
+}
+\examples{
+\dontrun{
+# Create a project with default memory
+project_add("simulation_study")
+
+# Create with higher memory requirement
+project_add("big_data_analysis", memory = 64)
+
+# Verify project was created
+project_list()
+}
+}
+\seealso{
+\code{\link{project_start}}, \code{\link{project_resource_add}},
+  \code{\link{task_add}}, \code{\link{project_delete}}
 }

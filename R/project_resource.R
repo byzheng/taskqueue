@@ -41,16 +41,60 @@
     return(invisible())
 }
 
-#' Assign a resource to a project
+#' Assign a Resource to a Project
 #'
-#' @param project project name
-#' @param resource resource name
-#' @param working_dir working directory for this resource
-#' @param account optional for account to use this resource
-#' @param hours worker wall times in hours for this resource
-#' @param workers maximum workers for this project.
+#' Associates a computing resource with a project and configures resource-specific
+#' settings like working directory, runtime limits, and worker count.
 #'
-#' @return no return
+#' @param project Character string specifying the project name.
+#' @param resource Character string specifying the resource name.
+#' @param working_dir Absolute path to the working directory on the resource
+#'   where workers will execute.
+#' @param account Optional character string for the account/allocation to use
+#'   on the resource (relevant for SLURM clusters with accounting). Default is NULL.
+#' @param hours Maximum runtime in hours for each worker job. Default is 1 hour.
+#' @param workers Maximum number of concurrent workers for this project on this
+#'   resource. If NULL, uses the resource's maximum worker count.
+#'
+#' @return Invisibly returns NULL. Called for side effects (adding/updating
+#'   project-resource association).
+#'
+#' @details
+#' This function creates or updates the association between a project and resource.
+#' Each project can be associated with multiple resources, and settings are
+#' resource-specific.
+#'
+#' If the project-resource association already exists, only the specified
+#' parameters are updated.
+#'
+#' The \code{working_dir} should exist on the resource and contain any necessary
+#' input files or scripts.
+#'
+#' The \code{hours} parameter sets the SLURM walltime for worker jobs. Workers
+#' will automatically terminate before this limit to avoid being killed mid-task.
+#'
+#' @seealso \code{\link{project_add}}, \code{\link{resource_add}},
+#'   \code{\link{worker_slurm}}, \code{\link{project_resource_get}}
+#'
+#' @examples
+#' \dontrun{
+#' # Assign resource to project with basic settings
+#' project_resource_add(
+#'   project = "simulation_study",
+#'   resource = "hpc",
+#'   working_dir = "/home/user/simulations"
+#' )
+#'
+#' # Assign with specific account and time limit
+#' project_resource_add(
+#'   project = "big_analysis",
+#'   resource = "hpc",
+#'   working_dir = "/scratch/project/data",
+#'   account = "research_group",
+#'   hours = 48,
+#'   workers = 100
+#' )
+#' }
 #' @export
 project_resource_add <- function(project,
                                  resource,
@@ -122,13 +166,34 @@ project_resource_add <- function(project,
 }
 
 
-#' Delete all logs for a project resource
+#' Delete Log Files for a Project Resource
 #'
-#' @param project project name
-#' @param resource resource name
-#' @param con connection to database
+#' Removes all log files from the resource's log folder for a specific project.
+#' Log files include SLURM output/error files and worker scripts.
 #'
-#' @return no return
+#' @param project Character string specifying the project name.
+#' @param resource Character string specifying the resource name.
+#' @param con An optional database connection. If NULL, a new connection is
+#'   created and closed automatically.
+#'
+#' @return Invisibly returns NULL. Called for side effects (deleting log files).
+#'
+#' @details
+#' Deletes all files matching the pattern \code{<project>-<resource>*} from
+#' the log folder specified in the resource configuration.
+#'
+#' Currently only supports SLURM resources.
+#'
+#' This function is automatically called by \code{\link{project_reset}} when
+#' \code{log_clean = TRUE}.
+#'
+#' @seealso \code{\link{project_reset}}, \code{\link{resource_add}}
+#'
+#' @examples
+#' \dontrun{
+#' # Delete logs for specific project-resource
+#' project_resource_log_delete("simulation_study", "hpc")
+#' }
 #' @export
 project_resource_log_delete <- function(project,
                                  resource, con = NULL) {
@@ -157,14 +222,40 @@ project_resource_log_delete <- function(project,
 }
 
 
-#' Add a job to project/resource
+#' Manage SLURM Job List for Project Resource
 #'
-#' @param project project name
-#' @param resource resource name
-#' @param job job name. If missing, reset to empty
-#' @param reset whether to reset jobs
+#' Adds a SLURM job name to the list of active jobs for a project-resource
+#' association, or resets the job list.
 #'
-#' @return no return
+#' @param project Character string specifying the project name.
+#' @param resource Character string specifying the resource name.
+#' @param job Character string with the SLURM job name to add. If missing,
+#'   the job list is reset to empty.
+#' @param reset Logical indicating whether to clear the job list before adding.
+#'   Default is FALSE. If TRUE, replaces all jobs with \code{job}.
+#'
+#' @return Invisibly returns NULL. Called for side effects (updating job list).
+#'
+#' @details
+#' The job list is a semicolon-separated string of SLURM job names stored in
+#' the database. This list is used by \code{\link{project_stop}} to cancel
+#' all jobs when stopping a project.
+#'
+#' Job names are automatically added by \code{\link{worker_slurm}} when
+#' submitting workers.
+#'
+#' Currently only supports SLURM resources.
+#'
+#' @seealso \code{\link{worker_slurm}}, \code{\link{project_stop}}
+#'
+#' @examples
+#' \dontrun{
+#' # Add a job (typically done automatically by worker_slurm)
+#' project_resource_add_jobs("simulation_study", "hpc", "job_12345")
+#'
+#' # Reset job list
+#' project_resource_add_jobs("simulation_study", "hpc", reset = TRUE)
+#' }
 #' @export
 project_resource_add_jobs <- function(project, resource, job, reset = FALSE) {
     if (length(project) != 1 || length(resource) != 1) {

@@ -216,20 +216,20 @@ project_resource_add(project = "simulation_study", resource = "my_hpc")
 task_add("simulation_study", num = 1000, clean = TRUE)
 
 # 6. Create worker function (save as worker_script.R)
-# library(taskqueue)
-# 
-# run_simulation <- function(task_id) {
-#   out_file <- sprintf("results/sim_%04d.Rds", task_id)
-#   if (file.exists(out_file)) return()
-#   
-#   # Run your simulation
-#   result <- your_simulation_function(task_id)
-#   
-#   # Save results
-#   saveRDS(result, out_file)
-# }
-# 
-# worker("simulation_study", run_simulation)
+library(taskqueue)
+
+run_simulation <- function(task_id) {
+    out_file <- sprintf("results/sim_%04d.Rds", task_id)
+    if (file.exists(out_file)) return()
+    
+    # Run your simulation
+    result <- your_simulation_function(task_id)
+    
+    # Save results
+    saveRDS(result, out_file)
+}
+
+worker("simulation_study", run_simulation)
 
 # 7. Deploy to HPC
 project_start("simulation_study")
@@ -250,13 +250,3 @@ project_stop("simulation_study")
 4. **Resource Monitoring**: Use `task_status()` regularly to monitor progress
 5. **Clean Start**: Use `project_reset()` to restart failed tasks
 
-## Next Steps
-
-- Read the PostgreSQL Setup vignette for database configuration details
-- Explore the SSH Setup vignette if working with remote HPC systems
-- Check function documentation with `?function_name` for detailed parameter information
-
-## Additional Resources
-
-- [taskqueue GitHub Repository](https://github.com/byzheng/taskqueue)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)

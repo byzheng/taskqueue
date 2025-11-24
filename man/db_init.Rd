@@ -2,13 +2,41 @@
 % Please edit documentation in R/db.R
 \name{db_init}
 \alias{db_init}
-\title{Initialize PostgreSQL database for taskqueue}
+\title{Initialize PostgreSQL Database for taskqueue}
 \usage{
 db_init()
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (creating database schema).
 }
 \description{
-Initialize PostgreSQL database for taskqueue
+Creates the necessary database schema for taskqueue, including all required
+tables, types, and constraints. This function must be run once before using
+taskqueue for the first time.
+}
+\details{
+This function creates:
+\itemize{
+  \item Custom PostgreSQL types (e.g., \code{task_status} enum)
+  \item \code{project} table for managing projects
+  \item \code{resource} table for computing resources
+  \item \code{project_resource} table for project-resource associations
+}
+
+It is safe to call this function multiple times; existing tables and types
+will not be modified or deleted.
+}
+\examples{
+\dontrun{
+# Initialize database (run once)
+db_init()
+
+# Verify initialization
+con <- db_connect()
+DBI::dbListTables(con)
+db_disconnect(con)
+}
+}
+\seealso{
+\code{\link{db_clean}}, \code{\link{db_connect}}
 }

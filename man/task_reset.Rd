@@ -2,20 +2,60 @@
 % Please edit documentation in R/task.R
 \name{task_reset}
 \alias{task_reset}
-\title{Reset status of all tasks in a project to NULL}
+\title{Reset Task Status to Idle}
 \usage{
 task_reset(project, status = c("working", "failed"), con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{status}{status to reset (e.g. working, failed, or all), all tasks if status = all}
+\item{status}{Character vector of statuses to reset. Can include "working",
+"failed", "finished", or "all". Default is c("working", "failed").}
 
-\item{con}{connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (resetting task status).
 }
 \description{
-Reset status of all tasks in a project to NULL
+Resets tasks with specified statuses back to idle (NULL) state, clearing
+their execution history. This allows them to be picked up by workers again.
+}
+\details{
+Resetting tasks clears:
+\itemize{
+  \item Status (set to NULL/idle)
+  \item Start time
+  \item Finish time
+  \item Error messages
+}
+
+Common use cases:
+\itemize{
+  \item Reset failed tasks after fixing code: \code{status = "failed"}
+  \item Reset interrupted tasks: \code{status = "working"}
+  \item Re-run everything: \code{status = "all"}
+}
+
+Specifying \code{status = "all"} resets all tasks regardless of current status.
+}
+\examples{
+\dontrun{
+# Reset only failed tasks
+task_reset("simulation_study", status = "failed")
+
+# Reset working tasks (e.g., after project_stop)
+task_reset("simulation_study", status = "working")
+
+# Reset all tasks to start over
+task_reset("simulation_study", status = "all")
+
+# Check status after reset
+task_status("simulation_study")
+}
+}
+\seealso{
+\code{\link{task_status}}, \code{\link{task_add}},
+  \code{\link{project_reset}}
 }

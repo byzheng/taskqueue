@@ -2,18 +2,47 @@
 % Please edit documentation in R/project.R
 \name{project_delete}
 \alias{project_delete}
-\title{Delete a project}
+\title{Delete a Project}
 \usage{
 project_delete(project, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{con}{connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (deleting project).
 }
 \description{
-Delete a project
+Permanently removes a project and all associated data from the database.
+This includes the project configuration, task table, and resource assignments.
+}
+\details{
+This function removes:
+\itemize{
+  \item The project's task table (\code{task_<project>}) and all tasks
+  \item All project-resource associations
+  \item The project entry from the project table
+}
+
+\strong{Warning:} This is a destructive operation that cannot be undone.
+All task data and history for this project will be permanently lost.
+
+Log files on resources are NOT automatically deleted. Remove them manually
+if needed.
+}
+\examples{
+\dontrun{
+# Delete a completed project
+project_delete("old_simulation")
+
+# Verify deletion
+project_list()
+}
+}
+\seealso{
+\code{\link{project_add}}, \code{\link{project_reset}},
+  \code{\link{db_clean}}
 }

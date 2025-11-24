@@ -2,13 +2,37 @@
 % Please edit documentation in R/db.R
 \name{is_db_connect}
 \alias{is_db_connect}
-\title{Test whether db can be connected}
+\title{Test Database Connection}
 \usage{
 is_db_connect()
 }
 \value{
-TRUE if test db is available.
+Logical. \code{TRUE} if the database can be connected successfully,
+  \code{FALSE} otherwise.
 }
 \description{
-Test whether db can be connected
+Checks whether a connection to the PostgreSQL database can be established
+with the current configuration.
+}
+\details{
+This function attempts to create a database connection using the credentials
+in environment variables or \code{taskqueue_options()}. It returns FALSE if
+the connection fails for any reason (wrong credentials, network issues,
+PostgreSQL not running, etc.).
+
+Useful for testing database configuration before running workers or adding tasks.
+}
+\examples{
+\dontrun{
+# Test connection
+if (is_db_connect()) {
+  message("Database is accessible")
+  db_init()
+} else {
+  stop("Cannot connect to database. Check .Renviron settings.")
+}
+}
+}
+\seealso{
+\code{\link{db_connect}}, \code{\link{taskqueue_options}}
 }

@@ -2,27 +2,56 @@
 % Please edit documentation in R/options.R
 \name{taskqueue_options}
 \alias{taskqueue_options}
-\title{Set or get options for my package}
+\title{Set or Get taskqueue Options}
 \usage{
 taskqueue_options(...)
 }
 \arguments{
-\item{...}{Option names to retrieve option values or \code{[key]=[value]} pairs to set options.}
+\item{...}{Option names to retrieve values (as strings), or key=value pairs
+to set options. All option names must be specified.}
 }
 \value{
-Options for task queue
+If no arguments: list of all option values.  
+  If argument names only: list of specified option values.  
+  If setting values: invisibly returns updated options.
 }
 \description{
-Set or get options for my package
+Configure or retrieve database connection parameters for taskqueue.
+Options are typically set via environment variables in \code{.Renviron},
+but can be overridden programmatically.
+}
+\details{
+By default, options are read from environment variables set in \code{~/.Renviron}.
+Use this function to override defaults temporarily or check current settings.
+
+Changes are session-specific and don't modify environment variables.
 }
 \section{Supported options}{
 
-\itemize{
-  \item \code{host}: Host of PostgreSQL database
-  \item \code{port}: Port of PostgreSQL database
-  \item \code{user}: User name of PostgreSQL database
-  \item \code{password}: Password of PostgreSQL database
-  \item \code{database}: Database name of PostgreSQL database
+\describe{
+  \item{host}{PostgreSQL server hostname or IP address (from PGHOST)}
+  \item{port}{PostgreSQL server port, typically 5432 (from PGPORT)}
+  \item{user}{Database username (from PGUSER)}
+  \item{password}{Database password (from PGPASSWORD)}
+  \item{database}{Database name (from PGDATABASE)}
 }
 }
 
+\examples{
+\dontrun{
+# View all current options
+taskqueue_options()
+
+# Get specific option
+taskqueue_options("host")
+
+# Set options (temporary override)
+taskqueue_options(host = "localhost", port = 5432)
+
+# Reset to environment variable values
+taskqueue_reset()
+}
+}
+\seealso{
+\code{\link{taskqueue_reset}}, \code{\link{db_connect}}
+}

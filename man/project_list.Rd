@@ -2,16 +2,35 @@
 % Please edit documentation in R/project.R
 \name{project_list}
 \alias{project_list}
-\title{List all projects}
+\title{List All Projects}
 \usage{
 project_list(con = NULL)
 }
 \arguments{
-\item{con}{a db connection}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-a table for all projects
+A data frame with one row per project, or NULL if no projects exist.
+  Columns include: id, name, table, status, and memory.
 }
 \description{
-List all projects
+Retrieves information about all projects in the database.
+}
+\details{
+Returns NULL if the project table doesn't exist (i.e., \code{\link{db_init}}
+has not been called).
+}
+\examples{
+\dontrun{
+# List all projects
+projects <- project_list()
+print(projects)
+
+# Find running projects
+running <- projects[projects$status == TRUE, ]
+}
+}
+\seealso{
+\code{\link{project_add}}, \code{\link{project_get}}
 }

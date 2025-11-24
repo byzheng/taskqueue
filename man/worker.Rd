@@ -2,26 +2,71 @@
 % Please edit documentation in R/worker.R
 \name{worker}
 \alias{worker}
-\title{Execute a job on cluster}
+\title{Execute Tasks as a Worker}
 \usage{
 worker(project, fun, ...)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{fun}{function to run actual works which will take task id as the first argument}
+\item{fun}{Function to execute for each task. Must accept the task ID as its
+first argument. The function should save its results to disk and is not
+expected to return a value.}
 
-\item{...}{other arguments passed to fun}
+\item{...}{Additional arguments passed to \code{fun} for every task.}
 }
 \value{
-No return is expected from this function
+Does not return normally. Stops when: no more tasks are available,
+  the project is stopped, or runtime limit is reached (SLURM only).
 }
 \description{
-A worker will listen task channel to get a new job, run this job and mark job
-is finished until get a shutdown message to stop this function.
+Runs as a worker process that continuously fetches and executes tasks from
+a project until no tasks remain or the project is stopped.
+}
+\details{
+This function implements the worker loop:
+\enumerate{
+  \item Request a task from the database (atomically)
+  \item Update task status to "working"
+  \item Execute \code{fun(task_id, ...)}
+  \item Update task status to "finished" (or "failed" if error)
+  \item Repeat until no more tasks or stopping condition
+}
+
+Workers automatically:
+\itemize{
+  \item Add random delays to reduce database contention
+  \item Track runtime to respect SLURM walltime limits
+  \item Reconnect to database on connection failures
+  \item Log progress and errors to console
+}
+
+Your worker function should:
+\itemize{
+  \item Check if output already exists (idempotent)
+  \item Save results to disk (not return them)
+  \item Handle errors gracefully or let them propagate
+}
+
+For SLURM resources, set the \code{TASKQUEUE_RESOURCE} environment variable
+to enable automatic walltime management.
 }
 \examples{
 \dontrun{
-worker("test_project", mean)
+# Define worker function
+my_task <- function(task_id, param1, param2) {
+  out_file <- sprintf("results/task_\%04d.Rds", task_id)
+  if (file.exists(out_file)) return()  # Skip if done
+ 
+  result <- expensive_computation(task_id, param1, param2)
+  saveRDS(result, out_file)
 }
+
+# Run worker locally (for testing)
+worker("test_project", my_task, param1 = 10, param2 = "value")
+}
+}
+\seealso{
+\code{\link{worker_slurm}}, \code{\link{task_add}},
+  \code{\link{project_start}}, \code{\link{tq_apply}}
 }

@@ -2,20 +2,40 @@
 % Please edit documentation in R/project_resource.R
 \name{project_resource_log_delete}
 \alias{project_resource_log_delete}
-\title{Delete all logs for a project resource}
+\title{Delete Log Files for a Project Resource}
 \usage{
 project_resource_log_delete(project, resource, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{resource}{resource name}
+\item{resource}{Character string specifying the resource name.}
 
-\item{con}{connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (deleting log files).
 }
 \description{
-Delete all logs for a project resource
+Removes all log files from the resource's log folder for a specific project.
+Log files include SLURM output/error files and worker scripts.
+}
+\details{
+Deletes all files matching the pattern \code{<project>-<resource>*} from
+the log folder specified in the resource configuration.
+
+Currently only supports SLURM resources.
+
+This function is automatically called by \code{\link{project_reset}} when
+\code{log_clean = TRUE}.
+}
+\examples{
+\dontrun{
+# Delete logs for specific project-resource
+project_resource_log_delete("simulation_study", "hpc")
+}
+}
+\seealso{
+\code{\link{project_reset}}, \code{\link{resource_add}}
 }

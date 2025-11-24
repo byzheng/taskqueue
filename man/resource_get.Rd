@@ -2,18 +2,35 @@
 % Please edit documentation in R/resource.R
 \name{resource_get}
 \alias{resource_get}
-\title{Get a resource}
+\title{Get Information for a Specific Resource}
 \usage{
 resource_get(resource, con = NULL)
 }
 \arguments{
-\item{resource}{resource name}
+\item{resource}{Character string specifying the resource name.}
 
-\item{con}{a db connection}
+\item{con}{An optional database connection. If NULL, a new connection is created
+and closed automatically.}
 }
 \value{
-a data frame for selected resource
+A single-row data frame containing resource information. Stops with
+  an error if the resource is not found.
 }
 \description{
-Get a resource
+Retrieves detailed information about a single computing resource by name.
+}
+\details{
+The returned data frame contains all resource configuration details needed
+for worker deployment, including connection information and resource limits.
+}
+\examples{
+\dontrun{
+# Get specific resource
+hpc_info <- resource_get("hpc")
+print(hpc_info$workers)  # Maximum workers
+print(hpc_info$log_folder)  # Log directory
+}
+}
+\seealso{
+\code{\link{resource_add}}, \code{\link{resource_list}}
 }

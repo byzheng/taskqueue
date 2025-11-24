@@ -11,21 +11,51 @@ TASKQUEUE_OPTIONS <- settings::options_manager(
     )
 
 
-#' Set or get options for my package
+#' Set or Get taskqueue Options
 #'
-#' @param ... Option names to retrieve option values or \code{[key]=[value]} pairs to set options.
+#' Configure or retrieve database connection parameters for taskqueue.
+#' Options are typically set via environment variables in \code{.Renviron},
+#' but can be overridden programmatically.
+#'
+#' @param ... Option names to retrieve values (as strings), or key=value pairs
+#'   to set options. All option names must be specified.
 #'
 #' @section Supported options:
-#' \itemize{
-#'   \item \code{host}: Host of PostgreSQL database
-#'   \item \code{port}: Port of PostgreSQL database
-#'   \item \code{user}: User name of PostgreSQL database
-#'   \item \code{password}: Password of PostgreSQL database
-#'   \item \code{database}: Database name of PostgreSQL database
+#' \describe{
+#'   \item{host}{PostgreSQL server hostname or IP address (from PGHOST)}
+#'   \item{port}{PostgreSQL server port, typically 5432 (from PGPORT)}
+#'   \item{user}{Database username (from PGUSER)}
+#'   \item{password}{Database password (from PGPASSWORD)}
+#'   \item{database}{Database name (from PGDATABASE)}
 #' }
 #'
+#' @return If no arguments: list of all option values.  
+#'   If argument names only: list of specified option values.  
+#'   If setting values: invisibly returns updated options.
+#'
+#' @details
+#' By default, options are read from environment variables set in \code{~/.Renviron}.
+#' Use this function to override defaults temporarily or check current settings.
+#'
+#' Changes are session-specific and don't modify environment variables.
+#'
+#' @seealso \code{\link{taskqueue_reset}}, \code{\link{db_connect}}
+#'
+#' @examples
+#' \dontrun{
+#' # View all current options
+#' taskqueue_options()
+#'
+#' # Get specific option
+#' taskqueue_options("host")
+#'
+#' # Set options (temporary override)
+#' taskqueue_options(host = "localhost", port = 5432)
+#'
+#' # Reset to environment variable values
+#' taskqueue_reset()
+#' }
 #' @export
-#' @return Options for task queue
 taskqueue_options <- function(...){
     # protect against the use of reserved words.
     settings::stop_if_reserved(...)
@@ -37,10 +67,30 @@ taskqueue_options <- function(...){
     TASKQUEUE_OPTIONS(...)
 }
 
-#' Reset global options for pkg
+#' Reset taskqueue Options to Defaults
 #'
+#' Resets all taskqueue options to their default values from environment variables.
+#'
+#' @return Invisibly returns NULL. Called for side effects (resetting options).
+#'
+#' @details
+#' This function restores options to the values specified in environment variables
+#' (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE). Any programmatic changes
+#' made via \code{\link{taskqueue_options}} are discarded.
+#'
+#' Useful after temporarily modifying connection parameters.
+#'
+#' @seealso \code{\link{taskqueue_options}}
+#'
+#' @examples
+#' \dontrun{
+#' # Override options temporarily
+#' taskqueue_options(host = "test.server.com")
+#'
+#' # Reset to environment variable values
+#' taskqueue_reset()
+#' }
 #' @export
-#' @return no return
 taskqueue_reset <- function() {
     settings::reset(TASKQUEUE_OPTIONS)
 }

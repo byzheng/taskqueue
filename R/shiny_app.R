@@ -1,7 +1,28 @@
 
-#' A shiny app to monitor project status
+#' Launch Shiny App for Monitoring Projects
 #'
-#' @return no return
+#' Starts an interactive Shiny application to monitor task progress and
+#' runtime statistics for taskqueue projects.
+#'
+#' @return Does not return while the app is running. Stops when the app is closed.
+#'
+#' @details
+#' The Shiny app provides:
+#' \itemize{
+#'   \item Project selector dropdown
+#'   \item Real-time task status table (updates every 5 seconds)
+#'   \item Runtime distribution histogram for completed tasks
+#' }
+#'
+#' Useful for monitoring long-running projects and identifying performance issues.
+#'
+#' @seealso \code{\link{project_status}}, \code{\link{task_status}}
+#'
+#' @examples
+#' \dontrun{
+#' # Launch monitoring app
+#' shiny_app()
+#' }
 #' @export
 shiny_app <- function() {
     projects <- project_list()

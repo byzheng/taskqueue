@@ -2,22 +2,61 @@
 % Please edit documentation in R/task.R
 \name{task_get}
 \alias{task_get}
-\title{Get tasks by status}
+\title{Get Detailed Task Information}
 \usage{
 task_get(project, status = c("failed"), limit = 10, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{status}{status to reset (e.g. working, failed, or all), all tasks if status = all}
+\item{status}{Character vector of statuses to retrieve. Can include "working",
+"failed", "finished", or "all". Default is "failed".}
 
-\item{limit}{number of rows to return}
+\item{limit}{Maximum number of tasks to return (integer). Default is 10.}
 
-\item{con}{connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-A data frame of tasks
+A data frame with detailed task information:
+  \item{id}{Task ID}
+  \item{status}{Current status}
+  \item{start}{Start timestamp}
+  \item{finish}{Finish timestamp}
+  \item{message}{Error message (for failed tasks) or NULL}
+  \item{runtime}{Calculated runtime in seconds}
 }
 \description{
-Get tasks by status
+Retrieves detailed information about tasks with specified statuses, including
+execution times and error messages.
+}
+\details{
+Useful for:
+\itemize{
+  \item Debugging failed tasks (examine error messages)
+  \item Analyzing runtime patterns
+  \item Identifying slow tasks
+}
+
+The \code{runtime} column is calculated as the difference between finish and
+start times in seconds.
+
+Specifying \code{status = "all"} returns tasks of any status.
+}
+\examples{
+\dontrun{
+# Get first 10 failed tasks
+failed <- task_get("simulation_study", status = "failed")
+print(failed$message)  # View error messages
+
+# Get all finished tasks
+finished <- task_get("simulation_study", status = "finished", limit = 1000)
+hist(finished$runtime, main = "Task Runtime Distribution")
+
+# Get tasks of any status
+all_tasks <- task_get("simulation_study", status = "all", limit = 50)
+}
+}
+\seealso{
+\code{\link{task_status}}, \code{\link{task_reset}}
 }

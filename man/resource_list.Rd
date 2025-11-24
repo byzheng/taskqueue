@@ -2,13 +2,34 @@
 % Please edit documentation in R/resource.R
 \name{resource_list}
 \alias{resource_list}
-\title{Get all resource}
+\title{List All Computing Resources}
 \usage{
 resource_list()
 }
 \value{
-a data frame for all resources
+A data frame containing information about all resources, with columns:
+  \item{id}{Unique resource identifier}
+  \item{name}{Resource name}
+  \item{type}{Resource type (e.g., "slurm", "computer")}
+  \item{host}{Hostname or IP address}
+  \item{username}{Username for SSH connection}
+  \item{nodename}{Node name as reported by Sys.info()}
+  \item{workers}{Maximum number of concurrent workers}
+  \item{log_folder}{Absolute path to log file directory}
 }
 \description{
-Get all resource
+Retrieves all computing resources registered in the database.
+}
+\examples{
+\dontrun{
+# List all resources
+resources <- resource_list()
+print(resources)
+
+# Find SLURM resources
+slurm_resources <- resources[resources$type == "slurm", ]
+}
+}
+\seealso{
+\code{\link{resource_add}}, \code{\link{resource_get}}
 }

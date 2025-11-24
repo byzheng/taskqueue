@@ -2,18 +2,38 @@
 % Please edit documentation in R/project.R
 \name{project_status}
 \alias{project_status}
-\title{Get project status}
+\title{Display Project Status}
 \usage{
 project_status(project, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{con}{a connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (printing status).
 }
 \description{
-Get project status
+Prints a summary of project status including whether it's running and
+the current status of all tasks.
+}
+\details{
+Displays:
+\itemize{
+  \item Whether the project is running or stopped
+  \item Task status summary from \code{\link{task_status}}
+}
+
+Use this function to monitor progress and identify failed tasks.
+}
+\examples{
+\dontrun{
+# Check project status
+project_status("simulation_study")
+}
+}
+\seealso{
+\code{\link{task_status}}, \code{\link{project_get}}
 }

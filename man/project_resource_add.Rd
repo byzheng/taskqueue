@@ -2,7 +2,7 @@
 % Please edit documentation in R/project_resource.R
 \name{project_resource_add}
 \alias{project_resource_add}
-\title{Assign a resource to a project}
+\title{Assign a Resource to a Project}
 \usage{
 project_resource_add(
   project,
@@ -14,21 +14,64 @@ project_resource_add(
 )
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{resource}{resource name}
+\item{resource}{Character string specifying the resource name.}
 
-\item{working_dir}{working directory for this resource}
+\item{working_dir}{Absolute path to the working directory on the resource
+where workers will execute.}
 
-\item{account}{optional for account to use this resource}
+\item{account}{Optional character string for the account/allocation to use
+on the resource (relevant for SLURM clusters with accounting). Default is NULL.}
 
-\item{hours}{worker wall times in hours for this resource}
+\item{hours}{Maximum runtime in hours for each worker job. Default is 1 hour.}
 
-\item{workers}{maximum workers for this project.}
+\item{workers}{Maximum number of concurrent workers for this project on this
+resource. If NULL, uses the resource's maximum worker count.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (adding/updating
+  project-resource association).
 }
 \description{
-Assign a resource to a project
+Associates a computing resource with a project and configures resource-specific
+settings like working directory, runtime limits, and worker count.
+}
+\details{
+This function creates or updates the association between a project and resource.
+Each project can be associated with multiple resources, and settings are
+resource-specific.
+
+If the project-resource association already exists, only the specified
+parameters are updated.
+
+The \code{working_dir} should exist on the resource and contain any necessary
+input files or scripts.
+
+The \code{hours} parameter sets the SLURM walltime for worker jobs. Workers
+will automatically terminate before this limit to avoid being killed mid-task.
+}
+\examples{
+\dontrun{
+# Assign resource to project with basic settings
+project_resource_add(
+  project = "simulation_study",
+  resource = "hpc",
+  working_dir = "/home/user/simulations"
+)
+
+# Assign with specific account and time limit
+project_resource_add(
+  project = "big_analysis",
+  resource = "hpc",
+  working_dir = "/scratch/project/data",
+  account = "research_group",
+  hours = 48,
+  workers = 100
+)
+}
+}
+\seealso{
+\code{\link{project_add}}, \code{\link{resource_add}},
+  \code{\link{worker_slurm}}, \code{\link{project_resource_get}}
 }

@@ -2,13 +2,32 @@
 % Please edit documentation in R/options.R
 \name{taskqueue_reset}
 \alias{taskqueue_reset}
-\title{Reset global options for pkg}
+\title{Reset taskqueue Options to Defaults}
 \usage{
 taskqueue_reset()
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (resetting options).
 }
 \description{
-Reset global options for pkg
+Resets all taskqueue options to their default values from environment variables.
+}
+\details{
+This function restores options to the values specified in environment variables
+(PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE). Any programmatic changes
+made via \code{\link{taskqueue_options}} are discarded.
+
+Useful after temporarily modifying connection parameters.
+}
+\examples{
+\dontrun{
+# Override options temporarily
+taskqueue_options(host = "test.server.com")
+
+# Reset to environment variable values
+taskqueue_reset()
+}
+}
+\seealso{
+\code{\link{taskqueue_options}}
 }

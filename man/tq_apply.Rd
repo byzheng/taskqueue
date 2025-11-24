@@ -2,7 +2,7 @@
 % Please edit documentation in R/apply.R
 \name{tq_apply}
 \alias{tq_apply}
-\title{Apply a function with task queue}
+\title{Apply a Function with Task Queue (Simplified Workflow)}
 \usage{
 tq_apply(
   n,
@@ -17,27 +17,99 @@ tq_apply(
 )
 }
 \arguments{
-\item{n}{Number of task}
+\item{n}{Integer specifying the number of tasks to run. Your function will
+be called with arguments 1, 2, ..., n.}
 
-\item{fun}{A function}
+\item{fun}{Function to execute for each task. Must accept the task ID as its
+first argument. Should save results to disk.}
 
-\item{project}{Project name}
+\item{project}{Character string for project name. Will be created if it
+doesn't exist, updated if it does.}
 
-\item{resource}{Resource name}
+\item{resource}{Character string for resource name. Must already exist
+(created via \code{\link{resource_add}}).}
 
-\item{memory}{Memory in GB}
+\item{memory}{Memory requirement in GB for each task. Default is 10 GB.}
 
-\item{hour}{Maximum runtime in cluster}
+\item{hour}{Maximum runtime in hours for worker jobs. Default is 24 hours.}
 
-\item{account}{Optional. Account for cluster}
+\item{account}{Optional character string for SLURM account/allocation.
+Default is NULL.}
 
-\item{working_dir}{Working directory in cluster}
+\item{working_dir}{Working directory on the cluster where tasks execute.
+Default is current directory (\code{getwd()}).}
 
-\item{...}{Other arguments for fun}
+\item{...}{Additional arguments passed to \code{fun} for every task.}
 }
 \value{
-No return values
+Invisibly returns NULL. Called for side effects (scheduling workers).
 }
 \description{
-Apply a function with task queue
+A high-level interface for running embarrassingly parallel tasks on HPC
+clusters. Combines project creation, task addition, and worker scheduling
+into a single function call, similar to \code{lapply}.
+}
+\details{
+This function automates the standard taskqueue workflow:
+\enumerate{
+  \item Creates or updates the project with specified memory
+  \item Assigns the resource to the project
+  \item Adds \code{n} tasks (cleaning any existing tasks)
+  \item Resets all tasks to idle status
+  \item Schedules workers on the SLURM cluster
+}
+
+Equivalent to manually calling:
+\preformatted{
+project_add(project, memory = memory)
+project_resource_add(project, resource, working_dir, account, hour, n)
+task_add(project, n, clean = TRUE)
+project_reset(project)
+worker_slurm(project, resource, fun = fun, ...)
+}
+
+\strong{Before using tq_apply:}
+\itemize{
+  \item Initialize database: \code{db_init()}
+  \item Create resource: \code{resource_add(...)}
+  \item Configure \code{.Renviron} with database credentials
+}
+
+Your worker function should:
+\itemize{
+  \item Take task ID as first argument
+  \item Save results to files (not return values)
+  \item Be idempotent (check if output exists)
+}
+}
+\examples{
+\dontrun{
+# Simple example
+my_simulation <- function(i, param) {
+  out_file <- sprintf("results/sim_\%04d.Rds", i)
+  if (file.exists(out_file)) return()
+  result <- run_simulation(i, param)
+  saveRDS(result, out_file)
+}
+
+# Run 100 simulations on HPC
+tq_apply(
+  n = 100,
+  fun = my_simulation,
+  project = "my_study",
+  resource = "hpc",
+  memory = 16,
+  hour = 6,
+  param = 5
+)
+
+# Monitor progress
+project_status("my_study")
+task_status("my_study")
+}
+}
+\seealso{
+\code{\link{worker}}, \code{\link{worker_slurm}},
+  \code{\link{project_add}}, \code{\link{task_add}},
+  \code{\link{resource_add}}
 }

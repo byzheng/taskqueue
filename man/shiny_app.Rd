@@ -2,13 +2,33 @@
 % Please edit documentation in R/shiny_app.R
 \name{shiny_app}
 \alias{shiny_app}
-\title{A shiny app to monitor project status}
+\title{Launch Shiny App for Monitoring Projects}
 \usage{
 shiny_app()
 }
 \value{
-no return
+Does not return while the app is running. Stops when the app is closed.
 }
 \description{
-A shiny app to monitor project status
+Starts an interactive Shiny application to monitor task progress and
+runtime statistics for taskqueue projects.
+}
+\details{
+The Shiny app provides:
+\itemize{
+  \item Project selector dropdown
+  \item Real-time task status table (updates every 5 seconds)
+  \item Runtime distribution histogram for completed tasks
+}
+
+Useful for monitoring long-running projects and identifying performance issues.
+}
+\examples{
+\dontrun{
+# Launch monitoring app
+shiny_app()
+}
+}
+\seealso{
+\code{\link{project_status}}, \code{\link{task_status}}
 }

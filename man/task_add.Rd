@@ -2,22 +2,51 @@
 % Please edit documentation in R/task.R
 \name{task_add}
 \alias{task_add}
-\title{Add tasks into a project}
+\title{Add Tasks to a Project}
 \usage{
 task_add(project, num, clean = TRUE, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{num}{number of tasks}
+\item{num}{Integer specifying the number of tasks to create.}
 
-\item{clean}{whether to clean existing tasks}
+\item{clean}{Logical indicating whether to delete existing tasks before adding
+new ones. Default is TRUE.}
 
-\item{con}{a connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (adding tasks to database).
 }
 \description{
-Add tasks into a project
+Creates a specified number of tasks in a project's task table. Each task
+is assigned a unique ID and initially has idle (NULL) status.
+}
+\details{
+Tasks are created with sequential IDs from 1 to \code{num}. Each task initially
+has NULL status (idle) and will be assigned to workers after the project is started.
+
+If \code{clean = TRUE}, all existing tasks are removed using \code{\link{task_clean}}
+before adding new tasks. If FALSE, new tasks are added but existing tasks remain
+(duplicates are ignored due to primary key constraints).
+
+Your worker function will receive the task ID as its first argument.
+}
+\examples{
+\dontrun{
+# Add 100 tasks to a project
+task_add("simulation_study", num = 100)
+
+# Add tasks without cleaning existing ones
+task_add("simulation_study", num = 50, clean = FALSE)
+
+# Check task status
+task_status("simulation_study")
+}
+}
+\seealso{
+\code{\link{task_clean}}, \code{\link{task_status}},
+  \code{\link{worker}}, \code{\link{project_start}}
 }

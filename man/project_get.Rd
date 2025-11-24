@@ -2,18 +2,38 @@
 % Please edit documentation in R/project.R
 \name{project_get}
 \alias{project_get}
-\title{Get a project}
+\title{Get Project Information}
 \usage{
 project_get(project, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{con}{connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-a table of project information
+A single-row data frame containing project information with columns:
+  \item{id}{Unique project identifier}
+  \item{name}{Project name}
+  \item{table}{Name of the task table for this project}
+  \item{status}{Logical indicating if project is running (TRUE) or stopped (FALSE)}
+  \item{memory}{Memory requirement in GB for tasks}
+
+  Stops with an error if the project is not found.
 }
 \description{
-Get a project
+Retrieves detailed information about a specific project from the database.
+}
+\examples{
+\dontrun{
+# Get project details
+info <- project_get("simulation_study")
+print(info$status)  # Check if running
+print(info$memory)  # Memory requirement
+}
+}
+\seealso{
+\code{\link{project_add}}, \code{\link{project_list}},
+  \code{\link{project_resource_get}}
 }

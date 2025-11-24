@@ -2,18 +2,50 @@
 % Please edit documentation in R/task.R
 \name{task_status}
 \alias{task_status}
-\title{Get task status in a project}
+\title{Get Task Status Summary}
 \usage{
 task_status(project, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{con}{a connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-a table to show task status
+A data frame with one row per status, containing:
+  \item{status}{Task status: "idle", "working", "finished", or "failed"}
+  \item{count}{Number of tasks with this status (integer)}
+  \item{ratio}{Proportion of tasks with this status (numeric)}
 }
 \description{
-Get task status in a project
+Returns a summary table showing the number and proportion of tasks in each
+status for a project.
+}
+\details{
+Task statuses:
+\itemize{
+  \item \strong{idle} (NULL in database): Task not yet started
+  \item \strong{working}: Task currently being processed by a worker
+  \item \strong{finished}: Task completed successfully
+  \item \strong{failed}: Task encountered an error
+}
+
+Use this function to monitor progress and identify problems.
+}
+\examples{
+\dontrun{
+# Check task status
+status <- task_status("simulation_study")
+print(status)
+
+# Calculate completion percentage
+finished <- status$count[status$status == "finished"]
+total <- sum(status$count)
+pct_complete <- 100 * finished / total
+}
+}
+\seealso{
+\code{\link{task_get}}, \code{\link{task_reset}},
+  \code{\link{project_status}}
 }

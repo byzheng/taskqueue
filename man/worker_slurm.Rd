@@ -48,7 +48,8 @@ Create a worker on slurm cluster
 }
 \details{
 There are two ways to pass R scripts into workers (i.e. \code{fun} or \code{file}).
-* \code{fun} is used for general and simple case which takes the task id as the first argument. A new r script is created in the log
+* \code{fun} is used for general and simple case which takes the task id as 
+the first argument. A new r script is created in the log
  folder and running in the workers. The required packages are passed using \code{pkgs}.
  Extra arguments are specified through \code{...}. \code{taskqueue_options()} is passed
  into workers.

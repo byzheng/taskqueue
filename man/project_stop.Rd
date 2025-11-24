@@ -2,16 +2,42 @@
 % Please edit documentation in R/project.R
 \name{project_stop}
 \alias{project_stop}
-\title{Stop a project}
+\title{Stop a Project}
 \usage{
 project_stop(project)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (stopping project and jobs).
 }
 \description{
-Stop a project
+Deactivates a project and cancels all running SLURM jobs associated with it.
+Workers will terminate after completing their current task.
+}
+\details{
+This function:
+\itemize{
+  \item Sets the project status to FALSE, preventing workers from taking new tasks
+  \item Cancels all SLURM jobs associated with this project using \code{scancel}
+  \item Resets the job list for all project resources
+}
+
+Active workers will complete their current task before shutting down. Tasks
+in \code{working} status when the project stops should be reset to \code{idle}
+using \code{\link{project_reset}} or \code{\link{task_reset}}.
+}
+\examples{
+\dontrun{
+# Stop project and cancel all jobs
+project_stop("simulation_study")
+
+# Reset tasks that were in progress
+task_reset("simulation_study", status = "working")
+}
+}
+\seealso{
+\code{\link{project_start}}, \code{\link{project_reset}},
+  \code{\link{task_reset}}
 }

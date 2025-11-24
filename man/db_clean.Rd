@@ -2,13 +2,42 @@
 % Please edit documentation in R/db.R
 \name{db_clean}
 \alias{db_clean}
-\title{Clean all tables and definition}
+\title{Clean All Tables and Definitions from Database}
 \usage{
 db_clean()
 }
 \value{
-No return
+Invisibly returns NULL. Called for side effects (dropping database objects).
 }
 \description{
-Clean all tables and definition
+Removes all taskqueue-related tables, types, and data from the PostgreSQL
+database. This is a destructive operation that cannot be undone.
+}
+\details{
+This function drops:
+\itemize{
+  \item All project task tables
+  \item The \code{project_resource} table
+  \item The \code{project} table
+  \item The \code{resource} table
+  \item All custom types (e.g., \code{task_status})
+}
+
+\strong{Warning:} This permanently deletes all projects, tasks, and configurations.
+Use with extreme caution, typically only for testing or complete resets.
+
+After cleaning, you must call \code{\link{db_init}} to recreate the schema
+before using taskqueue again.
+}
+\examples{
+\dontrun{
+# Clean entire database (destructive!)
+db_clean()
+
+# Reinitialize after cleaning
+db_init()
+}
+}
+\seealso{
+\code{\link{db_init}}
 }

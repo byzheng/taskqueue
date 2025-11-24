@@ -2,22 +2,47 @@
 % Please edit documentation in R/project_resource.R
 \name{project_resource_add_jobs}
 \alias{project_resource_add_jobs}
-\title{Add a job to project/resource}
+\title{Manage SLURM Job List for Project Resource}
 \usage{
 project_resource_add_jobs(project, resource, job, reset = FALSE)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{resource}{resource name}
+\item{resource}{Character string specifying the resource name.}
 
-\item{job}{job name. If missing, reset to empty}
+\item{job}{Character string with the SLURM job name to add. If missing,
+the job list is reset to empty.}
 
-\item{reset}{whether to reset jobs}
+\item{reset}{Logical indicating whether to clear the job list before adding.
+Default is FALSE. If TRUE, replaces all jobs with \code{job}.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (updating job list).
 }
 \description{
-Add a job to project/resource
+Adds a SLURM job name to the list of active jobs for a project-resource
+association, or resets the job list.
+}
+\details{
+The job list is a semicolon-separated string of SLURM job names stored in
+the database. This list is used by \code{\link{project_stop}} to cancel
+all jobs when stopping a project.
+
+Job names are automatically added by \code{\link{worker_slurm}} when
+submitting workers.
+
+Currently only supports SLURM resources.
+}
+\examples{
+\dontrun{
+# Add a job (typically done automatically by worker_slurm)
+project_resource_add_jobs("simulation_study", "hpc", "job_12345")
+
+# Reset job list
+project_resource_add_jobs("simulation_study", "hpc", reset = TRUE)
+}
+}
+\seealso{
+\code{\link{worker_slurm}}, \code{\link{project_stop}}
 }

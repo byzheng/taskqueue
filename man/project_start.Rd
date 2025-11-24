@@ -2,18 +2,41 @@
 % Please edit documentation in R/project.R
 \name{project_start}
 \alias{project_start}
-\title{Start a project}
+\title{Start a Project}
 \usage{
 project_start(project, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{con}{connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (updating project status).
 }
 \description{
-Start a project
+Activates a project to allow workers to begin consuming tasks. Workers will
+only process tasks from started projects.
+}
+\details{
+Starting a project sets its \code{status} field to TRUE in the database.
+Workers check this status before requesting new tasks. If a project is
+stopped (status = FALSE), workers will terminate instead of processing tasks.
+
+You must start a project before deploying workers with \code{\link{worker}}
+or \code{\link{worker_slurm}}.
+}
+\examples{
+\dontrun{
+# Start project to enable workers
+project_start("simulation_study")
+
+# Deploy workers after starting
+worker_slurm("simulation_study", "hpc", fun = my_function)
+}
+}
+\seealso{
+\code{\link{project_stop}}, \code{\link{project_add}},
+  \code{\link{worker}}, \code{\link{worker_slurm}}
 }

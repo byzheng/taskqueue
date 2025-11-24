@@ -2,18 +2,42 @@
 % Please edit documentation in R/task.R
 \name{task_clean}
 \alias{task_clean}
-\title{Clear all tasks in a project}
+\title{Remove All Tasks from a Project}
 \usage{
 task_clean(project, con = NULL)
 }
 \arguments{
-\item{project}{project name}
+\item{project}{Character string specifying the project name.}
 
-\item{con}{a connection to database}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (truncating task table).
 }
 \description{
-Clear all tasks in a project
+Deletes all tasks from a project's task table. This is a destructive
+operation that removes all task data and history.
+}
+\details{
+Uses SQL TRUNCATE to efficiently remove all rows from the task table.
+This is faster than DELETE but cannot be rolled back.
+
+\strong{Warning:} All task history, including completion status and runtime
+information, will be permanently lost.
+
+This function is automatically called by \code{\link{task_add}} when
+\code{clean = TRUE}.
+}
+\examples{
+\dontrun{
+# Remove all tasks
+task_clean("simulation_study")
+
+# Add new tasks
+task_add("simulation_study", num = 200)
+}
+}
+\seealso{
+\code{\link{task_add}}, \code{\link{task_reset}}
 }

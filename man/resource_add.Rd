@@ -2,7 +2,7 @@
 % Please edit documentation in R/resource.R
 \name{resource_add}
 \alias{resource_add}
-\title{Add a new resource}
+\title{Add a New Computing Resource}
 \usage{
 resource_add(
   name,
@@ -16,25 +16,76 @@ resource_add(
 )
 }
 \arguments{
-\item{name}{resource name}
+\item{name}{Character string for the resource name. Must be unique.}
 
-\item{type}{resource type (e.g. slurm or computer)}
+\item{type}{Type of resource. Currently supported: \code{"slurm"} for SLURM
+clusters or \code{"computer"} for standalone machines.}
 
-\item{host}{host name}
+\item{host}{Hostname or IP address of the resource. For SLURM clusters,
+this should be the login/head node.}
 
-\item{workers}{worker number}
+\item{workers}{Maximum number of concurrent workers/cores available on this
+resource (integer).}
 
-\item{log_folder}{log folder which has to be absolute path.}
+\item{log_folder}{Absolute path to the directory where log files will be stored.
+Must be an absolute path (Linux or Windows format). Directory will contain
+subdirectories for each project.}
 
-\item{username}{username to login the host. If null, the user from Sys.info is used.}
+\item{username}{Username for SSH connection to the resource. If NULL (default),
+uses the current user from \code{Sys.info()["user"]}.}
 
-\item{nodename}{nodename obtained by Sys.info()}
+\item{nodename}{Node name as obtained by \code{Sys.info()["nodename"]} on the
+resource. Default extracts the hostname from \code{host}.}
 
-\item{con}{a db connection}
+\item{con}{An optional database connection. If NULL, a new connection is
+created and closed automatically.}
 }
 \value{
-no return
+Invisibly returns NULL. Called for side effects (adding resource to database).
 }
 \description{
-Add a new resource
+Registers a new computing resource (HPC cluster or computer) in the database
+for use with taskqueue projects.
+}
+\details{
+The \code{log_folder} is critical for troubleshooting. It stores:
+\itemize{
+  \item SLURM job output and error files
+  \item Task execution logs
+  \item R worker scripts
+}
+
+Choose a high-speed storage location if possible due to frequent I/O operations.
+
+If a resource with the same \code{name} already exists, this function will
+fail due to uniqueness constraints.
+}
+\examples{
+\dontrun{
+# Add a SLURM cluster resource
+resource_add(
+  name = "hpc",
+  type = "slurm",
+  host = "hpc.university.edu",
+  workers = 500,
+  log_folder = "/home/user/taskqueue_logs/"
+)
+
+# Add with explicit username
+resource_add(
+  name = "hpc2",
+  type = "slurm",
+  host = "cluster.lab.org",
+  workers = 200,
+  log_folder = "/scratch/taskqueue/logs/",
+  username = "johndoe"
+)
+
+# Verify resource was added
+resource_list()
+}
+}
+\seealso{
+\code{\link{resource_get}}, \code{\link{resource_list}},
+  \code{\link{project_resource_add}}
 }
