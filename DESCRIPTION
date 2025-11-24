@@ -1,7 +1,7 @@
 Package: taskqueue
 Type: Package
 Title: Task Queue in R Based on PostgreSQL 
-Version: 0.1.0
+Version: 0.2.0
 Maintainer: Bangyou Zheng <bangyou.zheng@csiro.au>
 Authors@R: person("Bangyou", "Zheng", 
                email = "bangyou.zheng@csiro.au", 
@@ -22,6 +22,8 @@ RoxygenNote: 7.3.3
 Depends:
     R (>= 4.1.0),
 Suggests:
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Imports: 
     settings,
@@ -35,3 +37,4 @@ Imports:
     DBI,
     ssh
 Config/testthat/edition: 3
+VignetteBuilder: knitr
