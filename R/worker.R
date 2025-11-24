@@ -428,7 +428,7 @@ worker_slurm <- function(project, resource, fun, rfile,
         #cmd <- .cmd_remote(resource_info$host, resource_info$username, cmd)
         Sys.sleep(1)
         #system(cmd)
-        .run_slurm_cmd(cmds, resource_info$host, resource_info$username)
+        .run_slurm_cmd(cmd, resource_info$host, resource_info$username)
 
 
         # Add jobs to project_resource table
