@@ -1,7 +1,7 @@
 # taskqueue
 
 [![](https://www.r-pkg.org/badges/version/taskqueue?color=green)](https://cran.r-project.org/package=taskqueue)
-![R-CMD-check](https://github.com/byzheng/taskqueue/workflows/R-CMD-check/badge.svg) 
+[![R-CMD-check.yaml](https://github.com/byzheng/taskqueue/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/byzheng/taskqueue/actions/workflows/R-CMD-check.yaml)
 
 [![](http://cranlogs.r-pkg.org/badges/grand-total/taskqueue?color=green)](https://cran.r-project.org/package=taskqueue)
 [![](http://cranlogs.r-pkg.org/badges/last-month/taskqueue?color=green)](https://cran.r-project.org/package=taskqueue)
