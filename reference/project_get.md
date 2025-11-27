@@ -56,6 +56,7 @@ Stops with an error if the project is not found.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Get project details
 info <- project_get("simulation_study")
 print(info$status)  # Check if running

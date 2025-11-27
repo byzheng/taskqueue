@@ -58,6 +58,7 @@ Your worker function will receive the task ID as its first argument.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Add 100 tasks to a project
 task_add("simulation_study", num = 100)
 

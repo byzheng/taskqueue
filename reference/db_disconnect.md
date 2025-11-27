@@ -34,6 +34,7 @@ avoid errors when disconnecting an already-closed connection.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Connect and disconnect
 con <- db_connect()
 # ... perform database operations ...

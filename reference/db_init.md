@@ -39,6 +39,7 @@ types will not be modified or deleted.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Initialize database (run once)
 db_init()
 

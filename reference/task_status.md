@@ -60,6 +60,7 @@ Use this function to monitor progress and identify problems.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Check task status
 status <- task_status("simulation_study")
 print(status)

@@ -87,6 +87,7 @@ slurm host if `submit = TRUE`.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 fun_test <- function(i, prefix) {
     Sys.sleep(runif(1) * 2)
 }

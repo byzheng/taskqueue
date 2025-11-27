@@ -35,6 +35,7 @@ been called).
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # List all projects
 projects <- project_list()
 print(projects)

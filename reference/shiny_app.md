@@ -35,6 +35,7 @@ issues.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Launch monitoring app
 shiny_app()
 } # }

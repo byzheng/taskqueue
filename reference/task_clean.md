@@ -45,6 +45,7 @@ This function is automatically called by
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Remove all tasks
 task_clean("simulation_study")
 

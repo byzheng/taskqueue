@@ -61,17 +61,31 @@ Changes are session-specific and don't modify environment variables.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 # View all current options
 taskqueue_options()
+#> $host
+#> [1] ""
+#> 
+#> $port
+#> [1] ""
+#> 
+#> $user
+#> [1] ""
+#> 
+#> $password
+#> [1] ""
+#> 
+#> $database
+#> [1] ""
+#> 
 
 # Get specific option
 taskqueue_options("host")
+#> [1] ""
 
 # Set options (temporary override)
 taskqueue_options(host = "localhost", port = 5432)
 
 # Reset to environment variable values
 taskqueue_reset()
-} # }
 ```

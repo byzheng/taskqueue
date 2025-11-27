@@ -79,6 +79,7 @@ mid-task.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Assign resource to project with basic settings
 project_resource_add(
   project = "simulation_study",

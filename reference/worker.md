@@ -76,6 +76,7 @@ to enable automatic walltime management.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Define worker function
 my_task <- function(task_id, param1, param2) {
   out_file <- sprintf("results/task_%04d.Rds", task_id)

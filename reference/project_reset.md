@@ -58,6 +58,7 @@ files, which may contain useful debugging information.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Reset project and clean logs
 project_reset("simulation_study")
 

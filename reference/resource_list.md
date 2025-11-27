@@ -53,6 +53,7 @@ A data frame containing information about all resources, with columns:
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # List all resources
 resources <- resource_list()
 print(resources)

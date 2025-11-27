@@ -45,6 +45,7 @@ recreate the schema before using taskqueue again.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Clean entire database (destructive!)
 db_clean()
 

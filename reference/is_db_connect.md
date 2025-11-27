@@ -34,6 +34,7 @@ adding tasks.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Test connection
 if (is_db_connect()) {
   message("Database is accessible")

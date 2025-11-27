@@ -63,6 +63,7 @@ status.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Reset only failed tasks
 task_reset("simulation_study", status = "failed")
 

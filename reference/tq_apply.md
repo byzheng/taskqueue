@@ -119,6 +119,7 @@ Your worker function should:
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Simple example
 my_simulation <- function(i, param) {
   out_file <- sprintf("results/sim_%04d.Rds", i)

@@ -103,8 +103,6 @@ Please refer to
   : List All Computing Resources
 - [`shiny_app()`](https://taskqueue.bangyou.me/reference/shiny_app.md) :
   Launch Shiny App for Monitoring Projects
-- [`slurm_deploy()`](https://taskqueue.bangyou.me/reference/slurm_deploy.md)
-  : Deploy taskqueue Package to SLURM Resources
 - [`table_exist()`](https://taskqueue.bangyou.me/reference/table_exist.md)
   : Check whether a table is existed
 - [`task_add()`](https://taskqueue.bangyou.me/reference/task_add.md) :

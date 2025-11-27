@@ -52,6 +52,7 @@ reduce console output noise.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Create a new connection
 con <- db_connect()
 

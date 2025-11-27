@@ -44,6 +44,7 @@ Use this function to monitor progress and identify failed tasks.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Check project status
 project_status("simulation_study")
 } # }

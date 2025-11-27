@@ -30,11 +30,9 @@ Useful after temporarily modifying connection parameters.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 # Override options temporarily
 taskqueue_options(host = "test.server.com")
 
 # Reset to environment variable values
 taskqueue_reset()
-} # }
 ```

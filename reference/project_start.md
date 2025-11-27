@@ -47,6 +47,7 @@ You must start a project before deploying workers with
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Start project to enable workers
 project_start("simulation_study")
 

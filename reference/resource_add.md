@@ -91,6 +91,7 @@ fail due to uniqueness constraints.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Add a SLURM cluster resource
 resource_add(
   name = "hpc",

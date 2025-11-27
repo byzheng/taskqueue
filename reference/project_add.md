@@ -61,6 +61,7 @@ After creating a project, you must:
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Create a project with default memory
 project_add("simulation_study")
 

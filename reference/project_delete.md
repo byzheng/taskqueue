@@ -51,6 +51,7 @@ manually if needed.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Delete a completed project
 project_delete("old_simulation")
 

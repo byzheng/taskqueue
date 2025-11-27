@@ -47,6 +47,7 @@ or [`task_reset`](https://taskqueue.bangyou.me/reference/task_reset.md).
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Stop project and cancel all jobs
 project_stop("simulation_study")
 

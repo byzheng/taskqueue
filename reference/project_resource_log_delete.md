@@ -48,6 +48,7 @@ when `log_clean = TRUE`.
 
 ``` r
 if (FALSE) { # \dontrun{
+# Not run:
 # Delete logs for specific project-resource
 project_resource_log_delete("simulation_study", "hpc")
 } # }
