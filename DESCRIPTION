@@ -11,7 +11,7 @@ Description: Implements a task queue system for asynchronous parallel computing
     Dynamically distributes tasks to workers, handles uneven load balancing, and 
     allows new workers to join at any time. Particularly useful for running large 
     numbers of independent tasks on high-performance computing (HPC) clusters with 
-    'SLURM' job schedulers.
+    'SLURM' <https://slurm.schedmd.com/> job schedulers.
 URL: https://taskqueue.bangyou.me/,
     https://github.com/byzheng/taskqueue
 BugReports: https://github.com/byzheng/taskqueue/issues

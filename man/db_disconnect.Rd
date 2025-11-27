@@ -23,6 +23,7 @@ to avoid errors when disconnecting an already-closed connection.
 }
 \examples{
 \dontrun{
+# Not run:
 # Connect and disconnect
 con <- db_connect()
 # ... perform database operations ...

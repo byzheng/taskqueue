@@ -29,6 +29,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Add 100 tasks to a project
 #' task_add("simulation_study", num = 100)
 #'
@@ -84,6 +85,7 @@ task_add <- function(project, num, clean = TRUE, con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Remove all tasks
 #' task_clean("simulation_study")
 #'
@@ -133,6 +135,7 @@ task_clean <- function(project, con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Check task status
 #' status <- task_status("simulation_study")
 #' print(status)
@@ -191,6 +194,7 @@ task_status <- function(project, con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Reset only failed tasks
 #' task_reset("simulation_study", status = "failed")
 #'
@@ -269,6 +273,7 @@ task_reset <- function(project, status = c("working", "failed"), con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Get first 10 failed tasks
 #' failed <- task_get("simulation_study", status = "failed")
 #' print(failed$message)  # View error messages

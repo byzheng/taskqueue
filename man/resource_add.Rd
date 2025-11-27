@@ -62,6 +62,7 @@ fail due to uniqueness constraints.
 }
 \examples{
 \dontrun{
+# Not run:
 # Add a SLURM cluster resource
 resource_add(
   name = "hpc",

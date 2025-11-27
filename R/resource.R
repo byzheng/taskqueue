@@ -41,6 +41,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # List all resources
 #' resources <- resource_list()
 #' print(resources)
@@ -76,6 +77,7 @@ resource_list <- function() {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Get specific resource
 #' hpc_info <- resource_get("hpc")
 #' print(hpc_info$workers)  # Maximum workers
@@ -134,6 +136,7 @@ resource_get <- function(resource, con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Add a SLURM cluster resource
 #' resource_add(
 #'   name = "hpc",

@@ -20,13 +20,11 @@ made via \code{\link{taskqueue_options}} are discarded.
 Useful after temporarily modifying connection parameters.
 }
 \examples{
-\dontrun{
 # Override options temporarily
 taskqueue_options(host = "test.server.com")
 
 # Reset to environment variable values
 taskqueue_reset()
-}
 }
 \seealso{
 \code{\link{taskqueue_options}}

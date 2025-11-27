@@ -61,6 +61,7 @@ Then system command \code{ssh} is used to connect remote slurm host if \code{sub
 }
 \examples{
 \dontrun{
+# Not run:
 fun_test <- function(i, prefix) {
     Sys.sleep(runif(1) * 2)
 }

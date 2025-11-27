@@ -30,6 +30,7 @@ using \code{\link{project_reset}} or \code{\link{task_reset}}.
 }
 \examples{
 \dontrun{
+# Not run:
 # Stop project and cancel all jobs
 project_stop("simulation_study")
 

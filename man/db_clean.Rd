@@ -31,6 +31,7 @@ before using taskqueue again.
 }
 \examples{
 \dontrun{
+# Not run:
 # Clean entire database (destructive!)
 db_clean()
 

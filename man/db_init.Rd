@@ -28,6 +28,7 @@ will not be modified or deleted.
 }
 \examples{
 \dontrun{
+# Not run:
 # Initialize database (run once)
 db_init()
 

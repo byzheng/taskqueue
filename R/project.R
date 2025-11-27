@@ -66,6 +66,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Create a project with default memory
 #' project_add("simulation_study")
 #'
@@ -148,6 +149,7 @@ project_add <- function(project, memory = 10) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Start project to enable workers
 #' project_start("simulation_study")
 #'
@@ -188,6 +190,7 @@ project_start <- function(project, con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Stop project and cancel all jobs
 #' project_stop("simulation_study")
 #'
@@ -261,6 +264,7 @@ project_stop <- function(project) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Reset project and clean logs
 #' project_reset("simulation_study")
 #'
@@ -320,6 +324,7 @@ project_reset <- function(project, log_clean = TRUE) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Get project details
 #' info <- project_get("simulation_study")
 #' print(info$status)  # Check if running
@@ -379,6 +384,7 @@ project_resource_get <- function(project, resource = NULL, con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # List all projects
 #' projects <- project_list()
 #' print(projects)
@@ -426,6 +432,7 @@ project_list <- function(con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Delete a completed project
 #' project_delete("old_simulation")
 #'
@@ -485,6 +492,7 @@ project_delete <- function(project, con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Check project status
 #' project_status("simulation_study")
 #' }

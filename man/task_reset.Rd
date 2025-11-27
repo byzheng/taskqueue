@@ -42,6 +42,7 @@ Specifying \code{status = "all"} resets all tasks regardless of current status.
 }
 \examples{
 \dontrun{
+# Not run:
 # Reset only failed tasks
 task_reset("simulation_study", status = "failed")
 

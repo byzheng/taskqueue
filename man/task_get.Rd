@@ -45,6 +45,7 @@ Specifying \code{status = "all"} returns tasks of any status.
 }
 \examples{
 \dontrun{
+# Not run:
 # Get first 10 failed tasks
 failed <- task_get("simulation_study", status = "failed")
 print(failed$message)  # View error messages

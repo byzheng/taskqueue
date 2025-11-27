@@ -24,6 +24,7 @@ Useful for testing database configuration before running workers or adding tasks
 }
 \examples{
 \dontrun{
+# Not run:
 # Test connection
 if (is_db_connect()) {
   message("Database is accessible")

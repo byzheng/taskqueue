@@ -29,6 +29,7 @@ or \code{\link{worker_slurm}}.
 }
 \examples{
 \dontrun{
+# Not run:
 # Start project to enable workers
 project_start("simulation_study")
 

@@ -32,6 +32,7 @@ This function is automatically called by \code{\link{project_reset}} when
 }
 \examples{
 \dontrun{
+# Not run:
 # Delete logs for specific project-resource
 project_resource_log_delete("simulation_study", "hpc")
 }

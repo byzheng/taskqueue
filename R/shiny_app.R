@@ -20,6 +20,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Launch monitoring app
 #' shiny_app()
 #' }

@@ -31,6 +31,7 @@ This function is automatically called by \code{\link{task_add}} when
 }
 \examples{
 \dontrun{
+# Not run:
 # Remove all tasks
 task_clean("simulation_study")
 

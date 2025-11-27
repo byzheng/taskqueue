@@ -25,6 +25,7 @@ Useful for monitoring long-running projects and identifying performance issues.
 }
 \examples{
 \dontrun{
+# Not run:
 # Launch monitoring app
 shiny_app()
 }

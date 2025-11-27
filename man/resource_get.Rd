@@ -25,6 +25,7 @@ for worker deployment, including connection information and resource limits.
 }
 \examples{
 \dontrun{
+# Not run:
 # Get specific resource
 hpc_info <- resource_get("hpc")
 print(hpc_info$workers)  # Maximum workers

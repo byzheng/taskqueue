@@ -78,6 +78,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Assign resource to project with basic settings
 #' project_resource_add(
 #'   project = "simulation_study",
@@ -191,6 +192,7 @@ project_resource_add <- function(project,
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Delete logs for specific project-resource
 #' project_resource_log_delete("simulation_study", "hpc")
 #' }
@@ -250,6 +252,7 @@ project_resource_log_delete <- function(project,
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Add a job (typically done automatically by worker_slurm)
 #' project_resource_add_jobs("simulation_study", "hpc", "job_12345")
 #'

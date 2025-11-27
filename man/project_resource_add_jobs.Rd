@@ -36,6 +36,7 @@ Currently only supports SLURM resources.
 }
 \examples{
 \dontrun{
+# Not run:
 # Add a job (typically done automatically by worker_slurm)
 project_resource_add_jobs("simulation_study", "hpc", "job_12345")
 

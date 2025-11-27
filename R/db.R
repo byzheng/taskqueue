@@ -28,6 +28,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Create a new connection
 #' con <- db_connect()
 #'
@@ -75,6 +76,7 @@ db_connect <- function(con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Connect and disconnect
 #' con <- db_connect()
 #' # ... perform database operations ...
@@ -116,6 +118,7 @@ db_disconnect <- function(con) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Initialize database (run once)
 #' db_init()
 #'
@@ -162,6 +165,7 @@ db_init <- function() {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Clean entire database (destructive!)
 #' db_clean()
 #'
@@ -268,6 +272,7 @@ table_exist <- function(table, con = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Test connection
 #' if (is_db_connect()) {
 #'   message("Database is accessible")

@@ -38,6 +38,7 @@ log files, which may contain useful debugging information.
 }
 \examples{
 \dontrun{
+# Not run:
 # Reset project and clean logs
 project_reset("simulation_study")
 

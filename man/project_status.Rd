@@ -30,6 +30,7 @@ Use this function to monitor progress and identify failed tasks.
 }
 \examples{
 \dontrun{
+# Not run:
 # Check project status
 project_status("simulation_study")
 }

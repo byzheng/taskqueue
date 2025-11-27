@@ -27,6 +27,7 @@ Retrieves detailed information about a specific project from the database.
 }
 \examples{
 \dontrun{
+# Not run:
 # Get project details
 info <- project_get("simulation_study")
 print(info$status)  # Check if running

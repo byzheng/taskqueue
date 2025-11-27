@@ -22,6 +22,7 @@ Retrieves all computing resources registered in the database.
 }
 \examples{
 \dontrun{
+# Not run:
 # List all resources
 resources <- resource_list()
 print(resources)

@@ -40,6 +40,7 @@ After creating a project, you must:
 }
 \examples{
 \dontrun{
+# Not run:
 # Create a project with default memory
 project_add("simulation_study")
 

@@ -38,7 +38,6 @@ Changes are session-specific and don't modify environment variables.
 }
 
 \examples{
-\dontrun{
 # View all current options
 taskqueue_options()
 
@@ -50,7 +49,6 @@ taskqueue_options(host = "localhost", port = 5432)
 
 # Reset to environment variable values
 taskqueue_reset()
-}
 }
 \seealso{
 \code{\link{taskqueue_reset}}, \code{\link{db_connect}}

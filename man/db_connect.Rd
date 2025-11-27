@@ -34,6 +34,7 @@ reduce console output noise.
 }
 \examples{
 \dontrun{
+# Not run:
 # Create a new connection
 con <- db_connect()
 

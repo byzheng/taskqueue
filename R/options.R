@@ -42,7 +42,6 @@ TASKQUEUE_OPTIONS <- settings::options_manager(
 #' @seealso \code{\link{taskqueue_reset}}, \code{\link{db_connect}}
 #'
 #' @examples
-#' \dontrun{
 #' # View all current options
 #' taskqueue_options()
 #'
@@ -54,7 +53,6 @@ TASKQUEUE_OPTIONS <- settings::options_manager(
 #'
 #' # Reset to environment variable values
 #' taskqueue_reset()
-#' }
 #' @export
 taskqueue_options <- function(...){
     # protect against the use of reserved words.
@@ -83,13 +81,11 @@ taskqueue_options <- function(...){
 #' @seealso \code{\link{taskqueue_options}}
 #'
 #' @examples
-#' \dontrun{
 #' # Override options temporarily
 #' taskqueue_options(host = "test.server.com")
 #'
 #' # Reset to environment variable values
 #' taskqueue_reset()
-#' }
 #' @export
 taskqueue_reset <- function() {
     settings::reset(TASKQUEUE_OPTIONS)

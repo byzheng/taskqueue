@@ -48,6 +48,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' # Define worker function
 #' my_task <- function(task_id, param1, param2) {
 #'   out_file <- sprintf("results/task_%04d.Rds", task_id)
@@ -277,6 +278,7 @@ worker <- function(project, fun, ...) {
 #' @export
 #' @examples
 #' \dontrun{
+#' # Not run:
 #' fun_test <- function(i, prefix) {
 #'     Sys.sleep(runif(1) * 2)
 #' }

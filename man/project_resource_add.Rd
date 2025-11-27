@@ -53,6 +53,7 @@ will automatically terminate before this limit to avoid being killed mid-task.
 }
 \examples{
 \dontrun{
+# Not run:
 # Assign resource to project with basic settings
 project_resource_add(
   project = "simulation_study",

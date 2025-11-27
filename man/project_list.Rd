@@ -23,6 +23,7 @@ has not been called).
 }
 \examples{
 \dontrun{
+# Not run:
 # List all projects
 projects <- project_list()
 print(projects)
