@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/byzheng/taskqueue/blob/0.2.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/byzheng/taskqueue/blob/main/inst/CITATION)
 
 Zheng, B. (2025). taskqueue: Task Queue for Parallel Computing Based on
 PostgreSQL. R package version 0.2.0.
