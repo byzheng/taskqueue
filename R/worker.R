@@ -289,7 +289,7 @@ worker <- function(project, fun, ...) {
 #' }
 #'
 worker_slurm <- function(project, resource, fun, rfile,
-                         module_r = "R/4.3.1",
+                         module_r = "R/4.5.1",
                          module_pg = "postgresql/16.0",
                          modules = NULL,
                          pkgs = rev(.packages()), submit = TRUE, ...) {
