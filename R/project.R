@@ -218,6 +218,7 @@ project_stop <- function(project) {
                 next
             }
             jobs <- strsplit(pr_slurm$jobs[i], ";")[[1]]
+            jobs <- jobs[jobs != ""]
             r <- resource_get(pr_slurm$resource[i], con = con)
             cmds <- sprintf('scancel --jobname="%s"', jobs)
             for (j in seq(along = cmds)) {
