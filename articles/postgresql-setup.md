@@ -110,11 +110,13 @@ Restart R after editing `.Renviron`.
 ## Install R Packages
 
 ``` r
+
 # install from CRAN
 install.packages("taskqueue")
 ```
 
 ``` r
+
 # or install the latest development version from GitHub
 remotes::install_github("byzheng/taskqueue")
 ```
@@ -122,6 +124,7 @@ remotes::install_github("byzheng/taskqueue")
 ## Test Connection
 
 ``` r
+
 library(taskqueue)
 db_connect()
 ```
@@ -129,6 +132,7 @@ db_connect()
 ## Initialize taskqueue
 
 ``` r
+
 library(taskqueue)
 
 # Create required tables
@@ -146,6 +150,7 @@ db_init()
 If needed, remove all taskqueue data:
 
 ``` r
+
 library(taskqueue)
 db_clean()  # Removes all tables
 ```

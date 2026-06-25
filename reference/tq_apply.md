@@ -84,6 +84,7 @@ This function automates the standard taskqueue workflow:
 
 Equivalent to manually calling:
 
+
     project_add(project, memory = memory)
     project_resource_add(project, resource, working_dir, account, hour, n)
     task_add(project, n, clean = TRUE)

@@ -27,6 +27,7 @@ Before using `taskqueue`, ensure you have:
 Install the development version from GitHub:
 
 ``` r
+
 devtools::install_github('byzheng/taskqueue')
 ```
 
@@ -35,6 +36,7 @@ devtools::install_github('byzheng/taskqueue')
 ### 1. Initialize Database
 
 ``` r
+
 library(taskqueue)
 
 # Initialize the database structure
@@ -47,6 +49,7 @@ A computing resource is a facility/computer that can run multiple
 jobs/workers.
 
 ``` r
+
 resource_add(
   name = "hpc", 
   type = "slurm", 
@@ -77,6 +80,7 @@ high-speed hard drive due to frequent I/O operations.
 resources, working directory, runtime requirements, and configurations.
 
 ``` r
+
 # Create a project with common requirements
 project_add("test_project", memory = 20)
 ```
@@ -84,6 +88,7 @@ project_add("test_project", memory = 20)
 ### 4. Assign Resource to Project
 
 ``` r
+
 project_resource_add(
   project = "test_project", 
   resource = "hpc"
@@ -93,6 +98,7 @@ project_resource_add(
 ### 5. Add Tasks
 
 ``` r
+
 # Add 100 tasks to the project
 task_add("test_project", num = 100, clean = TRUE)
 ```
@@ -107,6 +113,7 @@ Create a function that:
 - Checks whether the task is already finished
 
 ``` r
+
 library(taskqueue)
 
 fun_test <- function(i) {
@@ -133,6 +140,7 @@ After developing and testing your function, save it to a file (e.g.,
 `rcode.R`) and deploy to your HPC resource:
 
 ``` r
+
 # Reset task status (if needed)
 project_reset("test_project")
 
@@ -164,6 +172,7 @@ Each task has one of four statuses:
 ### Check Task Status
 
 ``` r
+
 task_status("test_project")
 ```
 
@@ -172,12 +181,14 @@ task_status("test_project")
 Reset all tasks in a project:
 
 ``` r
+
 project_reset("test_project")
 ```
 
 Reset only failed or working tasks:
 
 ``` r
+
 project_reset("test_project", status = "failed")
 project_reset("test_project", status = "working")
 ```
@@ -185,6 +196,7 @@ project_reset("test_project", status = "working")
 ### Manage Projects
 
 ``` r
+
 # List all projects
 project_list()
 
@@ -200,6 +212,7 @@ project_delete("test_project")
 Here’s a complete example of using `taskqueue`:
 
 ``` r
+
 library(taskqueue)
 
 # 1. Initialize database (first time only)

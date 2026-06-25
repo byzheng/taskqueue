@@ -28,6 +28,7 @@ Before using `taskqueue`, ensure you have:
 3.  Database initialized:
 
     ``` r
+
     library(taskqueue)
     db_init()
     ```
@@ -35,6 +36,7 @@ Before using `taskqueue`, ensure you have:
 4.  A resource already defined:
 
     ``` r
+
     resource_add(
       name = "hpc",
       type = "slurm",
@@ -52,6 +54,7 @@ The simplest use of
 requires just a few arguments:
 
 ``` r
+
 library(taskqueue)
 
 # Define your function
@@ -103,6 +106,7 @@ This will:
 You can pass additional arguments to your function using `...`:
 
 ``` r
+
 my_function <- function(i, multiplier, offset = 0) {
   result <- i * multiplier + offset
   return(result)
@@ -127,6 +131,7 @@ Each task will call: - Task 1:
 Here’s a practical example running a Monte Carlo simulation:
 
 ``` r
+
 library(taskqueue)
 
 # Define simulation function
@@ -172,6 +177,7 @@ After calling
 monitor your tasks:
 
 ``` r
+
 # Check task status
 task_status("monte_carlo_study")
 
@@ -184,6 +190,7 @@ project_status("monte_carlo_study")
 After all tasks complete, collect your results:
 
 ``` r
+
 # Read all result files
 result_files <- list.files("results", pattern = "simulation_.*\\.Rds$", 
                           full.names = TRUE)
@@ -203,6 +210,7 @@ hist(means, main = "Distribution of Means")
 Your function should save results to the file system:
 
 ``` r
+
 my_task <- function(i) {
   out_file <- sprintf("output/result_%04d.Rds", i)
   
@@ -224,6 +232,7 @@ my_task <- function(i) {
 Check if output already exists to avoid re-running completed tasks:
 
 ``` r
+
 my_task <- function(i) {
   out_file <- sprintf("output/task_%d.Rds", i)
   if (file.exists(out_file)) return(invisible(NULL))
@@ -237,6 +246,7 @@ my_task <- function(i) {
 Ensure your working directory on the cluster is correct:
 
 ``` r
+
 tq_apply(
   n = 100,
   fun = my_function,
@@ -251,6 +261,7 @@ tq_apply(
 Configure memory and time limits based on your task requirements:
 
 ``` r
+
 tq_apply(
   n = 100,
   fun = memory_intensive_task,
@@ -269,6 +280,7 @@ simplifies the workflow by combining these steps:
 **Manual approach:**
 
 ``` r
+
 # Multiple steps
 project_add("test", memory = 10)
 project_resource_add("test", "hpc", working_dir = "/path", hours = 24)
@@ -280,6 +292,7 @@ worker_slurm("test", "hpc", fun = my_function)
 **With tq_apply():**
 
 ``` r
+
 # Single step
 tq_apply(n = 100, fun = my_function, project = "test", resource = "hpc",
          working_dir = "/path", hour = 24)

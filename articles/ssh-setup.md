@@ -90,6 +90,7 @@ connection
 Verify the connection works from R:
 
 ``` r
+
 library(ssh)
 
 # Create SSH session

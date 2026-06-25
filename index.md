@@ -35,6 +35,7 @@ Install the developing version from
 [Github](https://github.com/byzheng/taskqueue).
 
 ``` r
+
 remotes::install_github('byzheng/taskqueue')
 ```
 
